@@ -62,9 +62,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final InternalStorageFilesModel model = filesModelArrayList.get(position);
         lblFileName.setText(model.getFileName());
-        if (!model.getFilePath().equals("../") || model.getFilePath().equals("/"))
-            lblFilePath.setText(model.getFilePath());
-        else lblFilePath.setText("hell");
+        lblFilePath.setText("hell");
         checkBox.setChecked(model.isSelected());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
