@@ -35,7 +35,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private boolean isChecked = false;
     private Dialog dialog;
     private String MENU_TAG = "main";
-    private String root = "/sdcard/";
+    private String root = "/";
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -75,9 +75,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
+                Log.d("path is",model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead())//if selected directory is readable
-                        getDirectory(model.getFilePath());
+                        getDirectory(model.getFilePath()+"/");
                     else {
                         Toast.makeText(getActivity().getApplicationContext(), "not a readable file", Toast.LENGTH_LONG).show();
                     }//inner if-else
