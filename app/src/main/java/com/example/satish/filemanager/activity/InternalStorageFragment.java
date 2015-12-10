@@ -92,6 +92,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
+        if (!directoryPath.equals(root)) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel(root, root, false);
+            filesModelArrayList.add(model);
+            InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false);
+            filesModelArrayList.add(model1);
+
+        }
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             if (file.isDirectory()) {
@@ -103,9 +110,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         }
         //here i added comments
-        Log.d("action","after for loop");
+        Log.d("action", "after for loop");
         internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
-        Log.d("action","after internal");
+        Log.d("action", "after internal");
         internalStorageFilesAdapter.setCustomListener(this);
         Log.d("action", "after custom");
         listView.setAdapter(internalStorageFilesAdapter);
