@@ -109,14 +109,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 filesModelArrayList.add(model);
             }
         }
-        //here i added comments
-        Log.d("action", "after for loop");
-        internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
-        Log.d("action", "after internal");
-        internalStorageFilesAdapter.setCustomListener(this);
-        Log.d("action", "after custom");
-        listView.setAdapter(internalStorageFilesAdapter);
-        Log.d("action", "after set adapter");
+                internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
+              //  internalStorageFilesAdapter.setCustomListener(this);
+                listView.setAdapter(internalStorageFilesAdapter);
+
     }
 
     public void mainMenu() {
