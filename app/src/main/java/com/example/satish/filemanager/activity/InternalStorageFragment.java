@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -54,11 +55,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         btnSearch = (ImageButton) rootView.findViewById(R.id.btn_search);
         btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
-        filesModelArrayList = new ArrayList<>();
         getDirectory(root);
-        internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
-        internalStorageFilesAdapter.setCustomListener(this);
-        listView.setAdapter(internalStorageFilesAdapter);
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,16 +71,26 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                Log.d("path is",model.getFilePath());
+                Log.d("path is", model.getFilePath());
+                getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead())//if selected directory is readable
-                        getDirectory(model.getFilePath()+"/");
+                        //   getDirectory(model.getFilePath());
+                        Log.d("here ", "not a directory");
                     else {
-                      Dialog dialog=new Dialog(getActivity());
+                        final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.custom_dialog_file_not_readable);
                         dialog.show();
-                        TextView folderName= (TextView) dialog.findViewById(R.id.not_read_file_name);
-                        folderName.setText(model.getFilePath()+" folder can't be read!");
+                        TextView folderName = (TextView) dialog.findViewById(R.id.not_read_file_name);
+                        Button btnOkay = (Button) dialog.findViewById(R.id.btn_okay);
+                        folderName.setText(model.getFilePath() + " folder can't be read!");
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        });
+
                     }//inner if-else
                 }//if
             }//onItemClick
@@ -93,6 +100,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void getDirectory(String directoryPath) {
+        filesModelArrayList = new ArrayList<>();
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
@@ -101,7 +109,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             filesModelArrayList.add(model);
             InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false);
             filesModelArrayList.add(model1);
-
         }
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
@@ -113,10 +120,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 filesModelArrayList.add(model);
             }
         }
-                internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
-              //  internalStorageFilesAdapter.setCustomListener(this);
-                listView.setAdapter(internalStorageFilesAdapter);
-
+        internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
+        internalStorageFilesAdapter.setCustomListener(this);
+        listView.setAdapter(internalStorageFilesAdapter);
     }
 
     public void mainMenu() {
