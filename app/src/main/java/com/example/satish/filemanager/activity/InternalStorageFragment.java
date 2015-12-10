@@ -35,7 +35,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private boolean isChecked = false;
     private Dialog dialog;
     private String MENU_TAG = "main";
-    private String root = "/";
+    private String root = "/sdcard/";
 
     public InternalStorageFragment() {
         // Required empty public constructor
