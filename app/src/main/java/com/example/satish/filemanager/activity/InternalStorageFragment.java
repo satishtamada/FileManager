@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
@@ -80,7 +79,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     if (file.canRead())//if selected directory is readable
                         getDirectory(model.getFilePath()+"/");
                     else {
-                        Toast.makeText(getActivity().getApplicationContext(), "not a readable file", Toast.LENGTH_LONG).show();
+                      Dialog dialog=new Dialog(getActivity());
+                        dialog.setContentView(R.layout.custom_dialog_file_not_readable);
+                        dialog.show();
+                        TextView folderName= (TextView) dialog.findViewById(R.id.not_read_file_name);
+                        folderName.setText(model.getFilePath()+" folder can't be read!");
                     }//inner if-else
                 }//if
             }//onItemClick
