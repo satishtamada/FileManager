@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FileManager</string> <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_home">Internal storage</string>
+    <string name="nav_item_friends">External storage</string>
+
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_home</item>
+        <item>@string/nav_item_friends</item>
+            </string-array>
+
+    <string name="title_friends">External</string>
+    <string name="title_home">Internal</string>
+</resources>
