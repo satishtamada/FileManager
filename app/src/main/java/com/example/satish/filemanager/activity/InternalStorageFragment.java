@@ -2,8 +2,6 @@ package com.example.satish.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -25,8 +23,6 @@ import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +39,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private Dialog dialog;
     private String MENU_TAG = "main";
     private String root = "/sdcard";
-    File myInternalFile;
+    private String selectedFilePath;
+    private int selectedFilePosition;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -64,6 +61,29 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
         getDirectory(root);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            Dialog dialogDeleteFolder=new Dialog(getActivity());
+                dialogDeleteFolder.setContentView(R.layout.custom_dialog_file_delete);
+                Button btnDeleteOk= (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_ok);
+                Button btnDeleteCancel= (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_cancel);
+                btnDeleteOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            File deleteFile=new File(selectedFilePath);
+                            boolean isDeleteFile=deleteFile.delete();
+                            if(isDeleteFile){
+                                InternalStorageFilesModel model=filesModelArrayList.get(selectedFilePosition);
+                                filesModelArrayList.remove(model);
+                                internalStorageFilesAdapter.notifyDataSetChanged();
+                            }
+                        }catch(Exception e){}
+                    }
+                });
+            }
+        });
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,14 +227,17 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 String folderName = txtNewFolder.getText().toString();
                 Toast.makeText(getActivity().getApplicationContext(), root, Toast.LENGTH_SHORT).show();
-                ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
-                File directory = contextWrapper.getDir("sdcard", Context.MODE_PRIVATE);
-                myInternalFile = new File(directory, folderName + ".txt");
                 try {
-                    FileOutputStream fos = new FileOutputStream(myInternalFile);
-                    fos.write(folderName.getBytes());
-                    fos.close();
-                } catch (IOException e) {
+                    File file = new File(root + "/" + folderName);
+                    boolean isFolderCreated = file.mkdir();
+                    if (isFolderCreated) {
+                        InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false);
+                        filesModelArrayList.add(model);
+                        internalStorageFilesAdapter.notifyDataSetChanged();
+                    } else
+                        Toast.makeText(getActivity().getApplicationContext(), "Folder Not Created..!", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 fileDialog.cancel();
@@ -322,7 +345,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 size /= 1024;
             }
         }
-
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
 
         int commaOffset = resultBuffer.length() - 3;
@@ -348,6 +370,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         InternalStorageFilesModel model = filesModelArrayList.get(position);
+        selectedFilePath=model.getFilePath();
+        selectedFilePosition=position;
         model.setSelected(isChecked);
         filesModelArrayList.remove(position);
         filesModelArrayList.add(position, model);
