@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +44,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String MENU_TAG = "main";
     private String root = "/sdcard";
     File myInternalFile;
+
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -82,11 +85,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     Log.d("here ", Boolean.toString(file.isDirectory()));
                     if (file.canRead()) {//if selected directory is readable
                         Log.d("here", Boolean.toString(file.canRead()));
-                        if(model.getFileName().equals("../"))//if filename root the we set dirctory path ../
+                        if (model.getFileName().equals("../"))//if filename root the we set dirctory path ../
                             getDirectory("../");
                         else
-                        getDirectory(model.getFilePath());//if filename not root
-                        root=model.getFilePath();
+                            getDirectory(model.getFilePath());//if filename not root
+                        root = model.getFilePath();
                     } else {
                         final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.custom_dialog_file_not_readable);
@@ -115,7 +118,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         File f = new File(directoryPath);
         File[] files = f.listFiles();
 
-        if (!directoryPath.equals(root)&!directoryPath.equals("../")) {
+        if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
             InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false);
             filesModelArrayList.add(model);
             InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false);
@@ -146,44 +149,19 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
         TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
         TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
+        final TextView property = (TextView) dialog.findViewById(R.id.btn_property);
+        property.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getProperties();
+            }
+
+        });
         //event on new folder
         newFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //close the main menu dialog
-                dialog.cancel();
-                final Dialog fileDialog = new Dialog(getActivity());
-                fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
-                fileDialog.setTitle("Create Folder");
-                fileDialog.show();
-                final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_folder);
-                TextView create = (TextView) fileDialog.findViewById(R.id.btn_create);
-                TextView cancel = (TextView) fileDialog.findViewById(R.id.btn_cancel);
-                //create file event
-                create.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String folderName = txtNewFolder.getText().toString();
-                      //  Toast.makeText(getActivity().getApplicationContext(),root,Toast.LENGTH_SHORT).show();
-                      //  ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
-                      ////  File directory = contextWrapper.getDir("sdcard", Context.MODE_PRIVATE);
-                      //  myInternalFile = new File(directory , folderName+".txt");
-                      //  try {
-                      //      FileOutputStream fos = new FileOutputStream(myInternalFile);
-                      //      fos.write(folderName.getBytes());
-                       //     fos.close();
-                      //  } catch (IOException e) {
-                      //      e.printStackTrace();
-                     //   }
-                    }
-                });
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fileDialog.cancel();
-                    }
-                });
-
+                getNewFolder();
             }
         });
         selectAll.setOnClickListener(new View.OnClickListener() {
@@ -209,6 +187,61 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 dialog.cancel();//close the menu dialog
+            }
+        });
+    }
+
+    private void getNewFolder() {
+        //close the main menu dialog
+        dialog.cancel();
+        final Dialog fileDialog = new Dialog(getActivity());
+        fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
+        fileDialog.setTitle("Create Folder");
+        fileDialog.show();
+        final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_folder);
+        TextView create = (TextView) fileDialog.findViewById(R.id.btn_create);
+        TextView cancel = (TextView) fileDialog.findViewById(R.id.btn_cancel);
+        //create file event
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String folderName = txtNewFolder.getText().toString();
+                Toast.makeText(getActivity().getApplicationContext(), root, Toast.LENGTH_SHORT).show();
+                ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
+                File directory = contextWrapper.getDir("sdcard", Context.MODE_PRIVATE);
+                myInternalFile = new File(directory, folderName + ".txt");
+                try {
+                    FileOutputStream fos = new FileOutputStream(myInternalFile);
+                    fos.write(folderName.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileDialog.cancel();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fileDialog.cancel();
+            }
+        });
+    }
+
+    private void getProperties() {
+        dialog.cancel();
+        final Dialog propertyDialog = new Dialog(getActivity());
+        propertyDialog.setContentView(R.layout.custom_dialog_property);
+        propertyDialog.show();
+        TextView lblTotalDiskSize = (TextView) propertyDialog.findViewById(R.id.used_space);
+        TextView lblFreeDiskSize = (TextView) propertyDialog.findViewById(R.id.free_space);
+        TextView lblCancel = (TextView) propertyDialog.findViewById(R.id.btn_cancel);
+        lblFreeDiskSize.setText(getAvailableInternalMemorySize());
+        lblTotalDiskSize.setText(getTotalInternalMemorySize());
+        lblCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                propertyDialog.cancel();
             }
         });
     }
@@ -259,6 +292,47 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
         dialog.cancel();
 
+    }
+
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize);
+    }
+
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize);
+    }
+
+
+    public static String formatSize(long size) {
+        String suffix = null;
+
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+            }
+        }
+
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
     }
 
     @Override
