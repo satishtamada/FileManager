@@ -64,22 +64,32 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Dialog dialogDeleteFolder=new Dialog(getActivity());
+                final Dialog dialogDeleteFolder = new Dialog(getActivity());
                 dialogDeleteFolder.setContentView(R.layout.custom_dialog_file_delete);
-                Button btnDeleteOk= (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_ok);
-                Button btnDeleteCancel= (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_cancel);
+                dialogDeleteFolder.show();
+                Button btnDeleteOk = (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_ok);
+                Button btnDeleteCancel = (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_cancel);
                 btnDeleteOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try{
-                            File deleteFile=new File(selectedFilePath);
-                            boolean isDeleteFile=deleteFile.delete();
-                            if(isDeleteFile){
-                                InternalStorageFilesModel model=filesModelArrayList.get(selectedFilePosition);
+                        try {
+                            File deleteFile = new File(selectedFilePath);
+                            boolean isDeleteFile = deleteFile.delete();
+                            if (isDeleteFile) {
+                                dialogDeleteFolder.cancel();
+                                InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                                 filesModelArrayList.remove(model);
                                 internalStorageFilesAdapter.notifyDataSetChanged();
+
                             }
-                        }catch(Exception e){}
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+                btnDeleteCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogDeleteFolder.cancel();
                     }
                 });
             }
@@ -99,7 +109,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                Toast.makeText(getActivity().getApplicationContext(), "fname " + model.getFileName() + " fpath " + model.getFilePath(), Toast.LENGTH_LONG).show();
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     Log.d("here ", Boolean.toString(file.isDirectory()));
@@ -226,7 +235,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String folderName = txtNewFolder.getText().toString();
-                Toast.makeText(getActivity().getApplicationContext(), root, Toast.LENGTH_SHORT).show();
                 try {
                     File file = new File(root + "/" + folderName);
                     boolean isFolderCreated = file.mkdir();
@@ -370,8 +378,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         InternalStorageFilesModel model = filesModelArrayList.get(position);
-        selectedFilePath=model.getFilePath();
-        selectedFilePosition=position;
+        selectedFilePath = model.getFilePath();
+        selectedFilePosition = position;
         model.setSelected(isChecked);
         filesModelArrayList.remove(position);
         filesModelArrayList.add(position, model);
