@@ -72,12 +72,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
                 Log.d("path is", model.getFilePath());
-                getDirectory(model.getFilePath());
+                // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
-                    if (file.canRead())//if selected directory is readable
-                        //   getDirectory(model.getFilePath());
-                        Log.d("here ", "not a directory");
-                    else {
+                    Log.d("here ", Boolean.toString(file.isDirectory()));
+                    if (file.canRead()) {//if selected directory is readable
+                        Log.d("here", Boolean.toString(file.canRead()));
+                        getDirectory(model.getFilePath());
+                    } else {
                         final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.custom_dialog_file_not_readable);
                         dialog.show();
@@ -123,6 +124,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
         internalStorageFilesAdapter.setCustomListener(this);
         listView.setAdapter(internalStorageFilesAdapter);
+
     }
 
     public void mainMenu() {
