@@ -19,7 +19,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="Property"
+            android:text="@string/lbl_property"
             android:textAllCaps="false" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="Refresh"
+            android:text="@string/lbl_refresh"
             android:textAllCaps="false" />
     </LinearLayout>
 
@@ -44,7 +44,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="New folder"
+            android:text="@string/lbl_new_folder"
             android:textAllCaps="false" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="New file"
+            android:text="@string/lbl_new_file"
             android:textAllCaps="false" />
     </LinearLayout>
 
@@ -69,7 +69,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="Select all"
+            android:text="@string/lbl_select_all"
             android:textAllCaps="false" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"
             android:background="@null"
-            android:text="Deselect all"
+            android:text="@string/lbl_de_select_all"
             android:textAllCaps="false" />
     </LinearLayout>
 
@@ -89,6 +89,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="5dp"
         android:background="@null"
-        android:text="Cancel"
+        android:text="@string/lbl_cancel"
         android:textAllCaps="false" />
 </LinearLayout>

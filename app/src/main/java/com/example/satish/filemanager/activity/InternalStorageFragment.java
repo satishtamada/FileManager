@@ -2,6 +2,8 @@ package com.example.satish.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,12 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -35,8 +40,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private boolean isChecked = false;
     private Dialog dialog;
     private String MENU_TAG = "main";
-    private String root = "/";
-
+    private String root = "/sdcard";
+    File myInternalFile;
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -71,13 +76,17 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                Log.d("path is", model.getFilePath());
+                Toast.makeText(getActivity().getApplicationContext(), "fname " + model.getFileName() + " fpath " + model.getFilePath(), Toast.LENGTH_LONG).show();
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     Log.d("here ", Boolean.toString(file.isDirectory()));
                     if (file.canRead()) {//if selected directory is readable
                         Log.d("here", Boolean.toString(file.canRead()));
-                        getDirectory(model.getFilePath());
+                        if(model.getFileName().equals("../"))//if filename root the we set dirctory path ../
+                            getDirectory("../");
+                        else
+                        getDirectory(model.getFilePath());//if filename not root
+                        root=model.getFilePath();
                     } else {
                         final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.custom_dialog_file_not_readable);
@@ -105,8 +114,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
-        if (!directoryPath.equals(root)) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel(root, root, false);
+
+        if (!directoryPath.equals(root)&!directoryPath.equals("../")) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false);
             filesModelArrayList.add(model);
             InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false);
             filesModelArrayList.add(model1);
@@ -154,7 +164,17 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     @Override
                     public void onClick(View v) {
                         String folderName = txtNewFolder.getText().toString();
-
+                      //  Toast.makeText(getActivity().getApplicationContext(),root,Toast.LENGTH_SHORT).show();
+                      //  ContextWrapper contextWrapper = new ContextWrapper(getActivity().getApplicationContext());
+                      ////  File directory = contextWrapper.getDir("sdcard", Context.MODE_PRIVATE);
+                      //  myInternalFile = new File(directory , folderName+".txt");
+                      //  try {
+                      //      FileOutputStream fos = new FileOutputStream(myInternalFile);
+                      //      fos.write(folderName.getBytes());
+                       //     fos.close();
+                      //  } catch (IOException e) {
+                      //      e.printStackTrace();
+                     //   }
                     }
                 });
                 cancel.setOnClickListener(new View.OnClickListener() {

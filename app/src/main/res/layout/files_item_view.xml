@@ -37,13 +37,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="filename" />
+           />
 
         <TextView
             android:id="@+id/file_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="D:/SDcard/Local/" />
+            />
     </LinearLayout>
 
 </RelativeLayout>

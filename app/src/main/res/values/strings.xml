@@ -14,4 +14,15 @@
 
     <string name="title_friends">External</string>
     <string name="title_home">Internal</string>
+    <string name="lbl_property">Property</string>
+    <string name="lbl_refresh">Refresh</string>
+    <string name="lbl_new_folder">New folder</string>
+    <string name="lbl_new_file">New file</string>
+    <string name="lbl_select_all">Select all</string>
+    <string name="lbl_de_select_all">Deselect all</string>
+    <string name="lbl_copy_here">Copy selection here</string>
+    <string name="lbl_move_here">Move selection here</string>
+    <string name="lbl_delete_selection">Delete selection</string>
+    <string name="lbl_add_bookmark">Add  bookmark</string>
+    <string name="lbl_cancel">Cancel</string>
 </resources>
