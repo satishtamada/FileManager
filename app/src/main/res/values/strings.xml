@@ -25,4 +25,7 @@
     <string name="lbl_delete_selection">Delete selection</string>
     <string name="lbl_add_bookmark">Add  bookmark</string>
     <string name="lbl_cancel">Cancel</string>
+    <string name="btn_cancel">cancel</string>
+    <string name="btn_confirm">confirm</string>
+    <string name="msg_prompt_remove_friend">Are you sure you want delete #name# folder?</string>
 </resources>

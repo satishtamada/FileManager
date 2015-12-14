@@ -2,10 +2,12 @@ package com.example.satish.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String MENU_TAG = "main";
     private String root = "/sdcard";
     private String selectedFilePath;
+    private String selectedFolderName;
     private int selectedFilePosition;
 
     public InternalStorageFragment() {
@@ -64,34 +67,33 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialogDeleteFolder = new Dialog(getActivity());
-                dialogDeleteFolder.setContentView(R.layout.custom_dialog_file_delete);
-                dialogDeleteFolder.show();
-                Button btnDeleteOk = (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_ok);
-                Button btnDeleteCancel = (Button) dialogDeleteFolder.findViewById(R.id.btn_delete_cancel);
-                btnDeleteOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                // Setting Dialog Message
+                alertDialog.setIcon(R.mipmap.ic_delete_folder);
+                alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_remove_friend).replace("#name#",selectedFolderName));
+                alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    //TODO on dialog cancel button
+                    }
+                });
+                alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         try {
                             File deleteFile = new File(selectedFilePath);
                             boolean isDeleteFile = deleteFile.delete();
                             if (isDeleteFile) {
-                                dialogDeleteFolder.cancel();
                                 InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                                 filesModelArrayList.remove(model);
                                 internalStorageFilesAdapter.notifyDataSetChanged();
-
+                                btnMenu.setTag(MENU_TAG);
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });
-                btnDeleteCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogDeleteFolder.cancel();
-                    }
-                });
+                alertDialog.show();
+                //event button request add friend
             }
         });
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -378,6 +380,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         InternalStorageFilesModel model = filesModelArrayList.get(position);
         selectedFilePath = model.getFilePath();
+        selectedFolderName=model.getFileName();
         selectedFilePosition = position;
         model.setSelected(isChecked);
         filesModelArrayList.remove(position);
@@ -387,7 +390,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             btnMenu.setTag("dirmenu");
             btnDelete.setVisibility(View.VISIBLE);
         } else {
-            btnMenu.setTag("menu");//if checkbox is not selected change menu to main menu and disappear the delete icon
+            btnMenu.setTag(MENU_TAG);//if checkbox is not selected change menu to main menu and disappear the delete icon
             btnDelete.setVisibility(View.GONE);
         }//end of else
     }
