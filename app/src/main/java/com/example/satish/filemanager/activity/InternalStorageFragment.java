@@ -28,6 +28,7 @@ import com.example.satish.filemanager.model.InternalStorageFilesModel;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Satish on 04-12-2015.
@@ -37,7 +38,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
     private ImageButton btnMenu;
-    private ImageButton btnSearch;
     private ImageButton btnDelete;
     private boolean isChecked = false;
     private Dialog dialog;
@@ -46,6 +46,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
+    private List<String> selectedFilePositions = new ArrayList<String>();
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -62,9 +63,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_interanl, container, false);
         btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
-        btnSearch = (ImageButton) rootView.findViewById(R.id.btn_search);
+
         btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
+
         getDirectory(root);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +74,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                 // Setting Dialog Message
                 alertDialog.setIcon(R.mipmap.ic_delete_folder);
-                alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_remove_friend).replace("#name#", selectedFolderName));
+                if (selectedFilePositions.size() == 1)//if user select single folder
+                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
+                else //if user select multi folders
+                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folders));
                 alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO on dialog cancel button
@@ -80,18 +85,32 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 });
                 alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            File deleteFile = new File(selectedFilePath);
-                            boolean isDeleteFile = deleteFile.delete();
-                            if (isDeleteFile) {
-                                InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
-                                filesModelArrayList.remove(model);
-                                internalStorageFilesAdapter.notifyDataSetChanged();
-                                btnMenu.setTag(MENU_TAG);
+                        if (selectedFilePositions.size() == 1) {
+                            try {
+                                File deleteFile = new File(selectedFilePath);
+                                boolean isDeleteFile = deleteFile.delete();
+                                if (isDeleteFile) {
+                                    InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
+                                    filesModelArrayList.remove(model);
+                                    internalStorageFilesAdapter.notifyDataSetChanged();
+                                    btnMenu.setTag(MENU_TAG);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        } else {
+                            for (int i = 0; i < selectedFilePositions.size() - 1; i++) {
+                                Log.d("here", i + " " + selectedFilePositions.size());
+                                File deleteFile = new File(selectedFilePositions.get(i));
+                                boolean isDeleteFile = deleteFile.delete();
+                                if (isDeleteFile) {
+                                    InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
+                                    filesModelArrayList.remove(model);
+                                    internalStorageFilesAdapter.notifyDataSetChanged();
+                                    btnMenu.setTag(MENU_TAG);
+                                }//if
+                            }//for
+                        }//else
                     }
                 });
                 alertDialog.show();
@@ -106,6 +125,19 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     mainMenu();//it will display main menu
                 else
                     directoryMenu();//if will display folder menu
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity().getApplicationContext(), "hello", Toast.LENGTH_SHORT).show();
+                InternalStorageFilesModel model = filesModelArrayList.get(position);
+                model.setSelected(true);
+                filesModelArrayList.remove(position);
+                filesModelArrayList.add(position, model);
+                internalStorageFilesAdapter.notifyDataSetChanged();
+                btnDelete.setVisibility(View.VISIBLE);
+                return true;
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -152,18 +184,18 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         File[] files = f.listFiles();
 
         if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false,true);
+            InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false, true);
             filesModelArrayList.add(model);
-            InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false,true);
+            InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false, true);
             filesModelArrayList.add(model1);
         }
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             if (file.isDirectory()) {
-                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName() + "/", file.getPath(), false,true);
+                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName() + "/", file.getPath(), false, true);
                 filesModelArrayList.add(model);
             } else {
-                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false,false);
+                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false, false);
                 filesModelArrayList.add(model);
             }
         }
@@ -279,7 +311,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     File file = new File(root + "/" + folderName);
                     boolean isFolderCreated = file.mkdir();
                     if (isFolderCreated) {
-                        InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false,true);
+                        InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
                         filesModelArrayList.add(model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
                     } else
@@ -425,6 +457,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {//if checkbox is selected change menu to dir menu and display the delete icon
+            selectedFilePositions.add(selectedFilePath);
             btnMenu.setTag("dirmenu");
             btnDelete.setVisibility(View.VISIBLE);
         } else {

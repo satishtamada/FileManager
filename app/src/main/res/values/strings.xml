@@ -27,5 +27,6 @@
     <string name="lbl_cancel">Cancel</string>
     <string name="btn_cancel">cancel</string>
     <string name="btn_confirm">confirm</string>
-    <string name="msg_prompt_remove_friend">Are you sure you want delete #name# folder?</string>
+    <string name="msg_prompt_delete_folder">Are you sure you want delete #name# folder?</string>
+    <string name="msg_prompt_delete_folders">Are you sure you want delete selected folders?</string>
 </resources>

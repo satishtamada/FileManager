@@ -8,9 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.activity.InternalStorageFragment;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by Satish on 05-12-2015.
  */
-public class InternalStorageFilesAdapter extends BaseAdapter {
+public class InternalStorageFilesAdapter extends BaseAdapter implements Filterable {
     private LayoutInflater inflater;
     private Activity activity;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
@@ -87,10 +88,41 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
                     checkBox.setChecked(false);
                     customListener.isCheckboxSelectedListener(position, checkBox.isChecked());
                 }
-                Toast.makeText(activity.getApplicationContext(), model.getFileName(), Toast.LENGTH_LONG).show();
             }
         });
         return view;
+    }
+
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                filesModelArrayList = (ArrayList<InternalStorageFilesModel>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                ArrayList<InternalStorageFilesModel> FilteredList = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+                    // No filter implemented we return all the list
+                    results.values = filesModelArrayList;
+                    results.count = filesModelArrayList.size();
+                } else {
+                    for (int i = 0; i < filesModelArrayList.size(); i++) {
+                        InternalStorageFilesModel data = filesModelArrayList.get(i);
+                        FilteredList.add(data);
+                    }
+                    results.values = FilteredList;
+                    results.count = FilteredList.size();
+                }
+                return results;
+            }
+        };
+        return filter;
     }
 
     public interface CustomListener {
