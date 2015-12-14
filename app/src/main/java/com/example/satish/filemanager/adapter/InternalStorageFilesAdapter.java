@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,15 +60,22 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.files_item_view, null);
         TextView lblFileName = (TextView) view.findViewById(R.id.file_name);
         TextView lblFilePath = (TextView) view.findViewById(R.id.file_path);
+        ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final InternalStorageFilesModel model = filesModelArrayList.get(position);
+        if (model.isDir()) {
+            imgItemIcon.setImageResource(R.mipmap.ic_folder);
+        } else {
+            imgItemIcon.setImageResource(R.mipmap.ic_file);
+        }
         lblFileName.setText(model.getFileName());
-        if (model.getFileName().equals("/"))
+        if (model.getFileName().equals("/")) {
             lblFilePath.setText("sdcard");
-        else if (model.getFileName().equals("../"))
+        } else if (model.getFileName().equals("../")) {
             lblFilePath.setText("root");
-        else
+        } else {
             lblFilePath.setText(model.getFilePath());
+        }
         checkBox.setChecked(model.isSelected());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override

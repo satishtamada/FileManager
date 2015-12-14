@@ -7,14 +7,24 @@ public class InternalStorageFilesModel {
     private String fileName;
     private String filePath;
     private boolean selected;
+    private boolean isDir;
 
     public InternalStorageFilesModel() {
     }
 
-    public InternalStorageFilesModel(String fileName, String filePath ,boolean selected) {
+    public InternalStorageFilesModel(String fileName, String filePath ,boolean selected,boolean isDir) {
         this.filePath=filePath;
         this.fileName = fileName;
         this.selected = selected;
+        this.isDir=isDir;
+    }
+
+    public boolean isDir() {
+        return isDir;
+    }
+
+    public void setIsDir(boolean isDir) {
+        this.isDir = isDir;
     }
 
     public String getFilePath() {
