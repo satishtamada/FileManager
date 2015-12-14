@@ -327,6 +327,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     public static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
+        Log.d("getPath",path.getPath());
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
@@ -344,7 +345,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     public static String formatSize(long size) {
         String suffix = null;
-
         if (size >= 1024) {
             suffix = "KB";
             size /= 1024;
@@ -354,7 +354,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         }
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-
         int commaOffset = resultBuffer.length() - 3;
         while (commaOffset > 0) {
             resultBuffer.insert(commaOffset, ',');
