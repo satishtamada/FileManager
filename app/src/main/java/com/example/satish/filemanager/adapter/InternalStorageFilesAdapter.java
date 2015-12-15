@@ -2,7 +2,10 @@ package com.example.satish.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.activity.InternalStorageFragment;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +31,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
     private Activity activity;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     public CustomListener customListener;
+    private String fileExtension;
 
     public InternalStorageFilesAdapter(ArrayList<InternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
         this.activity = activity;
@@ -64,9 +69,21 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final InternalStorageFilesModel model = filesModelArrayList.get(position);
-        if (model.isDir()) {
+        fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);//file extension
+
+        if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);
-        } else {
+        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {//if list item any image then
+            File imgFile = new File(model.getFilePath());
+            if (imgFile.exists()) {
+                Log.d("action", model.getFilePath());
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                imgItemIcon.setImageBitmap(myBitmap);
+            }
+        }else if(fileExtension.equals("pdf")){
+            imgItemIcon.setImageResource(R.mipmap.ic_pdf);
+        }
+        else {
             imgItemIcon.setImageResource(R.mipmap.ic_file);
         }
         lblFileName.setText(model.getFileName());
