@@ -48,6 +48,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private int selectedFilePosition;
     private List<String> selectedFilePositions = new ArrayList<String>();
 
+
+    //creating conflicts for child
+
+
     public InternalStorageFragment() {
         // Required empty public constructor
     }
