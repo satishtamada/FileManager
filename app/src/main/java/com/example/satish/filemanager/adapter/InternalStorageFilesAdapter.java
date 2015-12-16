@@ -85,9 +85,10 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         }else if(fileExtension.equals("mp3")){
             imgItemIcon.setImageResource(R.mipmap.ic_mp3);
         }
-        else {
+        else if(fileExtension.equals("txt")){
             imgItemIcon.setImageResource(R.mipmap.ic_file);
         }
+        else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");

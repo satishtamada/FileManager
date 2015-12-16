@@ -2,7 +2,6 @@ package com.example.satish.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
+    private String selectedFileRootPath;
     private List<String> selectedFilePositions = new ArrayList<String>();
 
     //generate conflicts
@@ -169,6 +168,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     getActivity().startActivity(imageIntent);
                 } else if (fileExtension.equals("mp3")) {
                     getAudioPlayer(model.getFileName());
+                } else if (fileExtension.equals("txt")) {
+                    Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
+                    txtIntent.putExtra("filePath", model.getFilePath());
+                    txtIntent.putExtra("fileName", model.getFileName());
+                    getActivity().startActivity(txtIntent);
                 }
             }//onItemClick
         });
@@ -266,7 +270,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         newFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getNewFile();
+                getNewFile(root);
             }
         });
         selectAll.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +300,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
     }
 
-    private void getNewFile() {
+    private void getNewFile(final String rootPath) {
         dialog.cancel();
         final Dialog fileDialog = new Dialog(getActivity());
         fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
@@ -309,18 +313,24 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String fileName = txtNewFolder.getText().toString();
-                String data = "";
-                FileOutputStream outputStream = null;
                 try {
-                    outputStream = getActivity().getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
-                    outputStream.write(data.getBytes());
-                    outputStream.close();
-                    Toast.makeText(getActivity().getApplicationContext(), fileName + " saved",
-                            Toast.LENGTH_LONG).show();
+                    File file = new File(rootPath + "/" + fileName + ".txt");
+                    boolean isCreated = file.createNewFile();
+                    if (isCreated) {
+                        InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", root + "/" + fileName, false, false);
+                        filesModelArrayList.add(model);
+                        internalStorageFilesAdapter.notifyDataSetChanged();
+                    }
                     fileDialog.cancel();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fileDialog.cancel();
             }
         });
     }
@@ -392,6 +402,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
         TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
         TextView property = (TextView) dialog.findViewById(R.id.btn_menu_property);
+        TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
+        newFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                getNewFolder();
+            }
+        });
         property.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -444,7 +462,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             lbl_file_name.setText("root");
         else
             lbl_file_name.setText(selectedFileName);
-        lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set label size
+        lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
         lblCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -575,6 +593,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         Toast.makeText(getActivity().getApplicationContext(), "" + selectedFilePositions.size(), Toast.LENGTH_SHORT).show();
         InternalStorageFilesModel model = filesModelArrayList.get(position);
+        selectedFileRootPath = root;
+        root = model.getFilePath();//set the root to selected filepath
         selectedFilePath = model.getFilePath();
         selectedFolderName = model.getFileName();
         selectedFilePosition = position;
@@ -589,6 +609,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         } else {
             btnMenu.setTag(MENU_TAG);//if checkbox is not selected change menu to main menu and disappear the delete icon
             btnDelete.setVisibility(View.GONE);
+            root = selectedFileRootPath;
 
         }//end of else
     }
