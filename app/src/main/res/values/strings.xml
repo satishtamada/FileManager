@@ -24,6 +24,7 @@
     <string name="lbl_move_here">Move selection here</string>
     <string name="lbl_delete_selection">Delete selection</string>
     <string name="lbl_add_bookmark">Add  bookmark</string>
+    <string name="lbl_rename_file">Rename</string>
     <string name="lbl_cancel">Cancel</string>
     <string name="btn_cancel">cancel</string>
     <string name="btn_confirm">confirm</string>

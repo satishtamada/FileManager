@@ -403,6 +403,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
         TextView property = (TextView) dialog.findViewById(R.id.btn_menu_property);
         TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
+        TextView reName = (TextView) dialog.findViewById(R.id.btn_rename);
+        reName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                renameFile();
+            }
+        });
         newFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -440,6 +448,29 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+            }
+        });
+    }
+
+    private void renameFile() {
+        final Dialog renameDialog = new Dialog(getActivity());
+        renameDialog.setContentView(R.layout.custom_dialog_rename_file);
+        renameDialog.show();
+        final EditText renamed_file = (EditText) renameDialog.findViewById(R.id.txt_rename_file);
+        TextView lbl_rename = (TextView) renameDialog.findViewById(R.id.btn_rename);
+        TextView lbl_cancel = (TextView) renameDialog.findViewById(R.id.btn_cancel);
+        lbl_rename.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                renamed_file.getText().toString();
+                File file = new File(selectedFilePath);
+                file.renameTo(new File(renamed_file.getText().toString()));
+            }
+        });
+        lbl_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                renameDialog.cancel();
             }
         });
     }
