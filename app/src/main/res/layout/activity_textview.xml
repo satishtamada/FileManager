@@ -5,15 +5,31 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/lbl_text_file_name"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="ffast"
-        android:textColor="@color/colorWhite"
-        android:textSize="20dp" />
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:id="@+id/lbl_text_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="ffast"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/btn_txt_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_save" />
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/txt_file_data"
@@ -22,6 +38,9 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="@color/colorWhite"
+        android:gravity="top|left"
+        android:inputType="textMultiLine"
         android:padding="3dp"
+        android:singleLine="false"
         android:textColor="@color/light_gray_header_color" />
 </LinearLayout>
