@@ -82,15 +82,17 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
             }
         }else if(fileExtension.equals("pdf")){
             imgItemIcon.setImageResource(R.mipmap.ic_pdf);
+        }else if(fileExtension.equals("mp3")){
+            imgItemIcon.setImageResource(R.mipmap.ic_mp3);
         }
         else {
             imgItemIcon.setImageResource(R.mipmap.ic_file);
         }
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
-            lblFilePath.setText("sdcard");
+            lblFilePath.setText("/sdcard");
         } else if (model.getFileName().equals("../")) {
-            lblFilePath.setText("root");
+            lblFilePath.setText("/root");
         } else {
             lblFilePath.setText(model.getFilePath());
         }

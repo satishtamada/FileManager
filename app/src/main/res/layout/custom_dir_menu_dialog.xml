@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/btn_property"
+            android:id="@+id/btn_menu_property"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_marginLeft="5dp"

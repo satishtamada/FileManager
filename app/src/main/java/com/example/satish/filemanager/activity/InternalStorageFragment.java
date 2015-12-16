@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +50,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private int selectedFilePosition;
     private String fileExtension;
     private List<String> selectedFilePositions = new ArrayList<String>();
-    //this is confilt
 
+    //generate conflicts
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -89,6 +90,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         try {
                             File deleteFile = new File(selectedFilePath);
                             boolean isDeleteFile = deleteFile.delete();
+                            Log.d("delete file", Boolean.toString(isDeleteFile));
                             if (isDeleteFile) {
                                 InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                                 filesModelArrayList.remove(model);
@@ -119,7 +121,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 Toast.makeText(getActivity().getApplicationContext(), model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1),
-                Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();
                 model.setSelected(true);
                 filesModelArrayList.remove(position);
                 filesModelArrayList.add(position, model);
@@ -133,7 +135,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                fileExtension=model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
+                fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     Log.d("here ", Boolean.toString(file.isDirectory()));
@@ -160,18 +162,44 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
                     }//inner if-else
                 }//if
-                else if(fileExtension.equals("png")||fileExtension.equals("jpeg")){
-                    Toast.makeText(getActivity().getApplicationContext(),fileExtension,Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getActivity().getApplicationContext(),model.getFilePath(),Toast.LENGTH_SHORT).show();
-                    Intent imageIntent=new Intent(getActivity().getApplicationContext(),ImageViewActivity.class);
-                    imageIntent.putExtra("imagePath",model.getFilePath());
-                    imageIntent.putExtra("imageName",model.getFileName());
+                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {
+                    Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
+                    imageIntent.putExtra("imagePath", model.getFilePath());
+                    imageIntent.putExtra("imageName", model.getFileName());
                     getActivity().startActivity(imageIntent);
+                } else if (fileExtension.equals("mp3")) {
+                    getAudioPlayer(model.getFileName());
                 }
             }//onItemClick
         });
 
         return rootView;
+    }
+
+    private void getAudioPlayer(String fileName) {
+        Dialog dialogMusicPlayer = new Dialog(getActivity());
+        dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
+        dialogMusicPlayer.setTitle(fileName);
+        dialogMusicPlayer.show();
+        SeekBar seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
+        final TextView startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
+        TextView endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
+        endTime.setText("" + seekBar.getMax());
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressChanged = progress;
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                startTime.setText("" + progressChanged);
+            }
+        });
     }
 
     private void getDirectory(String directoryPath) {
@@ -363,6 +391,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         TextView cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
         TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
         TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
+        TextView property = (TextView) dialog.findViewById(R.id.btn_menu_property);
+        property.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                getFileProperty(selectedFilePath, selectedFolderName);
+            }
+        });
         selectAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -390,6 +426,86 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
     }
 
+    private void getFileProperty(String selectedFilePath, String selectedFileName) {
+        final Dialog propertyDialog = new Dialog(getActivity());
+        propertyDialog.setContentView(R.layout.custom_dialog_file_property);
+        propertyDialog.show();
+        TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
+        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.song_size);
+        TextView lbl_file_size_name = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
+        TextView lblCancel = (TextView) propertyDialog.findViewById(R.id.btn_cancel);
+        if (selectedFileName.equals("/") || selectedFileName.equals("../") || selectedFileName.equals("sdcard/"))
+            lbl_file_size_name.setText("Used :");
+        else
+            lbl_file_size_name.setText("Size :");
+        if (selectedFileName.equals("/"))//set label for file name
+            lbl_file_name.setText("sdcard");
+        else if (selectedFileName.equals("../"))
+            lbl_file_name.setText("root");
+        else
+            lbl_file_name.setText(selectedFileName);
+        lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set label size
+        lblCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                propertyDialog.cancel();
+            }
+        });
+    }
+
+    private String getTotalFileMemorySize(String selectedFilePath) {
+        String value = null;
+        File file = new File(selectedFilePath);
+        if (!file.isDirectory()) {//if selected file is not a directory
+            value = formatSize(file.length());
+        } else {//if selected file is directory
+            value = formatSize(dirSize(file));
+        }
+        return value;
+    }
+
+    public static String formatSize(long size) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+                if (size >= 1024) {
+                    suffix = "GB";
+                    size /= 1024;
+                }
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
+    }
+
+    private static long dirSize(File dir) {
+        if (dir.exists()) {
+            long result = 0;
+            File[] fileList = dir.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                // Recursive call if it's a directory
+                if (fileList[i].isDirectory()) {
+                    result += dirSize(fileList[i]);
+                } else {
+                    // Sum the file size in bytes
+                    result += fileList[i].length();
+                }
+            }
+            return result; // return the file size
+        }
+        return 0;
+    }
 
     public void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
@@ -428,7 +544,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if (size > 1024 & tag.equals("total")) {
+                if (size >= 1024 & tag.equals("total")) {
                     suffix = "GB";
                     size /= 1024;
                 }
