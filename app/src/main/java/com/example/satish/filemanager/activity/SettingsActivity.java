@@ -31,7 +31,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         // preparing list data
         prepareListData();
-
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
 
         // setting list adapter
@@ -75,45 +74,36 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    /*
-     * Preparing the list data
-     */
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("Top 250");
-        listDataHeader.add("Now Showing");
-        listDataHeader.add("Coming Soon..");
+        listDataHeader.add("General settings");
+        listDataHeader.add("Storage options");
+        listDataHeader.add("Editor options");
+        listDataHeader.add("About");
 
         // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
+        List<String> generalSettings = new ArrayList<String>();
+        generalSettings.add("Set password");
+        generalSettings.add("Show hidden files");
 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
+        List<String> storageOptions = new ArrayList<String>();
+        storageOptions.add("Set password");
+        storageOptions.add("Formant Disk");
 
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("2 Guns");
-        comingSoon.add("The Smurfs 2");
-        comingSoon.add("The Spectacular Now");
-        comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");
+        List<String> editorOptions = new ArrayList<String>();
+        editorOptions.add("Change text color");
+        editorOptions.add("Change editor background");
+        editorOptions.add("Change font size");
 
-        listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), nowShowing);
-        listDataChild.put(listDataHeader.get(2), comingSoon);
+        List<String> about = new ArrayList<String>();
+        about.add("FileManager 2.5 "+"\t"+"Created by Tamada Satish");
+
+        listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), storageOptions);
+        listDataChild.put(listDataHeader.get(2), editorOptions);
+        listDataChild.put(listDataHeader.get(3), about);
     }
 }
