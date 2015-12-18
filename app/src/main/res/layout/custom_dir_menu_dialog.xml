@@ -138,7 +138,6 @@
             android:id="@+id/btn_rename"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
             android:background="@null"
             android:text="@string/lbl_rename_file"
             android:textAllCaps="false" />

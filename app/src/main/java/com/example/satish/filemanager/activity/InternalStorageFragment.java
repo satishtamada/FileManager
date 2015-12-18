@@ -126,6 +126,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 filesModelArrayList.add(position, model);
                 internalStorageFilesAdapter.notifyDataSetChanged();
                 btnDelete.setVisibility(View.VISIBLE);
+                btnMenu.setTag("dirmenu");
                 return true;
             }
         });
@@ -317,7 +318,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     File file = new File(rootPath + "/" + fileName + ".txt");
                     boolean isCreated = file.createNewFile();
                     if (isCreated) {
-                        InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", root + "/" + fileName, false, false);
+                        InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
                         filesModelArrayList.add(model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
                     }
@@ -456,16 +457,37 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         final Dialog renameDialog = new Dialog(getActivity());
         renameDialog.setContentView(R.layout.custom_dialog_rename_file);
         renameDialog.show();
+        Log.d("subString", selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1));
         final EditText renamed_file = (EditText) renameDialog.findViewById(R.id.txt_rename_file);
         TextView lbl_rename = (TextView) renameDialog.findViewById(R.id.btn_rename);
         TextView lbl_cancel = (TextView) renameDialog.findViewById(R.id.btn_cancel);
+        renamed_file.setText(selectedFolderName);
         lbl_rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                renamed_file.getText().toString();
-                File file = new File(selectedFilePath);
-                file.renameTo(new File(renamed_file.getText().toString()));
-            }
+                File oldFile = new File(selectedFilePath);//create file with old name
+                File newFile = new File(selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1) + renamed_file.getText().toString());
+                if (newFile.exists()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Already file exits", Toast.LENGTH_LONG).show();
+                    renameDialog.cancel();
+                } else {
+                    boolean isRenamed = oldFile.renameTo(newFile);
+                    if (isRenamed) {
+                        Toast.makeText(getActivity().getApplicationContext(), selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/')) + renamed_file.getText().toString(), Toast.LENGTH_SHORT).show();
+                        InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
+                        model.setFileName(renamed_file.getText().toString());
+                        model.setFilePath(newFile.getPath());
+                        model.setIsDir(false);
+                        model.setSelected(false);
+                        filesModelArrayList.remove(selectedFilePosition);
+                        filesModelArrayList.add(selectedFilePosition, model);
+                        internalStorageFilesAdapter.notifyDataSetChanged();
+                        btnMenu.setTag("menu");
+                    } else
+                        Toast.makeText(getActivity().getApplicationContext(), "File Not Renamed", Toast.LENGTH_SHORT).show();
+                    renameDialog.cancel();
+                }
+            }//outer else
         });
         lbl_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -622,7 +644,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     @Override
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
-        Toast.makeText(getActivity().getApplicationContext(), "" + selectedFilePositions.size(), Toast.LENGTH_SHORT).show();
         InternalStorageFilesModel model = filesModelArrayList.get(position);
         selectedFileRootPath = root;
         root = model.getFilePath();//set the root to selected filepath

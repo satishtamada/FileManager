@@ -80,15 +80,15 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 imgItemIcon.setImageBitmap(myBitmap);
             }
-        }else if(fileExtension.equals("pdf")){
+        } else if (fileExtension.equals("pdf")) {
             imgItemIcon.setImageResource(R.mipmap.ic_pdf);
-        }else if(fileExtension.equals("mp3")){
+        } else if (fileExtension.equals("mp3")) {
             imgItemIcon.setImageResource(R.mipmap.ic_mp3);
-        }
-        else if(fileExtension.equals("txt")){
+        } else if (fileExtension.equals("txt")) {
             imgItemIcon.setImageResource(R.mipmap.ic_file);
-        }
-        else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
+        } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
+            imgItemIcon.setImageResource(R.mipmap.ic_zip);
+        } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");
