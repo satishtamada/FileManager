@@ -27,8 +27,13 @@ import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by Satish on 04-12-2015.
@@ -133,7 +138,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                InternalStorageFilesModel model = filesModelArrayList.get(position);
+                final InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
                 fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
                 // getDirectory(model.getFilePath());
@@ -174,11 +179,68 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     txtIntent.putExtra("filePath", model.getFilePath());
                     txtIntent.putExtra("fileName", model.getFileName());
                     getActivity().startActivity(txtIntent);
+                } else if (fileExtension.equals("zip")) {
+                    //create a alert dialog for unzip folder
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                    // Setting Dialog Message
+                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_unzip_folder));
+                    alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //TODO on dialog cancel button
+                        }
+                    });
+                    alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String filePath = model.getFilePath();
+                            String outputFolder = model.getFilePath().substring(0, model.getFilePath().lastIndexOf('.'));
+                            getUnZipDirectory(filePath, outputFolder);
+                        }
+                    });
+                    alertDialog.show();
+
+                } else {
+                    //TODO
                 }
             }//onItemClick
         });
 
         return rootView;
+    }
+
+    private void getUnZipDirectory(String zipFile, String outputFolder) {
+        byte[] buffer = new byte[1024];
+        try {
+            //create output directory is not exists
+            File folder = new File(outputFolder);
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            //get the zip file content
+            ZipInputStream zis =
+                    new ZipInputStream(new FileInputStream(zipFile));
+            //get the zipped file list entry
+            ZipEntry ze = zis.getNextEntry();
+            while (ze != null) {
+                String unzipFileName = ze.getName();
+                File newFile = new File(outputFolder + File.separator + unzipFileName);
+                Log.d("file unzip : ", newFile.getAbsoluteFile().getPath());
+                //create all non exists folders
+                //else you will hit FileNotFoundException for compressed folder
+                new File(newFile.getParent()).mkdirs();
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+                ze = zis.getNextEntry();
+            }
+            zis.closeEntry();
+            zis.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void getAudioPlayer(String fileName) {
