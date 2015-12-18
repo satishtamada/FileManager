@@ -79,6 +79,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                 // Setting Dialog Message
+                alertDialog.setTitle("Delete Folder");
                 alertDialog.setIcon(R.mipmap.ic_delete_folder);
                 if (selectedFilePositions.size() == 1)//if user select single folder
                     alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
@@ -179,10 +180,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     txtIntent.putExtra("filePath", model.getFilePath());
                     txtIntent.putExtra("fileName", model.getFileName());
                     getActivity().startActivity(txtIntent);
-                } else if (fileExtension.equals("zip")) {
+                } else if (fileExtension.equals("zip")||fileExtension.equals("rar")) {
                     //create a alert dialog for unzip folder
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                     // Setting Dialog Message
+                    alertDialog.setTitle("Unzip Folder");
+                    alertDialog.setIcon(R.mipmap.ic_unzip);
                     alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_unzip_folder));
                     alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
