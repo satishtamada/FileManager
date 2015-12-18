@@ -1,6 +1,7 @@
 package com.example.satish.filemanager.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -95,7 +96,8 @@ public class FragmentDrawer extends Fragment {
         imgBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(),TAG,Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(getActivity().getApplicationContext(),SettingsActivity.class);
+                getActivity().startActivity(intent);
             }
         });
         return layout;
