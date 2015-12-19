@@ -177,7 +177,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     getActivity().startActivity(imageIntent);
                 } else if (fileExtension.equals("mp3")) {//if file type is audio
                     getAudioPlayer(model.getFileName());
-                } else if (fileExtension.equals("txt")) {//if file type is text
+                } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {//if file type is text
                     Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
                     txtIntent.putExtra("filePath", model.getFilePath());
                     txtIntent.putExtra("fileName", model.getFileName());
@@ -247,6 +247,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             ex.printStackTrace();
         }
     }
+
     private void getAudioPlayer(String fileName) {
         Dialog dialogMusicPlayer = new Dialog(getActivity());
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
@@ -272,6 +273,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         });
     }
+
     private void getDirectory(String directoryPath) {
         filesModelArrayList = new ArrayList<>();
         Log.d("in get Directory", directoryPath);
@@ -281,8 +283,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
             InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false, true);
             filesModelArrayList.add(model);
-           // InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false, true);
-           // filesModelArrayList.add(model1);
+            // InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false, true);
+            // filesModelArrayList.add(model1);
         }
         for (int i = 0; i < files.length; i++) {
             File file = files[i];

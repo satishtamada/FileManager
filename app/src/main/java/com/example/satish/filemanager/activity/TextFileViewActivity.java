@@ -145,7 +145,7 @@ public class TextFileViewActivity extends AppCompatActivity {
             case R.id.action_text_blue:
                 txtTextData.setTextColor(getResources().getColor(R.color.txt_blue));
                 return true;
-                //set background color
+            //set background color
             case R.id.action_bg_gray:
                 txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_gray));
                 return true;

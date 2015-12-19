@@ -88,6 +88,8 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_file);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
+        } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
+            imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
         } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
