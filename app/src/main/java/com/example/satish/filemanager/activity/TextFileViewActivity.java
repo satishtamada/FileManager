@@ -1,15 +1,17 @@
 package com.example.satish.filemanager.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.satish.filemanager.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,26 +25,44 @@ import java.io.IOException;
 public class TextFileViewActivity extends AppCompatActivity {
     private String fileName, filePath;
     private EditText txtTextData;
+    private Toolbar mToolbar;
+    private String currentText, newText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textview);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         txtTextData = (EditText) findViewById(R.id.txt_file_data);
         Intent txtIntent = getIntent();
         fileName = txtIntent.getStringExtra("fileName");
         filePath = txtIntent.getStringExtra("filePath");
+        getSupportActionBar().setTitle(fileName);
         try {
             txtTextData.setText(readTxt(filePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-      /*  btnSave.setOnClickListener(new View.OnClickListener() {
+        currentText = txtTextData.getText().toString();//get current text from text file
+        newText = currentText;//set new text as current text
+        txtTextData.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-        });*/
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                newText = s.toString();//if text changed set new text as edittext text
+            }
+        });
 
     }
 
@@ -55,15 +75,51 @@ public class TextFileViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+            case R.id.action_save:
+                saveText();//save the text file
+                currentText = txtTextData.getText().toString();//set the current text as saved text
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
-        if(id==R.id.action_search) {
-            saveText();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!currentText.equals(newText))//if old text is not equal to newly updated text
+            showSaveDialog();//give a dialog for save text
+        else
+            super.onBackPressed();//if old text is equal to new text close the activity without save
+    }
+
+    private void showSaveDialog() {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+        // Setting Dialog Message
+        alertDialog.setTitle("Save file");
+        alertDialog.setIcon(R.mipmap.ic_dialog_save);
+        alertDialog.setMessage(getApplicationContext().getString(R.string.msg_prompt_save_text_file));
+        alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                txtTextData.setText(currentText);//set text value to old text
+                saveText();
+                finish();//close the activity
+            }
+        });
+        //display confirm dialog for delete file or folder
+        alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                saveText();
+                finish();
+            }
+        });
+        alertDialog.show();
     }
 
     private void saveText() {
@@ -82,7 +138,6 @@ public class TextFileViewActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private String readTxt(String filePath) throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(filePath);

@@ -34,4 +34,5 @@
     <string name="msg_prompt_delete_folder">Are you sure you want delete #name# folder?</string>
     <string name="msg_prompt_delete_folders">Are you sure you want delete selected folders?</string>
     <string name="msg_prompt_unzip_folder">Are you sure you want to unzip folder</string>
+    <string name="msg_prompt_save_text_file">Are you sure you want to save file</string>
 </resources>
