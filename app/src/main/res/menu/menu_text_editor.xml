@@ -9,11 +9,35 @@
         android:icon="@mipmap/ic_save"
         android:orderInCategory="100"
         android:title="@string/action_save"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
+        android:icon="@mipmap/ic_menu"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="more"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_text_size"
+                android:icon="@mipmap/ic_change_text_size"
+                android:orderInCategory="100"
+                android:title="@string/action_change_text_size"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_background_color"
+                android:icon="@mipmap/ic_menu_change_background"
+                android:orderInCategory="100"
+                android:title="@string/action_change_background_color"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/action_text_color"
+                android:icon="@mipmap/ic_change_text_color"
+                android:orderInCategory="100"
+                android:title="@string/action_change_text_color"
+                app:showAsAction="never" />
+
+        </menu>
+    </item>
+
 </menu>
