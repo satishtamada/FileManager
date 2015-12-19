@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        loadFragment(new InternalStorageFragment(), getResources().getString(R.string.title_home));
+        loadFragment(new InternalStorageFragment(), getResources().getString(R.string.title_internal));
 
     }
 
@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         switch (position) {
             case 0:
                 fragment = new InternalStorageFragment();
-                title = getString(R.string.title_home);
+                title = getString(R.string.title_internal);
                 break;
             case 1:
                 fragment = new ExternalStorageFragment();
-                title = getString(R.string.title_friends);
+                title = getString(R.string.title_external);
                 break;
             default:
                 break;

@@ -3,10 +3,9 @@ package com.example.satish.filemanager.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
@@ -23,48 +22,67 @@ import java.io.IOException;
  */
 public class TextFileViewActivity extends AppCompatActivity {
     private String fileName, filePath;
-    private TextView lblTextName;
     private EditText txtTextData;
-    private ImageView btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textview);
-        lblTextName = (TextView) findViewById(R.id.lbl_text_file_name);
         txtTextData = (EditText) findViewById(R.id.txt_file_data);
-        btnSave = (ImageView) findViewById(R.id.btn_txt_save);
         Intent txtIntent = getIntent();
         fileName = txtIntent.getStringExtra("fileName");
         filePath = txtIntent.getStringExtra("filePath");
-        lblTextName.setText(fileName);
         try {
             txtTextData.setText(readTxt(filePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        btnSave.setOnClickListener(new View.OnClickListener() {
+      /*  btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String data = txtTextData.getText().toString();
-                File file = new File(filePath);
-                if (file.exists()) {
-                    try {
-                        File newTextFile = new File(filePath);
-                        FileWriter fw = new FileWriter(newTextFile);
-                        fw.write(data);
-                        fw.close();
-                        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
-                    } catch (IOException iox) {
-                        //do stuff with exception
-                        iox.printStackTrace();
-                    }
 
-                }
             }
-        });
+        });*/
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_text_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if(id==R.id.action_search) {
+            saveText();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void saveText() {
+        String data = txtTextData.getText().toString();
+        File file = new File(filePath);
+        if (file.exists()) {
+            try {
+                File newTextFile = new File(filePath);
+                FileWriter fw = new FileWriter(newTextFile);
+                fw.write(data);
+                fw.close();
+                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+            } catch (IOException iox) {
+                //do stuff with exception
+                iox.printStackTrace();
+            }
+        }
+    }
+
 
     private String readTxt(String filePath) throws FileNotFoundException {
         FileInputStream inputStream = new FileInputStream(filePath);

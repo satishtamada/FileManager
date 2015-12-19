@@ -1,13 +1,16 @@
 package com.example.satish.filemanager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.ExpandableListAdapter;
+import com.example.satish.filemanager.model.TextEditorOptionsModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +25,14 @@ public class SettingsActivity extends AppCompatActivity {
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
-
+    String child=null;
+    TextEditorOptionsModel textEditorOptionsModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
-
+        textEditorOptionsModel=new TextEditorOptionsModel();
         // preparing list data
         prepareListData();
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
@@ -48,6 +52,11 @@ public class SettingsActivity extends AppCompatActivity {
                                 listDataHeader.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT)
                         .show();
+                child=listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                if(child.equals("Change font size"))
+                {
+                    textEditorOptionsModel.setTextSize(30);
+                }
                 return false;
             }
         });
