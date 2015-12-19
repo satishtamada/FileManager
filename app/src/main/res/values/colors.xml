@@ -9,4 +9,11 @@
     <color name="rounded_container_border">#3b3f44</color>
     <color name="light_gray_header_color">#646663</color>
 
+    <!--editor text colors-->
+    <color name="txt_black">#222</color>
+    <color name="txt_gray">#3b3f44</color>
+    <color name="txt_white">#fff</color>
+    <color name="txt_green">#0f0</color>
+    <color name="txt_blue">#2196F3</color>
+
 </resources>

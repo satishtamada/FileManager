@@ -11,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.example.satish.filemanager.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,6 +77,7 @@ public class TextFileViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
@@ -83,9 +86,70 @@ public class TextFileViewActivity extends AppCompatActivity {
                 saveText();//save the text file
                 currentText = txtTextData.getText().toString();//set the current text as saved text
                 return true;
+            case R.id.action_text_size:
+                return true;
+            case R.id.action_text_color:
+                return true;
+            case R.id.action_background_color:
+                return true;
+            //change font size
+            case R.id.ten:
+                txtTextData.setTextSize(10);
+                return true;
+            case R.id.twelve:
+                txtTextData.setTextSize(12);
+                return true;
+            case R.id.fourteen:
+                txtTextData.setTextSize(14);
+                return true;
+            case R.id.sixteen:
+                txtTextData.setTextSize(16);
+                return true;
+            case R.id.eighteen:
+                txtTextData.setTextSize(18);
+                return true;
+            case R.id.twenty:
+                txtTextData.setTextSize(20);
+                return true;
+            case R.id.twenty_two:
+                txtTextData.setTextSize(22);
+                return true;
+            case R.id.twenty_four:
+                txtTextData.setTextSize(24);
+                return true;
+            case R.id.twenty_six:
+                txtTextData.setTextSize(26);
+                return true;
+            case R.id.twenty_eight:
+                txtTextData.setTextSize(28);
+                return true;
+            case R.id.thirty:
+                txtTextData.setTextSize(30);
+                return true;
+            case R.id.action_text_black://if text black color
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_black));
+            case R.id.action_bg_white://background white
+                txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_white));
+                return true;
+            case R.id.action_text_white://if text white color
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_white));
+            case R.id.action_bg_black://background color black
+                txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_black));
+                return true;
+            case R.id.action_text_gray:
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_gray));
+                return true;
+            case R.id.action_text_green:
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_green));
+                return true;
+            case R.id.action_text_blue:
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_blue));
+                return true;
+                //set background color
+            case R.id.action_bg_gray:
+                txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_gray));
+                return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }

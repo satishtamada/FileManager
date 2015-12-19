@@ -23,19 +23,88 @@
                 android:icon="@mipmap/ic_change_text_size"
                 android:orderInCategory="100"
                 android:title="@string/action_change_text_size"
-                app:showAsAction="never" />
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/ten"
+                        android:title="10" />
+                    <item
+                        android:id="@+id/twelve"
+                        android:title="12" />
+                    <item
+                        android:id="@+id/fourteen"
+                        android:title="14" />
+                    <item
+                        android:id="@+id/sixteen"
+                        android:title="16" />
+                    <item
+                        android:id="@+id/eighteen"
+                        android:title="18" />
+                    <item
+                        android:id="@+id/twenty"
+                        android:title="20" />
+                    <item
+                        android:id="@+id/twenty_two"
+                        android:title="22" />
+                    <item
+                        android:id="@+id/twenty_four"
+                        android:title="24" />
+                    <item
+                        android:id="@+id/twenty_six"
+                        android:title="26" />
+                    <item
+                        android:id="@+id/twenty_eight"
+                        android:title="28" />
+                    <item
+                        android:id="@+id/thirty"
+                        android:title="30" />
+                </menu>
+            </item>
             <item
                 android:id="@+id/action_background_color"
                 android:icon="@mipmap/ic_menu_change_background"
                 android:orderInCategory="100"
                 android:title="@string/action_change_background_color"
-                app:showAsAction="never" />
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/action_bg_white"
+                        android:title="White" />
+                    <item
+                        android:id="@+id/action_bg_black"
+                        android:title="Black" />
+                    <item
+                        android:id="@+id/action_bg_gray"
+                        android:title="Gray" />
+
+                </menu>
+
+            </item>
             <item
                 android:id="@+id/action_text_color"
                 android:icon="@mipmap/ic_change_text_color"
                 android:orderInCategory="100"
                 android:title="@string/action_change_text_color"
-                app:showAsAction="never" />
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:id="@+id/action_text_white"
+                        android:title="White" />
+                    <item
+                        android:id="@+id/action_text_black"
+                        android:title="Black" />
+                    <item
+                        android:id="@+id/action_text_gray"
+                        android:title="Gray" />
+                    <item
+                        android:id="@+id/action_text_green"
+                        android:title="Green" />
+                    <item
+                        android:id="@+id/action_text_blue"
+                        android:title="Blue"/>
+
+                </menu>
+            </item>
 
         </menu>
     </item>
