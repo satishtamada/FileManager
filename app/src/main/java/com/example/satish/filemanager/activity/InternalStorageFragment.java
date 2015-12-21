@@ -148,8 +148,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     Log.d("here ", Boolean.toString(file.isDirectory()));
                     if (file.canRead()) {//if selected directory is readable
                         Log.d("here", Boolean.toString(file.canRead()));
-                        if (model.getFileName().equals("../"))//if filename root the we set dirctory path ../
-                            getDirectory("../");
+                        if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
+                            getDirectory("/sdcard");
                         else
                             getDirectory(model.getFilePath());//if filename not root
                         root = model.getFilePath();
@@ -279,7 +279,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
-
         if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
             InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false, true);
             filesModelArrayList.add(model);
@@ -381,17 +380,22 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String fileName = txtNewFile.getText().toString();
-                if(fileName.equals(".txt"))//if user not enter text file name
-                    fileName="NewFile.txt";
+                if(fileName.equals(""))//if user not enter text file name
+                    fileName="NewFile";
                 try {
                     File file = new File(rootPath + "/" + fileName + ".txt");
-                    boolean isCreated = file.createNewFile();
-                    if (isCreated) {
-                        InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
-                        filesModelArrayList.add(model);
-                        internalStorageFilesAdapter.notifyDataSetChanged();
+                    if(file.exists()){
+                        Toast.makeText(getActivity().getApplicationContext(),"File already exits",Toast.LENGTH_SHORT).show();
                     }
-                    fileDialog.cancel();
+                    else {
+                        boolean isCreated = file.createNewFile();
+                        if (isCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
+                            filesModelArrayList.add(model);
+                            internalStorageFilesAdapter.notifyDataSetChanged();
+                        }
+                        fileDialog.cancel();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

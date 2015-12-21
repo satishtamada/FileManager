@@ -94,8 +94,8 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");
-        } else if (model.getFileName().equals("../")) {
-            lblFilePath.setText("/root");
+            lblFileName.setText("parent");
+            imgItemIcon.setImageResource(R.mipmap.ic_parent_folder);
         } else {
             lblFilePath.setText(model.getFilePath());
         }
