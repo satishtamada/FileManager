@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -372,13 +374,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         fileDialog.setContentView(R.layout.custom_new_file_dialog);//display custom file menu
         fileDialog.setTitle("Create File");
         fileDialog.show();
-        final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_file);
+        final EditText txtNewFile = (EditText) fileDialog.findViewById(R.id.txt_new_file);
         TextView create = (TextView) fileDialog.findViewById(R.id.btn_create);
         TextView cancel = (TextView) fileDialog.findViewById(R.id.btn_cancel);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fileName = txtNewFolder.getText().toString();
+                String fileName = txtNewFile.getText().toString();
+                if(fileName.equals(".txt"))//if user not enter text file name
+                    fileName="NewFile.txt";
                 try {
                     File file = new File(rootPath + "/" + fileName + ".txt");
                     boolean isCreated = file.createNewFile();
