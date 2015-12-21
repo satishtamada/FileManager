@@ -369,10 +369,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private void getNewFile(final String rootPath) {
         dialog.cancel();
         final Dialog fileDialog = new Dialog(getActivity());
-        fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
-        fileDialog.setTitle("Create Folder");
+        fileDialog.setContentView(R.layout.custom_new_file_dialog);//display custom file menu
+        fileDialog.setTitle("Create File");
         fileDialog.show();
-        final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_folder);
+        final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_file);
         TextView create = (TextView) fileDialog.findViewById(R.id.btn_create);
         TextView cancel = (TextView) fileDialog.findViewById(R.id.btn_cancel);
         create.setOnClickListener(new View.OnClickListener() {
