@@ -88,18 +88,23 @@
                 app:showAsAction="never">
                 <menu>
                     <item
+                        android:icon="@mipmap/ic_white_black"
                         android:id="@+id/action_text_white"
                         android:title="White" />
                     <item
+                        android:icon="@mipmap/ic_black_white"
                         android:id="@+id/action_text_black"
                         android:title="Black" />
                     <item
+                        android:icon="@mipmap/ic_gray"
                         android:id="@+id/action_text_gray"
                         android:title="Gray" />
                     <item
+                        android:icon="@mipmap/ic_green"
                         android:id="@+id/action_text_green"
                         android:title="Green" />
                     <item
+                        android:icon="@mipmap/ic_blue"
                         android:id="@+id/action_text_blue"
                         android:title="Blue"/>
 
