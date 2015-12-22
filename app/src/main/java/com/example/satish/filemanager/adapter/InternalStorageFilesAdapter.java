@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,7 +92,12 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
-        } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
+        } else if(fileExtension.equals("mp4")||fileExtension.equals("3gp")){
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(model.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+            imgItemIcon.setImageBitmap(bMap);
+
+        }
+        else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");
