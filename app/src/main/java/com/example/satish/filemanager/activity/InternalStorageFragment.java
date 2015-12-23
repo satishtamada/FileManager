@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -176,7 +177,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     imageIntent.putExtra("imageName", model.getFileName());
                     getActivity().startActivity(imageIntent);
                 } else if (fileExtension.equals("mp3")) {//if file type is audio
-                    getAudioPlayer(model.getFileName());
+                    try {
+                        getAudioPlayer(model.getFileName(),model.getFilePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {//if file type is text
                     Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
                     txtIntent.putExtra("filePath", model.getFilePath());
@@ -248,11 +253,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         }
     }
 
-    private void getAudioPlayer(String fileName) {
+    private void getAudioPlayer(String fileName,String filePath) throws IOException {
         Dialog dialogMusicPlayer = new Dialog(getActivity());
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
         dialogMusicPlayer.show();
+        MediaPlayer mp = new MediaPlayer();
+        mp.setDataSource(filePath); mp.prepare();
+        mp.start();
         SeekBar seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
         final TextView startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
         TextView endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
