@@ -41,7 +41,11 @@ Android filemanager provides a user interface to manage files and folders.
 3. Adding Navigation Drawer.[Here](http://www.androidhive.info/2015/04/android-getting-started-with-material-design/) how to add navigation drawer to your app.
    
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/a.jpg)
+
+4. create a custom listview with icons on your internal fragment.
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/b.jpg)
+
+
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/c.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/d.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/e.jpg)
