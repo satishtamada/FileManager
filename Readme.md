@@ -42,12 +42,20 @@ Android filemanager provides a user interface to manage files and folders.
    
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/a.jpg)
 
-4. create a custom listview with icons on your internal fragment.
+4. check weather external memory card inserted or not
+```
+ if (!Environment.isExternalStorageRemovable())
+          //TODO Display exteranl memory card not inserted layout
+```
+![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/d.jpg)
+
+
+5. create a custom listview with icons on your internal fragment.
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/b.jpg)
 
 
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/c.jpg)
-![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/d.jpg)
+
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/e.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/f.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/g.jpg)
