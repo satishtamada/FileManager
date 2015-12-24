@@ -6,8 +6,10 @@ Android filemanager provides a user interface to manage files and folders.
  * edit your .txt file
  * play your audio,video files
  * imageview
-
-
+ 
+#How To Create Android FileManger
+1. Create a new project in android studio with FileManager
+2.Open AndroidManifest.xml and add WRITE_INTERNAL_STORAGE,READ_INTERNAL_STORAGE,READ_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/a.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/b.jpg)
