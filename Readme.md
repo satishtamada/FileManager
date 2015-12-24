@@ -8,8 +8,8 @@ Android filemanager provides a user interface to manage files and folders.
  * imageview
  
 #How To Create Android FileManger
-1. Create a new project in android studio with FileManager
-2.Open AndroidManifest.xml and add WRITE_INTERNAL_STORAGE,READ_INTERNAL_STORAGE,READ_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+1. Create a new project in android studio with FileManager<br>
+2. Open AndroidManifest.xml and add permission (WRITE_INTERNAL_STORAGE,READ_INTERNAL_STORAGE,READ_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE)
 
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/a.jpg)
 ![alt tag](https://raw.githubusercontent.com/satishtamada/FileManager/screenshots/app/src/main/ScreenShots/b.jpg)
