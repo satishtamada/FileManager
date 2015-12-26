@@ -4,28 +4,33 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
+import com.example.satish.filemanager.helper.Utilities;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -54,10 +59,101 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String fileExtension;
     private String selectedFileRootPath;
     private List<String> selectedFilePositions = new ArrayList<String>();
+    private Handler mHandler = new Handler();
+    MediaPlayer mediaPlayer;
+    TextView startTime;
+    TextView endTime;
+    SeekBar seekBar;
+    private Utilities utilities;
 
     //generate conflicts
     public InternalStorageFragment() {
         // Required empty public constructor
+    }
+
+    public static String formatSize(long size) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+                if (size >= 1024) {
+                    suffix = "GB";
+                    size /= 1024;
+                }
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
+    }
+
+    private static long dirSize(File dir) {
+        if (dir.exists()) {
+            long result = 0;
+            File[] fileList = dir.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                // Recursive call if it's a directory
+                if (fileList[i].isDirectory()) {
+                    result += dirSize(fileList[i]);
+                } else {
+                    // Sum the file size in bytes
+                    result += fileList[i].length();
+                }
+            }
+            return result; // return the file size
+        }
+        return 0;
+    }
+
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        Log.d("getPath", path.getPath());
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize, "free");
+    }
+
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize, "total");
+    }
+
+    public static String formatSize(long size, String tag) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+                if (size >= 1024 & tag.equals("total")) {
+                    suffix = "GB";
+                    size /= 1024;
+                }
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
     }
 
     @Override
@@ -176,7 +272,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     imageIntent.putExtra("imageName", model.getFileName());
                     getActivity().startActivity(imageIntent);
                 } else if (fileExtension.equals("mp3")) {//if file type is audio
-                    getAudioPlayer(model.getFileName());
+                    try {
+                        getAudioPlayer(model.getFileName(), model.getFilePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {//if file type is text
                     Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
                     txtIntent.putExtra("filePath", model.getFilePath());
@@ -248,15 +348,44 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         }
     }
 
-    private void getAudioPlayer(String fileName) {
+    private void getAudioPlayer(String fileName, String filePath) throws IOException {
         Dialog dialogMusicPlayer = new Dialog(getActivity());
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
         dialogMusicPlayer.show();
-        SeekBar seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
-        final TextView startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
-        TextView endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
-        endTime.setText("" + seekBar.getMax());
+        if(dialogMusicPlayer.isShowing())
+        seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
+        startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
+        endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
+        final ImageButton btnPlayPause = (ImageButton) dialogMusicPlayer.findViewById(R.id.btnPlayPause);
+        utilities = new Utilities();
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(filePath);
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+        updateProgressBar();
+        if(!dialogMusicPlayer.isShowing())
+            mediaPlayer.stop();
+        btnPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mediaPlayer.isPlaying()){
+                    if(mediaPlayer!=null){
+                        mediaPlayer.pause();
+                        // Changing button image to play button
+                        btnPlayPause.setImageResource(R.mipmap.ic_play);
+                    }
+                }else{
+                    // Resume song
+                    if(mediaPlayer!=null){
+                        mediaPlayer.start();
+                        // Changing button image to pause button
+                        btnPlayPause.setImageResource(R.mipmap.ic_pause);
+                    }
+                }
+            }
+        });
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
@@ -265,14 +394,44 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
+                mHandler.removeCallbacks(mUpdateTimeTask);
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                startTime.setText("" + progressChanged);
+                mHandler.removeCallbacks(mUpdateTimeTask);
+                int totalDuration = mediaPlayer.getDuration();
+                int currentPosition = utilities.progressToTimer(seekBar.getProgress(), totalDuration);
+                // forward or backward to certain seconds
+                mediaPlayer.seekTo(currentPosition);
+                // update timer progress again
+                updateProgressBar();
             }
         });
     }
+
+    private void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mediaPlayer.getDuration();
+            long currentDuration = mediaPlayer.getCurrentPosition();
+
+            // Displaying Total Duration time
+            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            seekBar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
 
     private void getDirectory(String directoryPath) {
         filesModelArrayList = new ArrayList<>();
@@ -380,14 +539,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String fileName = txtNewFile.getText().toString();
-                if(fileName.equals(""))//if user not enter text file name
-                    fileName="NewFile";
+                if (fileName.equals(""))//if user not enter text file name
+                    fileName = "NewFile";
                 try {
                     File file = new File(rootPath + "/" + fileName + ".txt");
-                    if(file.exists()){
-                        Toast.makeText(getActivity().getApplicationContext(),"File already exits",Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), "File already exits", Toast.LENGTH_SHORT).show();
+                    } else {
                         boolean isCreated = file.createNewFile();
                         if (isCreated) {
                             InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
@@ -608,49 +766,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         return value;
     }
 
-    public static String formatSize(long size) {
-        String suffix = null;
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-                if (size >= 1024) {
-                    suffix = "GB";
-                    size /= 1024;
-                }
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
-    }
-
-    private static long dirSize(File dir) {
-        if (dir.exists()) {
-            long result = 0;
-            File[] fileList = dir.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
-                // Recursive call if it's a directory
-                if (fileList[i].isDirectory()) {
-                    result += dirSize(fileList[i]);
-                } else {
-                    // Sum the file size in bytes
-                    result += fileList[i].length();
-                }
-            }
-            return result; // return the file size
-        }
-        return 0;
-    }
-
     public void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
             InternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
@@ -660,48 +775,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
         dialog.cancel();
 
-    }
-
-    public static String getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        Log.d("getPath", path.getPath());
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return formatSize(availableBlocks * blockSize, "free");
-    }
-
-    public static String getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return formatSize(totalBlocks * blockSize, "total");
-    }
-
-    public static String formatSize(long size, String tag) {
-        String suffix = null;
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-                if (size >= 1024 & tag.equals("total")) {
-                    suffix = "GB";
-                    size /= 1024;
-                }
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
     }
 
     @Override
