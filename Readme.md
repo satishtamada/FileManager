@@ -1,5 +1,5 @@
 #FileManager
-Android filemanager provides a user interface to manage files and folders. Here we develop a simple filemanager
+Android filemanager provides a user interface to manage files and folders. Here we develop a simple filemanager demo how to manage your internal and external files and folder on your android devices.
 ##FileManager Usage
  * listing of all file from your internal and exteranal memory 
  * create folders and files
