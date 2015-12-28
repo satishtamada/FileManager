@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -17,14 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.InternalStorageFilesAdapter;
@@ -303,13 +303,32 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     });
                     alertDialog.show();
 
+                } else if (fileExtension.equals("pdf")) {
+                    getPdfReader(model.getFilePath());
                 } else {
-                    //TODO
+
                 }
             }//onItemClick
         });
 
         return rootView;
+    }
+
+    private void getPdfReader(String filePath) {
+        File file = new File(filePath);
+        PackageManager packageManager = getActivity().getPackageManager();
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType("application/pdf");
+        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (list.size() > 0 && file.isFile()) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            Uri uri = Uri.fromFile(file);
+            intent.setDataAndType(uri, "application/pdf");
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getUnZipDirectory(String zipFile, String outputFolder) {
@@ -353,8 +372,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
         dialogMusicPlayer.show();
-        if(dialogMusicPlayer.isShowing())
-        seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
+        if (dialogMusicPlayer.isShowing())
+            seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
         startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
         endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
         final ImageButton btnPlayPause = (ImageButton) dialogMusicPlayer.findViewById(R.id.btnPlayPause);
@@ -364,20 +383,20 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         mediaPlayer.prepare();
         mediaPlayer.start();
         updateProgressBar();
-        if(!dialogMusicPlayer.isShowing())
+        if (!dialogMusicPlayer.isShowing())
             mediaPlayer.stop();
         btnPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayer.isPlaying()){
-                    if(mediaPlayer!=null){
+                if (mediaPlayer.isPlaying()) {
+                    if (mediaPlayer != null) {
                         mediaPlayer.pause();
                         // Changing button image to play button
                         btnPlayPause.setImageResource(R.mipmap.ic_play);
                     }
-                }else{
+                } else {
                     // Resume song
-                    if(mediaPlayer!=null){
+                    if (mediaPlayer != null) {
                         mediaPlayer.start();
                         // Changing button image to pause button
                         btnPlayPause.setImageResource(R.mipmap.ic_pause);

@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.activity.InternalStorageFragment;
 import com.example.satish.filemanager.model.InternalStorageFilesModel;
 
 import java.io.File;

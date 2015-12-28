@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -49,7 +51,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private boolean isChecked = false;
     private Dialog dialog;
     private String MENU_TAG = "main";
-    private String root = "/sdcard";
+    private String root;
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
@@ -163,6 +165,8 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         if (!Environment.isExternalStorageRemovable())
             linearLayout.setVisibility(View.VISIBLE);
         else {
+            root=Environment.getExternalStorageDirectory()
+                    .getAbsolutePath();
             getDirectory(root);
             //set event on delete button
             btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -293,8 +297,10 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         });
                         alertDialog.show();
 
+                    }else if (fileExtension.equals("pdf")) {
+                        getPdfReader(model.getFilePath());
                     } else {
-                        //TODO
+
                     }
                 }//onItemClick
             });
@@ -302,6 +308,24 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
 
         return rootView;
     }
+
+    private void getPdfReader(String filePath) {
+        File file = new File(filePath);
+        PackageManager packageManager = getActivity().getPackageManager();
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType("application/pdf");
+        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (list.size() > 0 && file.isFile()) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            Uri uri = Uri.fromFile(file);
+            intent.setDataAndType(uri, "application/pdf");
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void getUnZipDirectory(String zipFile, String outputFolder) {
         byte[] buffer = new byte[1024];

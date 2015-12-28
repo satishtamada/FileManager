@@ -38,4 +38,7 @@
     <string name="action_change_text_size">Font size</string>
     <string name="action_change_text_color">Text color</string>
     <string name="action_change_background_color">Background</string>
+    <string name="lbl_audios">Audios</string>
+    <string name="lbl_videos">Videos</string>
+    <string name="lbl_images">Images</string>
 </resources>
