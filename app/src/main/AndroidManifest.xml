@@ -23,6 +23,9 @@
         <activity android:name=".activity.ImageViewActivity"></activity>
         <activity android:name=".activity.TextFileViewActivity"></activity>
         <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".activity.AudiosListActivity"></activity>
+        <activity android:name=".activity.ImagesListActivity"></activity>
+        <activity android:name=".activity.VideosListActivity"></activity>
     </application>
 
 </manifest>
