@@ -75,7 +75,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
 
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);
-        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {//if list item any image then
+        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if list item any image then
             File imgFile = new File(model.getFilePath());
             if (imgFile.exists()) {
                 Log.d("action", model.getFilePath());

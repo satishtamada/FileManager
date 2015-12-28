@@ -266,7 +266,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     }//inner if-else
                 }//if
                 //if file is not a directory
-                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {//if file type is image
+                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if file type is image
                     Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
                     imageIntent.putExtra("imagePath", model.getFilePath());
                     imageIntent.putExtra("imageName", model.getFileName());
