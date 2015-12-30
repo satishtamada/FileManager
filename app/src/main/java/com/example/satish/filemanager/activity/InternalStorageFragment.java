@@ -44,6 +44,10 @@ import java.util.zip.ZipInputStream;
  * Created by Satish on 04-12-2015.
  */
 public class InternalStorageFragment extends Fragment implements InternalStorageFilesAdapter.CustomListener {
+    private MediaPlayer mediaPlayer;
+    private TextView startTime;
+    private TextView endTime;
+    private SeekBar seekBar;
     private ListView listView;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
@@ -60,11 +64,27 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFileRootPath;
     private List<String> selectedFilePositions = new ArrayList<String>();
     private Handler mHandler = new Handler();
-    MediaPlayer mediaPlayer;
-    TextView startTime;
-    TextView endTime;
-    SeekBar seekBar;
     private Utilities utilities;
+    private String listviewSletedFilePath;
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mediaPlayer.getDuration();
+            long currentDuration = mediaPlayer.getCurrentPosition();
+
+            // Displaying Total Duration time
+            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            seekBar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
 
     //generate conflicts
     public InternalStorageFragment() {
@@ -223,12 +243,23 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 InternalStorageFilesModel model = filesModelArrayList.get(position);
-                model.setSelected(true);//set true value for selected item
-                filesModelArrayList.remove(position);//remove the current selected item from list
-                filesModelArrayList.add(position, model);//add the updated item to list
-                internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
-                btnDelete.setVisibility(View.VISIBLE);//display the delete button
-                btnMenu.setTag("dirmenu");//set menu tag as directory menu
+                if (!model.isSelected()) {
+                    model.setSelected(true);//set true value for selected item
+                    filesModelArrayList.remove(position);//remove the current selected item from list
+                    filesModelArrayList.add(position, model);//add the updated item to list
+                    internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
+                    btnDelete.setVisibility(View.VISIBLE);//display the delete button
+                    btnMenu.setTag("dirmenu");//set menu tag as directory menu
+                    listviewSletedFilePath = model.getFilePath();
+                } else {
+                    model.setSelected(false);
+                    filesModelArrayList.remove(position);
+                    filesModelArrayList.add(position, model);
+                    internalStorageFilesAdapter.notifyDataSetChanged();
+                    btnDelete.setVisibility(View.GONE);
+                    btnMenu.setTag("menu");
+
+                }
                 return true;
             }
         });
@@ -266,7 +297,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     }//inner if-else
                 }//if
                 //if file is not a directory
-                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if file type is image
+                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {//if file type is image
                     Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
                     imageIntent.putExtra("imagePath", model.getFilePath());
                     imageIntent.putExtra("imageName", model.getFileName());
@@ -372,8 +403,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
         dialogMusicPlayer.show();
-        if (dialogMusicPlayer.isShowing())
-            seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
+        seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
         startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
         endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
         final ImageButton btnPlayPause = (ImageButton) dialogMusicPlayer.findViewById(R.id.btnPlayPause);
@@ -436,26 +466,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            long totalDuration = mediaPlayer.getDuration();
-            long currentDuration = mediaPlayer.getCurrentPosition();
-
-            // Displaying Total Duration time
-            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
-
-            // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            seekBar.setProgress(progress);
-
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
-        }
-    };
-
     private void getDirectory(String directoryPath) {
         filesModelArrayList = new ArrayList<>();
         Log.d("in get Directory", directoryPath);
@@ -480,7 +490,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter = new InternalStorageFilesAdapter(filesModelArrayList, getActivity());
         internalStorageFilesAdapter.setCustomListener(this);
         listView.setAdapter(internalStorageFilesAdapter);
-
     }
 
     public void mainMenu() {
@@ -574,6 +583,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                             InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
                             filesModelArrayList.add(model);
                             internalStorageFilesAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "File not created..!", Toast.LENGTH_SHORT).show();
                         }
                         fileDialog.cancel();
                     }

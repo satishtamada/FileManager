@@ -56,8 +56,8 @@ public class VideoListAdapter  extends BaseAdapter {
         TextView lblFileName = (TextView) view.findViewById(R.id.file_name);
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
-        lblFileName.setText(mediaFileListModel.getAudio_name());
-        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getAudio_file_path(), MediaStore.Video.Thumbnails.MICRO_KIND);
+        lblFileName.setText(mediaFileListModel.getFileName());
+        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
         imgItemIcon.setImageBitmap(bMap);
         return view;
     }

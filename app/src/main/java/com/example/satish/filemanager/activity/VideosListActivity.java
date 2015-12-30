@@ -28,7 +28,7 @@ public class VideosListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio_list);
+        setContentView(R.layout.activity_media_list);
         listview = (ListView) findViewById(R.id.audio_listview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

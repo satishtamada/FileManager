@@ -167,7 +167,7 @@ public class AudiosListActivity extends AppCompatActivity {
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
         Log.d("audio list",""+mCursor.getCount());
-        if (mCursor.getCount() == 0) ;
+        if (mCursor.getCount() == 0)
         noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {
             do {

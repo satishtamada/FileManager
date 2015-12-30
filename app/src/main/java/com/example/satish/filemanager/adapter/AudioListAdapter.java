@@ -53,7 +53,7 @@ public class AudioListAdapter extends BaseAdapter {
         TextView lblFileName = (TextView) view.findViewById(R.id.file_name);
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
-        lblFileName.setText(mediaFileListModel.getAudio_name());
+        lblFileName.setText(mediaFileListModel.getFileName());
         imgItemIcon.setImageResource(R.mipmap.ic_mp3);
         return view;
     }
