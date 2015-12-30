@@ -383,8 +383,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         mediaPlayer.prepare();
         mediaPlayer.start();
         updateProgressBar();
-        if (!dialogMusicPlayer.isShowing())
-            mediaPlayer.stop();
+        dialogMusicPlayer.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mediaPlayer.stop();
+            }
+        });
         btnPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

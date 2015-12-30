@@ -24,7 +24,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.ExternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.ExternalStorageFilesModel;
