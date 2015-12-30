@@ -41,7 +41,9 @@
 
         </activity>
         <!--activity for images list-->
-        <activity android:name=".activity.ImagesListActivity"></activity>
+        <activity
+            android:name=".activity.ImagesListActivity"
+            android:parentActivityName=".activity.MainActivity"></activity>
         <!--activity for audio list-->
         <activity
             android:name=".activity.AudiosListActivity"

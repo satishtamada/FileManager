@@ -3,8 +3,8 @@ package com.example.satish.filemanager.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,20 +13,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.activity.VideosListActivity;
+
+import com.example.satish.filemanager.activity.ImagesListActivity;
 import com.example.satish.filemanager.model.MediaFileListModel;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Satish on 29-12-2015.
+ * Created by Satish on 30-12-2015.
  */
-public class VideoListAdapter  extends BaseAdapter {
+public class ImagesListAdapter extends BaseAdapter {
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private Activity activity;
     private LayoutInflater layoutInflater;
 
-    public VideoListAdapter(VideosListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
+    public ImagesListAdapter(ImagesListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
         this.activity = audiosListActivity;
         this.mediaFileListModelsArray = mediaFileListModelsArray;
     }
@@ -52,13 +54,17 @@ public class VideoListAdapter  extends BaseAdapter {
         if (view == null)
             layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            view = layoutInflater.inflate(R.layout.audio_list_item_view, null);
+            view = layoutInflater.inflate(R.layout.media_list_item_view, null);
         TextView lblFileName = (TextView) view.findViewById(R.id.file_name);
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
-        lblFileName.setText(mediaFileListModel.getAudio_name());
-        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getAudio_file_path(), MediaStore.Video.Thumbnails.MICRO_KIND);
-        imgItemIcon.setImageBitmap(bMap);
+        lblFileName.setText(mediaFileListModel.getFileName());
+        File imgFile = new File(mediaFileListModel.getFilePath());
+        if (imgFile.exists()) {
+            Log.d("action", mediaFileListModel.getFilePath());
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            imgItemIcon.setImageBitmap(myBitmap);
+        }
         return view;
     }
 }

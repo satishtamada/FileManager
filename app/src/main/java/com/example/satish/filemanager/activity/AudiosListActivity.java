@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.AudioListAdapter;
 import com.example.satish.filemanager.helper.Utilities;
-import com.example.satish.filemanager.model.AudioListModel;
+import com.example.satish.filemanager.model.MediaFileListModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,16 +31,36 @@ import java.util.ArrayList;
  * Created by Satish on 28-12-2015.
  */
 public class AudiosListActivity extends AppCompatActivity {
-    private ArrayList<AudioListModel> audioListModelsArray;
+    TextView startTime;
+    TextView endTime;
+    SeekBar seekBar;
+    private LinearLayout noMediaLayout;
+    private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private Toolbar toolbar;
     private AudioListAdapter audioListAdapter;
     private ListView listview;
     private MediaPlayer mediaPlayer;
-    TextView startTime;
-    TextView endTime;
-    SeekBar seekBar;
     private Handler mHandler = new Handler();
     private Utilities utilities;
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mediaPlayer.getDuration();
+            long currentDuration = mediaPlayer.getCurrentPosition();
+
+            // Displaying Total Duration time
+            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            seekBar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
 
     /**
      * Called when the activity is first created.
@@ -47,26 +68,28 @@ public class AudiosListActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio_list);
+        setContentView(R.layout.activity_media_list);
         listview = (ListView) findViewById(R.id.audio_listview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Audios");
         mediaPlayer = new MediaPlayer();
-        audioListModelsArray = new ArrayList<>();
+        mediaFileListModelsArray = new ArrayList<>();
         getMusicList();
-        audioListAdapter = new AudioListAdapter(this, audioListModelsArray);
+        audioListAdapter = new AudioListAdapter(this, mediaFileListModelsArray);
         listview.setAdapter(audioListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AudioListModel model = audioListModelsArray.get(position);
+                MediaFileListModel model = mediaFileListModelsArray.get(position);
                 try {
-                    getAudioPlayer(model.getAudio_name(), model.getAudio_file_path());
+                    getAudioPlayer(model.getFileName(), model.getFilePath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getApplicationContext(), model.getAudio_file_path(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), model.getFilePath(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -138,38 +161,20 @@ public class AudiosListActivity extends AppCompatActivity {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            long totalDuration = mediaPlayer.getDuration();
-            long currentDuration = mediaPlayer.getCurrentPosition();
-
-            // Displaying Total Duration time
-            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
-
-            // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            seekBar.setProgress(progress);
-
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
-        }
-    };
-
     private void getMusicList() {
         final Cursor mCursor = managedQuery(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-        Log.d("length is", "" + mCursor.getCount());
+        Log.d("audio list",""+mCursor.getCount());
+        if (mCursor.getCount() == 0) ;
+        noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {
             do {
-                AudioListModel audioListModel = new AudioListModel();
-                audioListModel.setAudio_name(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
-                audioListModel.setAudio_file_path(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-                audioListModelsArray.add(audioListModel);
+                MediaFileListModel mediaFileListModel = new MediaFileListModel();
+                mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
+                mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+                mediaFileListModelsArray.add(mediaFileListModel);
             } while (mCursor.moveToNext());
         }
         mCursor.close();

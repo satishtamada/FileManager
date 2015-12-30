@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.ListView;
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.VideoListAdapter;
-import com.example.satish.filemanager.model.AudioListModel;
+import com.example.satish.filemanager.model.MediaFileListModel;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by Satish on 28-12-2015.
  */
 public class VideosListActivity extends AppCompatActivity {
-    private ArrayList<AudioListModel> videoListModelsArray;
+    private ArrayList<MediaFileListModel> videoListModelsArray;
     private Toolbar toolbar;
     private VideoListAdapter audioListAdapter;
     private ListView listview;
@@ -48,10 +48,10 @@ public class VideosListActivity extends AppCompatActivity {
         Log.d("length is", "" + mCursor.getCount());
         if (mCursor.moveToFirst()) {
             do {
-                AudioListModel audioListModel = new AudioListModel();
-                audioListModel.setAudio_name(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)));
-                audioListModel.setAudio_file_path(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
-                videoListModelsArray.add(audioListModel);
+                MediaFileListModel mediaFileListModel = new MediaFileListModel();
+                mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)));
+                mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
+                videoListModelsArray.add(mediaFileListModel);
             } while (mCursor.moveToNext());
         }
         mCursor.close();
