@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+=======
+import android.media.MediaPlayer;
+>>>>>>> 8b4d4da5156923300b14bf672477a18c48bc0b74
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -297,14 +301,18 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     }//inner if-else
                 }//if
                 //if file is not a directory
-                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")) {//if file type is image
+                else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if file type is image
                     Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
                     imageIntent.putExtra("imagePath", model.getFilePath());
                     imageIntent.putExtra("imageName", model.getFileName());
                     getActivity().startActivity(imageIntent);
                 } else if (fileExtension.equals("mp3")) {//if file type is audio
                     try {
+<<<<<<< HEAD
                         getAudioPlayer(model.getFileName(), model.getFilePath());
+=======
+                        getAudioPlayer(model.getFileName(),model.getFilePath());
+>>>>>>> 8b4d4da5156923300b14bf672477a18c48bc0b74
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -398,11 +406,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         }
     }
 
+<<<<<<< HEAD
     private void getAudioPlayer(String fileName, String filePath) throws IOException {
+=======
+    private void getAudioPlayer(String fileName,String filePath) throws IOException {
+>>>>>>> 8b4d4da5156923300b14bf672477a18c48bc0b74
         Dialog dialogMusicPlayer = new Dialog(getActivity());
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
         dialogMusicPlayer.show();
+<<<<<<< HEAD
         seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
         startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
         endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
@@ -439,6 +452,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         });
 
+=======
+        MediaPlayer mp = new MediaPlayer();
+        mp.setDataSource(filePath); mp.prepare();
+        mp.start();
+        SeekBar seekBar = (SeekBar) dialogMusicPlayer.findViewById(R.id.volume_bar);
+        final TextView startTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_start_time);
+        TextView endTime = (TextView) dialogMusicPlayer.findViewById(R.id.lbl_end_time);
+        endTime.setText("" + seekBar.getMax());
+>>>>>>> 8b4d4da5156923300b14bf672477a18c48bc0b74
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
