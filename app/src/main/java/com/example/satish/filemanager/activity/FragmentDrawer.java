@@ -1,7 +1,10 @@
 package com.example.satish.filemanager.activity;
 
+import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -47,7 +50,7 @@ public class FragmentDrawer extends Fragment {
     private FragmentDrawerListener drawerListener;
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
     private ProgressBar internal_progress, external_progress;
-    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory;
+    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory, lbl_ram_size,lbl_ram_free_size;
     static long totalSize;
     static long freeSize;
 
@@ -91,12 +94,16 @@ public class FragmentDrawer extends Fragment {
         audiosLayout = (LinearLayout) layout.findViewById(R.id.layout_audios);
         videosLayout = (LinearLayout) layout.findViewById(R.id.layout_videos);
         imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
-        internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);
-        external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);
+        internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);//internal memory status
+        external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);//external memory status
         lbl_free_external_memory = (TextView) layout.findViewById(R.id.free_external_memory);
         lbl_free_internal_memory = (TextView) layout.findViewById(R.id.free_internal_memory);
         lbl_total_external_memory = (TextView) layout.findViewById(R.id.total_external_memory);
         lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
+        lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
+        lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
+        lbl_ram_free_size.setText(getRamUsageSize()+"/");
+        lbl_ram_size.setText(getRamMemorySize());
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
         lbl_total_internal_memory.setText(getTotalInternalMemorySize());
         if (!Environment.isExternalStorageRemovable()) {//if external storage not available
@@ -205,6 +212,28 @@ public class FragmentDrawer extends Fragment {
         long totalBlocks = stat.getBlockCount();
         return formatSize(totalBlocks * blockSize, "total");
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public String getRamMemorySize() {
+        ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+        actManager.getMemoryInfo(memInfo);
+        long totalMemory = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            totalMemory = memInfo.totalMem;
+        }
+        return formatSize(totalMemory, "ram");
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public String getRamUsageSize() {
+        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+        ActivityManager activityManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
+        activityManager.getMemoryInfo(mi);
+        long availableMegs = mi.availMem / 1048576L;
+        return formatSize(availableMegs, "ramfree");
+    }
+
 
     public static String formatSize(long size, String tag) {
         String suffix = null;

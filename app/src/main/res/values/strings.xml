@@ -41,4 +41,7 @@
     <string name="lbl_audios">Audios</string>
     <string name="lbl_videos">Videos</string>
     <string name="lbl_images">Images</string>
+    <string name="lbl_internal_storage">Internal storage</string>
+    <string name="lbl_external_storage">SD storage</string>
+    <string name="lbl_ram">RAM</string>
 </resources>
