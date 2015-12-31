@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,16 +183,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // TODO Add your menu entries here
-        if (menu_type.equals("main"))
-            inflater.inflate(R.menu.bottom_menu, menu);
-        else
-            inflater.inflate(R.menu.bottom_dir_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -226,12 +216,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         changeCheckboxStatus();
                         break;
                     case R.id.action_rename:
+                        renameFile();
                         break;
                     case R.id.action_copy_selection:
                         break;
                     case R.id.action_move_selection:
                         break;
                     case R.id.action_add_bookmarks:
+                        break;
+                    case R.id.action_delete:
+                        deleteFile();
                         break;
                 }
                 return true;
@@ -243,46 +237,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         if (menu_type.equals("dirmenu"))
             toolbar.inflateMenu(R.menu.bottom_dir_menu);
 
-        //set event on delete button
-       /* btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-                // Setting Dialog Message
-                alertDialog.setTitle("Delete Folder");
-                alertDialog.setIcon(R.mipmap.ic_delete_folder);
-                if (selectedFilePositions.size() == 1)//if user select single folder
-                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
-                else //if user select multi folders
-                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folders));
-                alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO on dialog cancel button
-                    }
-                });
-                //display confirm dialog for delete file or folder
-                alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            File deleteFile = new File(selectedFilePath);//create file for selected file
-                            boolean isDeleteFile = deleteFile.delete();//delete the file from memory
-                            Log.d("delete file", Boolean.toString(isDeleteFile));
-                            if (isDeleteFile) {
-                                InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
-                                filesModelArrayList.remove(model);//remove file from listview
-                                internalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
-                                btnMenu.setTag(MENU_TAG);//set menu tag for display main menu
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                alertDialog.show();
-            }
-        });
-        //set event on list item long click
-        */
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -384,6 +338,41 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
 
         return rootView;
+    }
+
+    private void deleteFile() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        // Setting Dialog Message
+        alertDialog.setTitle("Delete Folder");
+        alertDialog.setIcon(R.mipmap.ic_delete_folder);
+        if (selectedFilePositions.size() == 1)//if user select single folder
+            alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
+        else //if user select multi folders
+            alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folders));
+        alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO on dialog cancel button
+            }
+        });
+        //display confirm dialog for delete file or folder
+        alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    File deleteFile = new File(selectedFilePath);//create file for selected file
+                    boolean isDeleteFile = deleteFile.delete();//delete the file from memory
+                    Log.d("delete file", Boolean.toString(isDeleteFile));
+                    if (isDeleteFile) {
+                        InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
+                        filesModelArrayList.remove(model);//remove file from listview
+                        internalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
+                        //set menu tag for display main menu
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        alertDialog.show();
     }
 
 
