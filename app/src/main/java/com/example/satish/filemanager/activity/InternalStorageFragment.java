@@ -53,11 +53,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private ListView listView;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
-    private ImageButton btnMenu;
-    private ImageButton btnDelete;
     private boolean isChecked = false;
     private Dialog dialog;
-    private String MENU_TAG = "main";
+    private String menu_type = "main";
     private String root = "/sdcard";
     private String selectedFilePath;
     private String selectedFolderName;
@@ -192,6 +190,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
+        getDirectory(root);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -213,14 +212,24 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         isChecked = false;
                         changeCheckboxStatus();
                         break;
-
-
+                    case R.id.action_rename:
+                        break;
+                    case R.id.action_copy_selection:
+                        break;
+                    case R.id.action_move_selection:
+                        break;
+                    case R.id.action_add_bookmarks:
+                        break;
                 }
                 return true;
             }
         });
-        toolbar.inflateMenu(R.menu.bottom_menu);
-        getDirectory(root);
+
+        if (menu_type.equals("main"))
+            toolbar.inflateMenu(R.menu.bottom_menu);
+        if (menu_type.equals("dirmenu"))
+            toolbar.inflateMenu(R.menu.bottom_dir_menu);
+
         //set event on delete button
        /* btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,17 +279,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     filesModelArrayList.remove(position);//remove the current selected item from list
                     filesModelArrayList.add(position, model);//add the updated item to list
                     internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
-                    btnDelete.setVisibility(View.VISIBLE);//display the delete button
-                    btnMenu.setTag("dirmenu");//set menu tag as directory menu
+                    //display the delete button
+                    menu_type = "dirmenu"; //set menu tag as directory menu
                     listviewSletedFilePath = model.getFilePath();
                 } else {
                     model.setSelected(false);
                     filesModelArrayList.remove(position);
                     filesModelArrayList.add(position, model);
                     internalStorageFilesAdapter.notifyDataSetChanged();
-                    btnDelete.setVisibility(View.GONE);
-                    btnMenu.setTag("menu");
-
                 }
                 return true;
             }
@@ -648,7 +654,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 isChecked = true;
                 changeCheckboxStatus();
-                btnDelete.setVisibility(View.VISIBLE);
 
             }
         });
@@ -657,8 +662,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 isChecked = false;
                 changeCheckboxStatus();
-                btnDelete.setVisibility(View.GONE);
-                btnMenu.setTag("main");
             }
         });
 
@@ -699,7 +702,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         filesModelArrayList.remove(selectedFilePosition);
                         filesModelArrayList.add(selectedFilePosition, model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
-                        btnMenu.setTag("menu");
                     } else
                         Toast.makeText(getActivity().getApplicationContext(), "File Not Renamed", Toast.LENGTH_SHORT).show();
                     renameDialog.cancel();
@@ -783,13 +785,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.remove(position);
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
-        if (isChecked) {//if checkbox is selected change menu to dir menu and display the delete icon
+        if (isChecked) {
+            menu_type = "dirmenu";//if checkbox is selected change menu to dir menu and display the delete icon
             selectedFilePositions.add(selectedFilePath);
-            btnMenu.setTag("dirmenu");
-            btnDelete.setVisibility(View.VISIBLE);
         } else {
-            btnMenu.setTag(MENU_TAG);//if checkbox is not selected change menu to main menu and disappear the delete icon
-            btnDelete.setVisibility(View.GONE);
+            menu_type = "main";//if checkbox is not selected change menu to main menu and disappear the delete icon
             root = selectedFileRootPath;
         }//end of else
     }
