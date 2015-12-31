@@ -11,15 +11,63 @@
         android:layout_height="140dp"
         android:layout_alignParentTop="true"
         android:background="@color/colorPrimary">
+        <!--layout for internal storage property-->
+        <LinearLayout
+            android:id="@+id/internal_storage_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_profile" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Internal storage"
+                android:textColor="@color/colorWhite"
+                android:textSize="18dp" />
+
+            <ProgressBar
+                android:id="@+id/progressbar1"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:progressDrawable="@drawable/bg_progress_bar"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp" />
+
+        </LinearLayout>
+        <!--layout for external storage property-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="External storage"
+                android:textColor="@color/colorWhite"
+                android:textSize="18dp" />
+
+            <ProgressBar
+                android:id="@+id/progressbar2"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
 
     </RelativeLayout>
+
+
     <!--to display items in a list-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/drawerList"
@@ -42,6 +90,7 @@
             android:id="@+id/layout_images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -65,6 +114,7 @@
             android:id="@+id/layout_videos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -72,6 +122,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:src="@mipmap/ic_video_list" />
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -86,6 +137,7 @@
             android:id="@+id/layout_audios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -93,6 +145,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:src="@mipmap/ic_audio_list" />
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.NavigationDrawerAdapter;
@@ -40,6 +41,7 @@ public class FragmentDrawer extends Fragment {
     private View containerView;
     private FragmentDrawerListener drawerListener;
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
+    private ProgressBar internal_progress, external_progress;
 
     public FragmentDrawer() {
 
@@ -81,6 +83,13 @@ public class FragmentDrawer extends Fragment {
         audiosLayout = (LinearLayout) layout.findViewById(R.id.layout_audios);
         videosLayout = (LinearLayout) layout.findViewById(R.id.layout_videos);
         imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
+        internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);
+        external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);
+        internal_progress.setProgress(25);   // Main Progress
+        internal_progress.setMax(100); // Maximum Progress
+        external_progress.setProgress(10);   // Main Progress
+        external_progress.setMax(100); // Maximum Progress
+
         adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
