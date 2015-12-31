@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.SettingsActivity">
     <item
+        android:id="@+id/action_save"
+        android:icon="@mipmap/ic_menu_delete"
+        android:orderInCategory="100"
+        android:title="@string/action_save"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@mipmap/ic_menu_bottom"
         android:orderInCategory="100"

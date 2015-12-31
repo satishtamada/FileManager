@@ -417,71 +417,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
 
     }
 
-    public void mainMenu() {
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_main_menu_dialog);
-        dialog.setTitle("Actions");
-        dialog.show();
-        TextView cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
-        TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
-        TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
-        TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
-        TextView newFile = (TextView) dialog.findViewById(R.id.btn_new_file);
-        TextView refresh = (TextView) dialog.findViewById(R.id.btn_cancel);
-        final TextView property = (TextView) dialog.findViewById(R.id.btn_property);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                externalStorageFilesAdapter.notifyDataSetChanged();
-                dialog.cancel();
-            }
-        });
-        property.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getProperties();
-            }
-
-        });
-        //event on new folder
-        newFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNewFolder();
-            }
-        });
-        newFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNewFile(root);
-            }
-        });
-        selectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = true;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.VISIBLE);//display the delete button on bottom of center
-                btnMenu.setTag("dirmenu");
-            }
-        });
-        deSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = false;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.GONE);//disable the delete button on bottom of center
-                btnMenu.setTag("main");
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();//close the menu dialog
-            }
-        });
-    }
+   
 
     private void getNewFile(final String rootPath) {
         dialog.cancel();

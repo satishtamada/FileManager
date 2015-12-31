@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +69,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private Utilities utilities;
     private String listviewSletedFilePath;
     private Toolbar toolbar;
+    private MenuItem item;
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -181,6 +184,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        if (menu_type.equals("main"))
+            inflater.inflate(R.menu.bottom_menu, menu);
+        else
+            inflater.inflate(R.menu.bottom_dir_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -372,6 +385,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
         return rootView;
     }
+
 
     private void getPdfReader(String filePath) {
         File file = new File(filePath);
@@ -786,10 +800,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {
-            menu_type = "dirmenu";//if checkbox is selected change menu to dir menu and display the delete icon
+            menu_type = "dirmenu";
+            setHasOptionsMenu(isChecked);
             selectedFilePositions.add(selectedFilePath);
         } else {
-            menu_type = "main";//if checkbox is not selected change menu to main menu and disappear the delete icon
+            menu_type = "main";
+            setHasOptionsMenu(isChecked);
             root = selectedFileRootPath;
         }//end of else
     }
