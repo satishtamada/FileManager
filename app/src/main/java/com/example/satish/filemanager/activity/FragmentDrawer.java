@@ -87,7 +87,7 @@ public class FragmentDrawer extends Fragment {
         external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);
         internal_progress.setProgress(25);   // Main Progress
         internal_progress.setMax(100); // Maximum Progress
-        external_progress.setProgress(10);   // Main Progress
+        external_progress.setProgress(70);   // Main Progress
         external_progress.setMax(100); // Maximum Progress
 
         adapter = new NavigationDrawerAdapter(getActivity(), getData());

@@ -30,7 +30,7 @@
                 android:id="@+id/progressbar1"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="10dp"
+                android:layout_height="5dp"
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:orientation="vertical">
@@ -60,6 +60,7 @@
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="5dp"
+                android:progressDrawable="@drawable/bg_progress_bar"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp" />
