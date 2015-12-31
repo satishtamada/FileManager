@@ -13,8 +13,10 @@ import android.os.Handler;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -66,6 +68,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private Handler mHandler = new Handler();
     private Utilities utilities;
     private String listviewSletedFilePath;
+    private Toolbar toolbar;
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -179,19 +182,47 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_interanl, container, false);
-        btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
-        btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
+        // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_property:
+                        getProperties();
+                        break;
+                    case R.id.action_new_folder:
+                        getNewFolder();
+                        break;
+                    case R.id.action_new_file:
+                        getNewFile(root);
+                        break;
+                    case R.id.action_select_all:
+                        isChecked = true;
+                        changeCheckboxStatus();
+                        break;
+                    case R.id.action_de_select_all:
+                        isChecked = false;
+                        changeCheckboxStatus();
+                        break;
+
+
+                }
+                return true;
+            }
+        });
+        toolbar.inflateMenu(R.menu.bottom_menu);
         getDirectory(root);
         //set event on delete button
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+       /* btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
@@ -228,17 +259,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 alertDialog.show();
             }
         });
-        //set event on menu button
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (btnMenu.getTag().equals(MENU_TAG))//check menu tag is main menu
-                    mainMenu();//it will display main menu
-                else
-                    directoryMenu();//if will display folder menu
-            }
-        });
         //set event on list item long click
+        */
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -492,74 +514,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         listView.setAdapter(internalStorageFilesAdapter);
     }
 
-    public void mainMenu() {
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_main_menu_dialog);
-        dialog.setTitle("Actions");
-        dialog.show();
-        TextView cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
-        TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
-        TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
-        TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
-        TextView newFile = (TextView) dialog.findViewById(R.id.btn_new_file);
-        TextView refresh = (TextView) dialog.findViewById(R.id.btn_cancel);
-        final TextView property = (TextView) dialog.findViewById(R.id.btn_property);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                internalStorageFilesAdapter.notifyDataSetChanged();
-                dialog.cancel();
-            }
-        });
-        property.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getProperties();
-            }
-
-        });
-        //event on new folder
-        newFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNewFolder();
-            }
-        });
-        newFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNewFile(root);
-            }
-        });
-        selectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = true;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.VISIBLE);//display the delete button on bottom of center
-                btnMenu.setTag("dirmenu");
-            }
-        });
-        deSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = false;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.GONE);//disable the delete button on bottom of center
-                btnMenu.setTag("main");
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();//close the menu dialog
-            }
-        });
-    }
-
     private void getNewFile(final String rootPath) {
-        dialog.cancel();
         final Dialog fileDialog = new Dialog(getActivity());
         fileDialog.setContentView(R.layout.custom_new_file_dialog);//display custom file menu
         fileDialog.setTitle("Create File");
@@ -602,8 +557,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void getNewFolder() {
-        //close the main menu dialog
-        dialog.cancel();
         final Dialog fileDialog = new Dialog(getActivity());
         fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
         fileDialog.setTitle("Create Folder");
@@ -641,7 +594,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void getProperties() {
-        dialog.cancel();
         final Dialog propertyDialog = new Dialog(getActivity());
         propertyDialog.setContentView(R.layout.custom_dialog_property);
         propertyDialog.show();
@@ -807,8 +759,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             filesModelArrayList.set(i, fileModel);//replace the element on arraylist
         }
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
-        dialog.cancel();
-
     }
 
     @Override

@@ -158,8 +158,8 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_external, container, false);
-        btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
-        btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
+        //btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
+       // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.external_files_list);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
         if (!Environment.isExternalStorageRemovable())
@@ -169,7 +169,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     .getAbsolutePath();
             getDirectory(root);
             //set event on delete button
-            btnDelete.setOnClickListener(new View.OnClickListener() {
+        /*    btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
@@ -216,6 +216,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         directoryMenu();//if will display folder menu
                 }
             });
+            */
             //set event on list item long click
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
