@@ -52,7 +52,7 @@ public class VideoListAdapter  extends BaseAdapter {
         if (view == null)
             layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            view = layoutInflater.inflate(R.layout.audio_list_item_view, null);
+            view = layoutInflater.inflate(R.layout.media_list_item_view, null);
         TextView lblFileName = (TextView) view.findViewById(R.id.file_name);
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
