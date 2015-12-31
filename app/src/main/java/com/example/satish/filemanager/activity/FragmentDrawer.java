@@ -3,12 +3,15 @@ package com.example.satish.filemanager.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,11 +20,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.NavigationDrawerAdapter;
 import com.example.satish.filemanager.model.NavDrawerItem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class FragmentDrawer extends Fragment {
     private FragmentDrawerListener drawerListener;
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
     private ProgressBar internal_progress, external_progress;
+    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory;
 
     public FragmentDrawer() {
 
@@ -85,6 +91,19 @@ public class FragmentDrawer extends Fragment {
         imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
         internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);
         external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);
+        lbl_free_external_memory = (TextView) layout.findViewById(R.id.free_external_memory);
+        lbl_free_internal_memory = (TextView) layout.findViewById(R.id.free_internal_memory);
+        lbl_total_external_memory = (TextView) layout.findViewById(R.id.total_external_memory);
+        lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
+        lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
+        lbl_total_internal_memory.setText(getTotalInternalMemorySize());
+        if (!Environment.isExternalStorageRemovable()) {
+            lbl_free_external_memory.setText("0MB/");
+            lbl_total_external_memory.setText("0GB");
+        } else {
+            lbl_free_external_memory.setText(getAvailableExternalMemorySize() + "/");
+            lbl_total_external_memory.setText(getTotalExternalMemorySize());
+        }
         internal_progress.setProgress(25);   // Main Progress
         internal_progress.setMax(100); // Maximum Progress
         external_progress.setProgress(70);   // Main Progress
@@ -136,6 +155,76 @@ public class FragmentDrawer extends Fragment {
         return layout;
     }
 
+    public static boolean externalMemoryAvailable() {
+        return android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED);
+    }
+
+    public static String getAvailableExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+            return formatSize(availableBlocks * blockSize, "free");
+        } else {
+            return "0";
+        }
+    }
+
+    public static String getTotalExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long totalBlocks = stat.getBlockCount();
+            return formatSize(totalBlocks * blockSize, "total");
+        } else {
+            return "0";
+        }
+    }
+
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        Log.d("getPath", path.getPath());
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize, "free");
+    }
+
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize, "total");
+    }
+
+    public static String formatSize(long size, String tag) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+                if (size >= 1024 & tag.equals("total")) {
+                    suffix = "GB";
+                    size /= 1024;
+                }
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
+    }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);

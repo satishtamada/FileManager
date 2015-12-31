@@ -19,22 +19,49 @@
             android:layout_margin="15dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Internal storage"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Internal storage"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/total_internal_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="200gb"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/free_internal_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/total_internal_memory"
+                    android:text="200mb/"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+            </RelativeLayout>
 
             <ProgressBar
                 android:id="@+id/progressbar1"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="5dp"
-                android:progressDrawable="@drawable/bg_progress_bar"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:progressDrawable="@drawable/bg_progress_bar" />
 
         </LinearLayout>
         <!--layout for external storage property-->
@@ -48,22 +75,49 @@
             android:layout_marginTop="15dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="External storage"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="SD storage"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/total_external_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="200gb"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/free_external_memory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@+id/total_external_memory"
+                    android:text="200mb/"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12dp" />
+            </RelativeLayout>
 
             <ProgressBar
                 android:id="@+id/progressbar2"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="5dp"
-                android:progressDrawable="@drawable/bg_progress_bar"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:progressDrawable="@drawable/bg_progress_bar" />
         </LinearLayout>
 
     </RelativeLayout>
