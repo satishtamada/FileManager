@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.satish.filemanager.model.NavDrawerItem;
 import com.example.satish.filemanager.R;
+import com.example.satish.filemanager.model.NavDrawerItem;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +59,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         public MyViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
-            icon= (ImageView) itemView.findViewById(R.id.img_storage);
+            icon = (ImageView) itemView.findViewById(R.id.img_storage);
         }
     }
 }

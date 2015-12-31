@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.ExternalStorageFilesAdapter;
 import com.example.satish.filemanager.model.ExternalStorageFilesModel;
@@ -164,7 +165,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         if (!Environment.isExternalStorageRemovable())
             linearLayout.setVisibility(View.VISIBLE);
         else {
-            root=Environment.getExternalStorageDirectory()
+            root = Environment.getExternalStorageDirectory()
                     .getAbsolutePath();
             getDirectory(root);
             //set event on delete button
@@ -263,7 +264,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         }//inner if-else
                     }//if
                     //if file is not a directory
-                    else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if file type is image
+                    else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if file type is image
                         Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
                         imageIntent.putExtra("imagePath", model.getFilePath());
                         imageIntent.putExtra("imageName", model.getFileName());
@@ -296,7 +297,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         });
                         alertDialog.show();
 
-                    }else if (fileExtension.equals("pdf")) {
+                    } else if (fileExtension.equals("pdf")) {
                         getPdfReader(model.getFilePath());
                     } else {
 

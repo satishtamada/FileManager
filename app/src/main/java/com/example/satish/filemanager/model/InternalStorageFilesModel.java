@@ -12,11 +12,11 @@ public class InternalStorageFilesModel {
     public InternalStorageFilesModel() {
     }
 
-    public InternalStorageFilesModel(String fileName, String filePath ,boolean selected,boolean isDir) {
-        this.filePath=filePath;
+    public InternalStorageFilesModel(String fileName, String filePath, boolean selected, boolean isDir) {
+        this.filePath = filePath;
         this.fileName = fileName;
         this.selected = selected;
-        this.isDir=isDir;
+        this.isDir = isDir;
     }
 
     public boolean isDir() {
@@ -39,15 +39,15 @@ public class InternalStorageFilesModel {
         return fileName;
     }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public boolean isSelected() {
         return selected;
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 }

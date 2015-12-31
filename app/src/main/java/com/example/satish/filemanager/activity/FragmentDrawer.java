@@ -50,7 +50,7 @@ public class FragmentDrawer extends Fragment {
     private FragmentDrawerListener drawerListener;
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
     private ProgressBar internal_progress, external_progress;
-    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory, lbl_ram_size,lbl_ram_free_size;
+    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory, lbl_ram_size, lbl_ram_free_size;
     static long totalSize;
     static long freeSize;
 
@@ -102,7 +102,7 @@ public class FragmentDrawer extends Fragment {
         lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
         lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
         lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
-        lbl_ram_free_size.setText(getRamUsageSize()+"/");
+        lbl_ram_free_size.setText(getRamUsageSize() + "/");
         lbl_ram_size.setText(getRamMemorySize());
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
         lbl_total_internal_memory.setText(getTotalInternalMemorySize());
@@ -233,7 +233,6 @@ public class FragmentDrawer extends Fragment {
         long availableMegs = mi.availMem / 1048576L;
         return formatSize(availableMegs, "ramfree");
     }
-
 
     public static String formatSize(long size, String tag) {
         String suffix = null;

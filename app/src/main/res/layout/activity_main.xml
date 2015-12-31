@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/container_toolbar"
             android:layout_width="match_parent"
@@ -21,6 +22,7 @@
                 android:id="@+id/toolbar"
                 layout="@layout/tool_bar" />
         </LinearLayout>
+
         <FrameLayout
             android:id="@+id/container_body"
             android:layout_width="fill_parent"

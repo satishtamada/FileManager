@@ -162,6 +162,7 @@
                         android:text="200gb"
                         android:textColor="@color/colorWhite"
                         android:textSize="10dp" />
+
                     <TextView
                         android:id="@+id/free_ram_memory"
                         android:layout_width="wrap_content"

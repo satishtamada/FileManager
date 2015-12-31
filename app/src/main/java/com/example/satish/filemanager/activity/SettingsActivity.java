@@ -1,9 +1,7 @@
 package com.example.satish.filemanager.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -25,14 +23,15 @@ public class SettingsActivity extends AppCompatActivity {
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
-    String child=null;
+    String child = null;
     TextEditorOptionsModel textEditorOptionsModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
-        textEditorOptionsModel=new TextEditorOptionsModel();
+        textEditorOptionsModel = new TextEditorOptionsModel();
         // preparing list data
         prepareListData();
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
@@ -52,9 +51,8 @@ public class SettingsActivity extends AppCompatActivity {
                                 listDataHeader.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT)
                         .show();
-                child=listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
-                if(child.equals("Change font size"))
-                {
+                child = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                if (child.equals("Change font size")) {
                     textEditorOptionsModel.setTextSize(30);
                 }
                 return false;
@@ -108,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
         editorOptions.add("Change font size");
 
         List<String> about = new ArrayList<String>();
-        about.add("FileManager 2.5 "+"\t"+"Created by Tamada Satish");
+        about.add("FileManager 2.5 " + "\t" + "Created by Tamada Satish");
 
         listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
         listDataChild.put(listDataHeader.get(1), storageOptions);

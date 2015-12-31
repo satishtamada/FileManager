@@ -166,9 +166,9 @@ public class AudiosListActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-        Log.d("audio list",""+mCursor.getCount());
+        Log.d("audio list", "" + mCursor.getCount());
         if (mCursor.getCount() == 0)
-        noMediaLayout.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {
             do {
                 MediaFileListModel mediaFileListModel = new MediaFileListModel();

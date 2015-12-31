@@ -29,10 +29,10 @@ import java.util.ArrayList;
  * Created by Satish on 05-12-2015.
  */
 public class InternalStorageFilesAdapter extends BaseAdapter implements Filterable {
+    public CustomListener customListener;
     private LayoutInflater inflater;
     private Activity activity;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
-    public CustomListener customListener;
     private String fileExtension;
 
     public InternalStorageFilesAdapter(ArrayList<InternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
@@ -75,7 +75,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
 
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);
-        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg")||fileExtension.equals("jpg")) {//if list item any image then
+        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if list item any image then
             File imgFile = new File(model.getFilePath());
             if (imgFile.exists()) {
                 Log.d("action", model.getFilePath());
@@ -92,12 +92,11 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
-        } else if(fileExtension.equals("mp4")||fileExtension.equals("3gp")){
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp")) {
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(model.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
             imgItemIcon.setImageBitmap(bMap);
 
-        }
-        else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
+        } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");

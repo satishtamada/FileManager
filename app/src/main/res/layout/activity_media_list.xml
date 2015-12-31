@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/tool_bar" />

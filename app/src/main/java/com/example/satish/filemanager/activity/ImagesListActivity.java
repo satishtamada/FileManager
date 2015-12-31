@@ -77,7 +77,7 @@ public class ImagesListActivity extends AppCompatActivity {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Images.Media.TITLE + ") ASC");
-        Log.d("images list",""+mCursor.getCount());
+        Log.d("images list", "" + mCursor.getCount());
         if (mCursor.getCount() == 0)
             noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {

@@ -17,9 +17,9 @@
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/img_storage"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
         android:text="helo"
         android:textSize="15dp"
         android:textStyle="bold" />

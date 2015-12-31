@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.satish.filemanager.R;
-
 import com.example.satish.filemanager.activity.ImagesListActivity;
 import com.example.satish.filemanager.model.MediaFileListModel;
 

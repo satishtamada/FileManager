@@ -7,6 +7,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="20dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,10 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:textColor="@color/colorPrimary"
             android:text=" Internal properties"
+            android:textColor="@color/colorPrimary"
             android:textSize="20dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,6 +48,7 @@
             android:text="5000 mb"
             android:textSize="20dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,13 +70,14 @@
             android:text="5000 mb"
             android:textSize="20dp" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
         android:layout_marginTop="5dp"
-        android:textSize="20dp"
-        android:text="@string/lbl_cancel" />
+        android:background="@null"
+        android:text="@string/lbl_cancel"
+        android:textSize="20dp" />
 
 </LinearLayout>
