@@ -48,6 +48,8 @@ public class FragmentDrawer extends Fragment {
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
     private ProgressBar internal_progress, external_progress;
     private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory;
+    static long totalSize;
+    static long freeSize;
 
     public FragmentDrawer() {
 
@@ -97,17 +99,20 @@ public class FragmentDrawer extends Fragment {
         lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
         lbl_total_internal_memory.setText(getTotalInternalMemorySize());
-        if (!Environment.isExternalStorageRemovable()) {
-            lbl_free_external_memory.setText("0MB/");
+        if (!Environment.isExternalStorageRemovable()) {//if external storage not available
+            lbl_free_external_memory.setText("0MB/");//
             lbl_total_external_memory.setText("0GB");
+            external_progress.setProgress(1);
+            external_progress.setMax(100);
         } else {
             lbl_free_external_memory.setText(getAvailableExternalMemorySize() + "/");
             lbl_total_external_memory.setText(getTotalExternalMemorySize());
+            external_progress.setProgress((int) totalSize);   // Main Progress
+            external_progress.setMax((int) freeSize);
         }
-        internal_progress.setProgress(25);   // Main Progress
-        internal_progress.setMax(100); // Maximum Progress
-        external_progress.setProgress(70);   // Main Progress
-        external_progress.setMax(100); // Maximum Progress
+        internal_progress.setProgress((int) totalSize);   // Main Progress
+        internal_progress.setMax((int) freeSize); // Maximum Progress
+        // Maximum Progress
 
         adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
@@ -209,10 +214,10 @@ public class FragmentDrawer extends Fragment {
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if (size >= 1024 & tag.equals("total")) {
-                    suffix = "GB";
-                    size /= 1024;
-                }
+                if (tag.equals("total"))//set progress bar
+                    totalSize = size;
+                if (tag.equals("free"))
+                    freeSize = size;
             }
         }
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));

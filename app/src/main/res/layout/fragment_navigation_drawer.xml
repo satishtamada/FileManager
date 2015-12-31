@@ -29,7 +29,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="Internal storage"
                     android:textColor="@color/colorWhite"
-                    android:textSize="18dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/total_internal_memory"
@@ -40,7 +40,7 @@
                     android:layout_marginTop="5dp"
                     android:text="200gb"
                     android:textColor="@color/colorWhite"
-                    android:textSize="12dp" />
+                    android:textSize="10dp" />
 
                 <TextView
                     android:id="@+id/free_internal_memory"
@@ -50,7 +50,7 @@
                     android:layout_toLeftOf="@+id/total_internal_memory"
                     android:text="200mb/"
                     android:textColor="@color/colorWhite"
-                    android:textSize="12dp" />
+                    android:textSize="10dp" />
             </RelativeLayout>
 
             <ProgressBar
@@ -85,7 +85,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="SD storage"
                     android:textColor="@color/colorWhite"
-                    android:textSize="18dp" />
+                    android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/total_external_memory"
@@ -96,7 +96,7 @@
                     android:layout_marginTop="5dp"
                     android:text="200gb"
                     android:textColor="@color/colorWhite"
-                    android:textSize="12dp" />
+                    android:textSize="10dp" />
 
                 <TextView
                     android:id="@+id/free_external_memory"
@@ -106,7 +106,7 @@
                     android:layout_toLeftOf="@+id/total_external_memory"
                     android:text="200mb/"
                     android:textColor="@color/colorWhite"
-                    android:textSize="12dp" />
+                    android:textSize="10dp" />
             </RelativeLayout>
 
             <ProgressBar
