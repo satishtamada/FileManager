@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +29,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.satish.filemanager.R;
 import com.droids.satish.filemanager.adapter.InternalStorageFilesAdapter;
 import com.droids.satish.filemanager.helper.Utilities;
 import com.droids.satish.filemanager.model.InternalStorageFilesModel;
+import com.example.satish.filemanager.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -71,7 +68,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private Utilities utilities;
     private String listviewSletedFilePath;
     private Toolbar toolbar;
-    private Menu item;
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -102,10 +98,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if (size >= 1024) {
-                    suffix = "GB";
-                    size /= 1024;
-                }
             }
         }
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
@@ -162,10 +154,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if (size >= 1024 & tag.equals("total")) {
-                    suffix = "GB";
-                    size /= 1024;
-                }
             }
         }
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
@@ -536,8 +524,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     private void getNewFile(final String rootPath) {
         final Dialog fileDialog = new Dialog(getActivity());
+        fileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fileDialog.setContentView(R.layout.custom_new_file_dialog);//display custom file menu
-        fileDialog.setTitle("Create File");
         fileDialog.show();
         final EditText txtNewFile = (EditText) fileDialog.findViewById(R.id.txt_new_file);
         Button create = (Button) fileDialog.findViewById(R.id.btn_create);
@@ -615,14 +603,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     private void getProperties() {
         final Dialog propertyDialog = new Dialog(getActivity());
+        propertyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         propertyDialog.setContentView(R.layout.custom_dialog_property);
         propertyDialog.show();
         TextView lblTotalDiskSize = (TextView) propertyDialog.findViewById(R.id.used_space);
         TextView lblFreeDiskSize = (TextView) propertyDialog.findViewById(R.id.free_space);
-        TextView lblCancel = (TextView) propertyDialog.findViewById(R.id.btn_cancel);
+        Button btnCancel = (Button) propertyDialog.findViewById(R.id.btn_cancel);
         lblFreeDiskSize.setText(getAvailableInternalMemorySize());
         lblTotalDiskSize.setText(getTotalInternalMemorySize());
-        lblCancel.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 propertyDialog.cancel();
