@@ -537,8 +537,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         fileDialog.setTitle("Create File");
         fileDialog.show();
         final EditText txtNewFile = (EditText) fileDialog.findViewById(R.id.txt_new_file);
-        TextView create = (TextView) fileDialog.findViewById(R.id.btn_create);
-        TextView cancel = (TextView) fileDialog.findViewById(R.id.btn_cancel);
+        Button create = (Button) fileDialog.findViewById(R.id.btn_create);
+        Button cancel = (Button) fileDialog.findViewById(R.id.btn_cancel);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
