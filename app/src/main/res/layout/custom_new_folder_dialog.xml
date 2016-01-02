@@ -2,53 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:background="@drawable/bg_dialog_menu"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="10dp">
 
-    <EditText
-        android:id="@+id/txt_new_folder"
+    <TextView
         android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:layout_margin="5dp"
-        android:singleLine="true"
-        android:background="@drawable/bg_et_input"
-        android:hint="New Folder"
-        android:paddingLeft="10dp">
-
-        <requestFocus />
-    </EditText>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="Create Folder"
+        android:textSize="18sp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_create"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_btn_confirm"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/btn_lbl_create"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary" />
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/bg_btn_delete"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/btn_lbl_cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/btn_cancel_boarder" />
+        android:background="@drawable/bg_dialog_menu"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
 
+        <EditText
+            android:id="@+id/txt_new_folder"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_et_input"
+            android:hint="New Folder"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:layout_gravity="center_horizontal">
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_create"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_btn_confirm"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/btn_lbl_create"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_btn_delete"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/btn_lbl_cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/btn_cancel_boarder" />
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

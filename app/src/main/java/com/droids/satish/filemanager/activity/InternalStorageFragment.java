@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -575,8 +578,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     private void getNewFolder() {
         final Dialog fileDialog = new Dialog(getActivity());
+        fileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
-        fileDialog.setTitle("Create Folder");
         fileDialog.show();
         final EditText txtNewFolder = (EditText) fileDialog.findViewById(R.id.txt_new_folder);
         Button create = (Button) fileDialog.findViewById(R.id.btn_create);

@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.droids.satish.filemanager.helper.Utilities;
 import com.example.satish.filemanager.R;
 import com.droids.satish.filemanager.adapter.AudioListAdapter;
