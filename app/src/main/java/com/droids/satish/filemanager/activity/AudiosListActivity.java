@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.activity;
+package com.droids.satish.filemanager.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,10 +19,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.droids.satish.filemanager.helper.Utilities;
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.adapter.AudioListAdapter;
-import com.example.satish.filemanager.helper.Utilities;
-import com.example.satish.filemanager.model.MediaFileListModel;
+import com.droids.satish.filemanager.adapter.AudioListAdapter;
+import com.droids.satish.filemanager.model.MediaFileListModel;
 
 import java.io.IOException;
 import java.util.ArrayList;

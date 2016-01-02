@@ -1,18 +1,18 @@
-package com.example.satish.filemanager.model;
+package com.droids.satish.filemanager.model;
 
 /**
- * Created by Satish on 05-12-2015.
+ * Created by Satish on 26-12-2015.
  */
-public class InternalStorageFilesModel {
+public class ExternalStorageFilesModel {
     private String fileName;
     private String filePath;
     private boolean selected;
     private boolean isDir;
 
-    public InternalStorageFilesModel() {
+    public ExternalStorageFilesModel() {
     }
 
-    public InternalStorageFilesModel(String fileName, String filePath, boolean selected, boolean isDir) {
+    public ExternalStorageFilesModel(String fileName, String filePath, boolean selected, boolean isDir) {
         this.filePath = filePath;
         this.fileName = fileName;
         this.selected = selected;

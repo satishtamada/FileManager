@@ -1,9 +1,11 @@
-package com.example.satish.filemanager.adapter;
+package com.droids.satish.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,29 +18,29 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.satish.filemanager.activity.InternalStorageFragment;
+import com.droids.satish.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.activity.ExternalStorageFragment;
-import com.example.satish.filemanager.model.ExternalStorageFilesModel;
 
 import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Satish on 26-12-2015.
+ * Created by Satish on 05-12-2015.
  */
-public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterable {
+public class InternalStorageFilesAdapter extends BaseAdapter implements Filterable {
     public CustomListener customListener;
     private LayoutInflater inflater;
     private Activity activity;
-    private ArrayList<ExternalStorageFilesModel> filesModelArrayList;
+    private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private String fileExtension;
 
-    public ExternalStorageFilesAdapter(ArrayList<ExternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
+    public InternalStorageFilesAdapter(ArrayList<InternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
         this.activity = activity;
         this.filesModelArrayList = filesModelArrayList;
     }
 
-    public void setCustomListener(ExternalStorageFragment customListener) {
+    public void setCustomListener(InternalStorageFragment customListener) {
         this.customListener = customListener;
     }
 
@@ -68,7 +70,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
         TextView lblFilePath = (TextView) view.findViewById(R.id.file_path);
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
-        final ExternalStorageFilesModel model = filesModelArrayList.get(position);
+        final InternalStorageFilesModel model = filesModelArrayList.get(position);
         fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);//file extension
 
         if (model.isDir()) {//if list item folder the set icon
@@ -90,6 +92,10 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp")) {
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(model.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+            imgItemIcon.setImageBitmap(bMap);
+
         } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
         lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
@@ -121,21 +127,21 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filesModelArrayList = (ArrayList<ExternalStorageFilesModel>) results.values;
+                filesModelArrayList = (ArrayList<InternalStorageFilesModel>) results.values;
                 notifyDataSetChanged();
             }
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
-                ArrayList<ExternalStorageFilesModel> FilteredList = new ArrayList<>();
+                ArrayList<InternalStorageFilesModel> FilteredList = new ArrayList<>();
                 if (constraint == null || constraint.length() == 0) {
                     // No filter implemented we return all the list
                     results.values = filesModelArrayList;
                     results.count = filesModelArrayList.size();
                 } else {
                     for (int i = 0; i < filesModelArrayList.size(); i++) {
-                        ExternalStorageFilesModel data = filesModelArrayList.get(i);
+                        InternalStorageFilesModel data = filesModelArrayList.get(i);
                         FilteredList.add(data);
                     }
                     results.values = FilteredList;
@@ -151,3 +157,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
         void isCheckboxSelectedListener(int position, boolean isChecked);
     }
 }
+
+
+
+

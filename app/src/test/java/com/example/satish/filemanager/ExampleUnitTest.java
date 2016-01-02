@@ -1,4 +1,4 @@
-package com.example.satish.filemanager;
+package com.droids.satish.filemanager;
 
 import org.junit.Test;
 

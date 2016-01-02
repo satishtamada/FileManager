@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.model;
+package com.droids.satish.filemanager.model;
 
 /**
  * Created by Satish on 19-12-2015.

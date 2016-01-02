@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.adapter;
+package com.droids.satish.filemanager.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.satish.filemanager.model.NavDrawerItem;
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.model.NavDrawerItem;
 
 import java.util.Collections;
 import java.util.List;

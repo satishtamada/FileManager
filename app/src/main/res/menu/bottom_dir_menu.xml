@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.SettingsActivity">
+    tools:context="com.droids.satish.filemanager.activity.SettingsActivity">
     <item
         android:id="@+id/action_settings"
         android:icon="@mipmap/ic_menu_bottom"

@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.adapter;
+package com.droids.satish.filemanager.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

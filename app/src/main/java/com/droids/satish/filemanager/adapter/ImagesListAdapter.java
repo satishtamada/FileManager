@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.adapter;
+package com.droids.satish.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.activity.ImagesListActivity;
-import com.example.satish.filemanager.model.MediaFileListModel;
+import com.droids.satish.filemanager.activity.ImagesListActivity;
+import com.droids.satish.filemanager.model.MediaFileListModel;
 
 import java.io.File;
 import java.util.ArrayList;

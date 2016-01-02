@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.activity;
+package com.droids.satish.filemanager.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;

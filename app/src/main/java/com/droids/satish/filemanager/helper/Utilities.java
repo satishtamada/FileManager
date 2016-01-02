@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.helper;
+package com.droids.satish.filemanager.helper;
 
 /**
  * Created by Satish on 26-12-2015.

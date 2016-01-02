@@ -1,4 +1,4 @@
-package com.example.satish.filemanager.activity;
+package com.droids.satish.filemanager.activity;
 
 import android.app.Dialog;
 import android.database.Cursor;
@@ -15,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.droids.satish.filemanager.adapter.ImagesListAdapter;
+import com.droids.satish.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
-import com.example.satish.filemanager.adapter.ImagesListAdapter;
-import com.example.satish.filemanager.model.MediaFileListModel;
 
 import java.io.File;
 import java.util.ArrayList;
