@@ -10,9 +10,15 @@
     <EditText
         android:id="@+id/txt_new_folder"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"
+        android:singleLine="true"
+        android:background="@drawable/bg_et_input"
         android:hint="New Folder"
-        android:paddingLeft="10dp" />
+        android:paddingLeft="10dp">
+
+        <requestFocus />
+    </EditText>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,24 +26,29 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
-
-        <TextView
+        <Button
             android:id="@+id/btn_create"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
-            android:background="@null"
-            android:text="Create"
-            android:textAllCaps="false" />
-
-        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_btn_confirm"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/btn_lbl_create"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
+        <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="100dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
-            android:background="@null"
-            android:text="Cancel"
-            android:textAllCaps="false" />
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/bg_btn_delete"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/btn_lbl_cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/btn_cancel_boarder" />
+
     </LinearLayout>
 
 </LinearLayout>
