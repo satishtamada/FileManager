@@ -6,6 +6,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.satish.filemanager.R;
@@ -22,7 +24,7 @@ public class VideosListActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private VideoListAdapter audioListAdapter;
     private ListView listview;
-
+    private LinearLayout noMediaLayout;
     /**
      * Called when the activity is first created.
      */
@@ -32,6 +34,7 @@ public class VideosListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_media_list);
         listview = (ListView) findViewById(R.id.audio_listview);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         videoListModelsArray = new ArrayList<>();
@@ -47,6 +50,8 @@ public class VideosListActivity extends AppCompatActivity {
                 new String[]{MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Video.Media.TITLE + ") ASC");
         Log.d("length is", "" + mCursor.getCount());
+        if (mCursor.getCount() == 0)
+            noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {
             do {
                 MediaFileListModel mediaFileListModel = new MediaFileListModel();

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +62,7 @@ public class ImagesListActivity extends AppCompatActivity {
 
     private void getImageView(String filePath, String fileName) {
         Dialog dialogImageView = new Dialog(this);
+        dialogImageView.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogImageView.setContentView(R.layout.custom_dialog_image_view);
         dialogImageView.setTitle(fileName);
         dialogImageView.show();

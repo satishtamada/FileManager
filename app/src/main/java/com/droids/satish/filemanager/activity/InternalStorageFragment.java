@@ -579,13 +579,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 String folderName = txtNewFolder.getText().toString();
                 try {
                     File file = new File(root + "/" + folderName);
+                    Log.d("new location", root + "/" + folderName);
                     boolean isFolderCreated = file.mkdir();
                     if (isFolderCreated) {
                         InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
                         filesModelArrayList.add(model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
-                    } else
+                    } else {
                         Toast.makeText(getActivity().getApplicationContext(), "Folder Not Created..!", Toast.LENGTH_SHORT).show();
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -517,65 +517,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         });
     }
 
-    //if user select any directory menu display directoryMenu
-    public void directoryMenu() {
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_dir_menu_dialog);
-        dialog.setTitle("Actions");
-        dialog.show();
-        TextView cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
-        TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
-        TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
-        TextView property = (TextView) dialog.findViewById(R.id.btn_menu_property);
-        TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
-        TextView reName = (TextView) dialog.findViewById(R.id.btn_rename);
-        reName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                renameFile();
-            }
-        });
-        newFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                getNewFolder();
-            }
-        });
-        property.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                getFileProperty(selectedFilePath, selectedFolderName);
-            }
-        });
-        selectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = true;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.VISIBLE);
-
-            }
-        });
-        deSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = false;
-                changeCheckboxStatus();
-                btnDelete.setVisibility(View.GONE);
-                btnMenu.setTag("main");
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-    }
 
     private void renameFile() {
         final Dialog renameDialog = new Dialog(getActivity());

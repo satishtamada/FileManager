@@ -48,5 +48,6 @@
     <string name="lbl_ram">RAM</string>
     <string name="btn_lbl_create">create</string>
     <string name="btn_lbl_cancel">cancel</string>
+    <string name="btn_lbl_rename">rename</string>
 
 </resources>
