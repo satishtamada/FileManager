@@ -222,9 +222,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
 
         if (menu_type.equals("main"))
-            toolbar.inflateMenu(R.menu.bottom_menu);
-        if (menu_type.equals("dirmenu"))
             toolbar.inflateMenu(R.menu.bottom_dir_menu);
+        if (menu_type.equals("dirmenu"))
+            toolbar.inflateMenu(R.menu.bottom_menu);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -621,65 +621,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
     }
 
-    //if user select any directory menu display directoryMenu
-    public void directoryMenu() {
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.custom_dir_menu_dialog);
-        dialog.setTitle("Actions");
-        dialog.show();
-        TextView cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
-        TextView selectAll = (TextView) dialog.findViewById(R.id.btn_select_all);
-        TextView deSelectAll = (TextView) dialog.findViewById(R.id.btn_de_select_all);
-        TextView property = (TextView) dialog.findViewById(R.id.btn_menu_property);
-        TextView newFolder = (TextView) dialog.findViewById(R.id.btn_new_folder);
-        TextView reName = (TextView) dialog.findViewById(R.id.btn_rename);
-        reName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                renameFile();
-            }
-        });
-        newFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                createNewFolder();
-            }
-        });
-        property.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-                getFileProperty(selectedFilePath, selectedFolderName);
-            }
-        });
-        selectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = true;
-                changeCheckboxStatus();
-
-            }
-        });
-        deSelectAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = false;
-                changeCheckboxStatus();
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-    }
-
     private void renameFile() {
         final Dialog renameDialog = new Dialog(getActivity());
+        renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         renameDialog.setContentView(R.layout.custom_dialog_rename_file);
         renameDialog.show();
         Log.d("subString", selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1));
