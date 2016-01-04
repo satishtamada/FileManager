@@ -10,9 +10,15 @@
         android:title="@string/action_delete"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_new_file"
+        android:icon="@mipmap/ic_menu_new_file"
+        android:orderInCategory="100"
+        android:title="@string/action_add_file"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_add_folder"
         android:icon="@mipmap/ic_menu_plus"
         android:orderInCategory="100"
-        android:title="@string/action_add"
+        android:title="@string/action_add_folder"
         app:showAsAction="always" />
 </menu>

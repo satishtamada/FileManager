@@ -108,7 +108,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             resultBuffer.insert(commaOffset, ',');
             commaOffset -= 3;
         }
-
         if (suffix != null) resultBuffer.append(suffix);
         return resultBuffer.toString();
     }
@@ -164,7 +163,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             resultBuffer.insert(commaOffset, ',');
             commaOffset -= 3;
         }
-
         if (suffix != null) resultBuffer.append(suffix);
         return resultBuffer.toString();
     }
@@ -173,13 +171,45 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_directory, menu);
+        if (menu_type.equals("main"))
+            inflater.inflate(R.menu.main_menu, menu);
+        else
+            inflater.inflate(R.menu.menu_directory, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_property:
+                getProperties();
+                break;
+            case R.id.action_select_all:
+                isChecked = true;
+                changeCheckboxStatus();
+                break;
+            case R.id.action_de_select_all:
+                isChecked = false;
+                changeCheckboxStatus();
+                break;
+            case R.id.action_rename:
+                renameFile();
+                break;
+            case R.id.action_copy_selection:
+                break;
+            case R.id.action_move_selection:
+                break;
+            case R.id.action_add_bookmarks:
+                break;
+            default:
+                break;
+        }
+
+        return false;
     }
 
     @Override
@@ -190,37 +220,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
         getDirectory(root);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_property:
-                        getProperties();
-                        break;
                     case R.id.action_add_folder:
                         createNewFolder();
                         break;
                     case R.id.action_new_file:
                         createNewFile(root);
-                        break;
-                    case R.id.action_select_all:
-                        isChecked = true;
-                        changeCheckboxStatus();
-                        break;
-                    case R.id.action_de_select_all:
-                        isChecked = false;
-                        changeCheckboxStatus();
-                        break;
-                    case R.id.action_rename:
-                        renameFile();
-                        break;
-                    case R.id.action_copy_selection:
-                        break;
-                    case R.id.action_move_selection:
-                        break;
-                    case R.id.action_add_bookmarks:
-                        break;
                     case R.id.action_delete:
                         deleteFile();
                         break;
@@ -228,7 +236,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 return true;
             }
         });
-
         toolbar.inflateMenu(R.menu.menu_bottom);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -330,7 +337,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 }
             }//onItemClick
         });
-
         return rootView;
     }
 
@@ -741,12 +747,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {
             menu_type = "dirmenu";
-            setHasOptionsMenu(isChecked);
             selectedFilePositions.add(selectedFilePath);
         } else {
-
             menu_type = "main";
-            setHasOptionsMenu(isChecked);
             root = selectedFileRootPath;
         }//end of else
     }
