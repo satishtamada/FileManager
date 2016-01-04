@@ -15,8 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
+import android.widget.LinearLayout;
 
 import com.example.satish.filemanager.R;
 import com.example.satish.filemanager.adapter.NavigationDrawerAdapter;
@@ -31,22 +30,19 @@ import java.util.List;
 public class FragmentDrawer extends Fragment {
 
     private static String TAG = FragmentDrawer.class.getSimpleName();
-   private ImageButton imgBtnSettings;
+    private static String[] titles = null;
+    private static int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
+    private ImageButton imgBtnSettings;
     private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private NavigationDrawerAdapter adapter;
     private View containerView;
-    private static String[] titles = null;
-    private static int[]icons={R.mipmap.ic_internal_storage,R.mipmap.ic_external_storage};
     private FragmentDrawerListener drawerListener;
+    private LinearLayout imagesLayout, audiosLayout, videosLayout;
 
     public FragmentDrawer() {
 
-    }
-
-    public void setDrawerListener(FragmentDrawerListener listener) {
-        this.drawerListener = listener;
     }
 
     public static List<NavDrawerItem> getData() {
@@ -63,6 +59,10 @@ public class FragmentDrawer extends Fragment {
         return data;
     }
 
+    public void setDrawerListener(FragmentDrawerListener listener) {
+        this.drawerListener = listener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +76,11 @@ public class FragmentDrawer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        imgBtnSettings= (ImageButton) layout.findViewById(R.id.img_btn_settings);
+        imgBtnSettings = (ImageButton) layout.findViewById(R.id.img_btn_settings);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
+        audiosLayout = (LinearLayout) layout.findViewById(R.id.layout_audios);
+        videosLayout = (LinearLayout) layout.findViewById(R.id.layout_videos);
+        imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
         adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -96,7 +99,28 @@ public class FragmentDrawer extends Fragment {
         imgBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity().getApplicationContext(),SettingsActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), SettingsActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        audiosLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AudiosListActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        videosLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), VideosListActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        imagesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), ImagesListActivity.class);
                 getActivity().startActivity(intent);
             }
         });
@@ -143,6 +167,10 @@ public class FragmentDrawer extends Fragment {
         public void onLongClick(View view, int position);
     }
 
+    public interface FragmentDrawerListener {
+        public void onDrawerItemSelected(View view, int position);
+    }
+
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private GestureDetector gestureDetector;
@@ -185,9 +213,5 @@ public class FragmentDrawer extends Fragment {
 
         }
 
-    }
-
-    public interface FragmentDrawerListener {
-        public void onDrawerItemSelected(View view, int position);
     }
 }
