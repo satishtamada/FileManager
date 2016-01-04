@@ -229,6 +229,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         break;
                     case R.id.action_new_file:
                         createNewFile(root);
+                        break;
                     case R.id.action_delete:
                         deleteFile();
                         break;
