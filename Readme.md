@@ -20,4 +20,3 @@ This article will take a comprehensive look at working with files and folders.It
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/f.png)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/g.png)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/h.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/i.png)
