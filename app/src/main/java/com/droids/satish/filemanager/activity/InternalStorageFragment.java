@@ -191,10 +191,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         getProperties();
                         break;
                     case R.id.action_add_folder:
-                        getNewFolder();
+                        createNewFolder();
                         break;
                     case R.id.action_new_file:
-                        getNewFile(root);
+                        createNewFile(root);
                         break;
                     case R.id.action_select_all:
                         isChecked = true;
@@ -349,7 +349,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 try {
                     File deleteFile = new File(selectedFilePath);//create file for selected file
                     boolean isDeleteFile = deleteFile.delete();//delete the file from memory
-                    Log.d("delete file", Boolean.toString(isDeleteFile));
+                    Log.d("delete file", selectedFilePath + "" + Boolean.toString(isDeleteFile));
                     if (isDeleteFile) {
                         InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                         filesModelArrayList.remove(model);//remove file from listview
@@ -522,7 +522,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         listView.setAdapter(internalStorageFilesAdapter);
     }
 
-    private void getNewFile(final String rootPath) {
+    private void createNewFile(final String rootPath) {
         final Dialog fileDialog = new Dialog(getActivity());
         fileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fileDialog.setContentView(R.layout.custom_new_file_dialog);//display custom file menu
@@ -564,7 +564,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
     }
 
-    private void getNewFolder() {
+    private void createNewFolder() {
         final Dialog fileDialog = new Dialog(getActivity());
         fileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fileDialog.setContentView(R.layout.custom_new_folder_dialog);//display custom file menu
@@ -642,7 +642,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                getNewFolder();
+                createNewFolder();
             }
         });
         property.setOnClickListener(new View.OnClickListener() {
@@ -789,7 +789,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {
-
             menu_type = "dirmenu";
             setHasOptionsMenu(isChecked);
             selectedFilePositions.add(selectedFilePath);

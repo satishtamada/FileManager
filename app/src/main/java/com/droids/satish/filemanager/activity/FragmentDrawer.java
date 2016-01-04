@@ -38,6 +38,8 @@ import java.util.List;
  */
 public class FragmentDrawer extends Fragment {
 
+    static long totalSize;
+    static long freeSize;
     private static String TAG = FragmentDrawer.class.getSimpleName();
     private static String[] titles = null;
     private static int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
@@ -51,8 +53,6 @@ public class FragmentDrawer extends Fragment {
     private LinearLayout imagesLayout, audiosLayout, videosLayout;
     private ProgressBar internal_progress, external_progress;
     private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory, lbl_ram_size, lbl_ram_free_size;
-    static long totalSize;
-    static long freeSize;
 
     public FragmentDrawer() {
 
@@ -70,6 +70,77 @@ public class FragmentDrawer extends Fragment {
             data.add(navItem);
         }
         return data;
+    }
+
+    public static boolean externalMemoryAvailable() {
+        return android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED);
+    }
+
+    public static String getAvailableExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+            return formatSize(availableBlocks * blockSize, "free");
+        } else {
+            return "0";
+        }
+    }
+
+    public static String getTotalExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long totalBlocks = stat.getBlockCount();
+            return formatSize(totalBlocks * blockSize, "total");
+        } else {
+            return "0";
+        }
+    }
+
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        Log.d("getPath", path.getPath());
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize, "free");
+    }
+
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize, "total");
+    }
+
+    public static String formatSize(long size, String tag) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+                if (tag.equals("total"))//set progress bar
+                    totalSize = size;
+                if (tag.equals("free"))
+                    freeSize = size;
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
     }
 
     public void setDrawerListener(FragmentDrawerListener listener) {
@@ -167,52 +238,6 @@ public class FragmentDrawer extends Fragment {
         return layout;
     }
 
-    public static boolean externalMemoryAvailable() {
-        return android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED);
-    }
-
-    public static String getAvailableExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
-            return formatSize(availableBlocks * blockSize, "free");
-        } else {
-            return "0";
-        }
-    }
-
-    public static String getTotalExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long totalBlocks = stat.getBlockCount();
-            return formatSize(totalBlocks * blockSize, "total");
-        } else {
-            return "0";
-        }
-    }
-
-    public static String getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        Log.d("getPath", path.getPath());
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return formatSize(availableBlocks * blockSize, "free");
-    }
-
-    public static String getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return formatSize(totalBlocks * blockSize, "total");
-    }
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public String getRamMemorySize() {
         ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
@@ -232,31 +257,6 @@ public class FragmentDrawer extends Fragment {
         activityManager.getMemoryInfo(mi);
         long availableMegs = mi.availMem / 1048576L;
         return formatSize(availableMegs, "ramfree");
-    }
-
-    public static String formatSize(long size, String tag) {
-        String suffix = null;
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-                if (tag.equals("total"))//set progress bar
-                    totalSize = size;
-                if (tag.equals("free"))
-                    freeSize = size;
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
     }
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
