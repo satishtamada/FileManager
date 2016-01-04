@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,6 +177,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_directory, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_interanl, container, false);
@@ -221,10 +229,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         });
 
-        if (menu_type.equals("main"))
-            toolbar.inflateMenu(R.menu.bottom_dir_menu);
-        if (menu_type.equals("dirmenu"))
-            toolbar.inflateMenu(R.menu.bottom_menu);
+        toolbar.inflateMenu(R.menu.menu_bottom);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
