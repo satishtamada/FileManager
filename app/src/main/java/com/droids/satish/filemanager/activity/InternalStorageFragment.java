@@ -273,6 +273,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
+                Toast.makeText(getActivity().getApplicationContext(), model.getFilePath(), Toast.LENGTH_LONG).show();
                 fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
@@ -577,11 +578,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(), "File not created..!", Toast.LENGTH_SHORT).show();
                         }
-                        fileDialog.cancel();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                fileDialog.cancel();
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -734,7 +735,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
             InternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
-            fileModel.setSelected(isChecked);//set the is checked value by getting from the selected or deselected btn
+            if (!fileModel.getFileName().equals("/"))
+                fileModel.setSelected(isChecked);
+            else
+                fileModel.setSelected(false);//set  is checked value by getting from the selected or deselected btn
             filesModelArrayList.set(i, fileModel);//replace the element on arraylist
         }
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter

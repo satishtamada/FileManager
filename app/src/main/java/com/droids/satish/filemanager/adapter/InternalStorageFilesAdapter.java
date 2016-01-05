@@ -105,6 +105,10 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         } else {
             lblFilePath.setText(model.getFilePath());
         }
+        if (!model.getFileName().equals("/"))//if file is not parent
+            checkBox.setVisibility(View.VISIBLE);//checkbox visible
+        else //if file is parent
+            checkBox.setVisibility(View.INVISIBLE);//checkbox invisible
         checkBox.setChecked(model.isSelected());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
