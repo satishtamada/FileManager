@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -57,7 +58,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
     private boolean isChecked = false;
-    private Dialog dialog;
     private String menu_type = "main";
     private String root = "/sdcard";
     private String selectedFilePath;
@@ -68,7 +68,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private List<String> selectedFilePositions = new ArrayList<String>();
     private Handler mHandler = new Handler();
     private Utilities utilities;
-    private String listviewSletedFilePath;
     private Toolbar toolbar;
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
@@ -171,12 +170,21 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+        FragmentManager fm = getFragmentManager();
+        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                Toast.makeText(getActivity().getApplicationContext(), "back pressed", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (menu_type.equals("main"))
             inflater.inflate(R.menu.main_menu, menu);
+
         else
             inflater.inflate(R.menu.menu_directory, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -238,7 +246,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         });
         toolbar.inflateMenu(R.menu.menu_bottom);
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -250,7 +257,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
                     //display the delete button
                     menu_type = "dirmenu"; //set menu tag as directory menu
-                    listviewSletedFilePath = model.getFilePath();
                 } else {
                     model.setSelected(false);
                     filesModelArrayList.remove(position);
@@ -336,6 +342,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 } else {
 
                 }
+
             }//onItemClick
         });
         return rootView;
@@ -748,9 +755,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {
             menu_type = "dirmenu";
+            getActivity().invalidateOptionsMenu();
             selectedFilePositions.add(selectedFilePath);
         } else {
             menu_type = "main";
+            getActivity().invalidateOptionsMenu();
             root = selectedFileRootPath;
         }//end of else
     }
