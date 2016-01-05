@@ -563,8 +563,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String fileName = txtNewFile.getText().toString();
-                if (fileName.equals(""))//if user not enter text file name
+                if (fileName.equals("")) {//if user not enter text file name
                     fileName = "NewFile";
+                } else {
+                    fileName = txtNewFile.getText().toString();
+                }
                 try {
                     File file = new File(rootPath + "/" + fileName + ".txt");
                     if (file.exists()) {
@@ -607,12 +610,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onClick(View v) {
                 String folderName = txtNewFolder.getText().toString();
+                if (folderName.equals("")) {//if user not enter text file name
+                    folderName = "NewFile";
+                } else {
+                    folderName = txtNewFolder.getText().toString();
+                }
                 try {
                     File file = new File(root + "/" + folderName);
                     if (file.exists()) {
                         Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
-                    }
-                   else {
+                    } else {
                         boolean isFolderCreated = file.mkdir();
                         if (isFolderCreated) {
                             InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
@@ -671,7 +678,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 File oldFile = new File(selectedFilePath);//create file with old name
                 File newFile = new File(selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1) + renamed_file.getText().toString());
                 if (newFile.exists()) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Already file exits", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_name_already_exits), Toast.LENGTH_LONG).show();
                     renameDialog.cancel();
                 } else {
                     boolean isRenamed = oldFile.renameTo(newFile);
@@ -680,13 +687,21 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                         model.setFileName(renamed_file.getText().toString());
                         model.setFilePath(newFile.getPath());
-                        model.setIsDir(false);
+                        if (newFile.isDirectory()) {
+                            model.setIsDir(true);
+                        } else {
+                            model.setIsDir(false);
+                        }
                         model.setSelected(false);
                         filesModelArrayList.remove(selectedFilePosition);
                         filesModelArrayList.add(selectedFilePosition, model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
+                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+                        menu_type = "main";
+                        getActivity().invalidateOptionsMenu();
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_renamed), Toast.LENGTH_SHORT).show();
                     } else
-                        Toast.makeText(getActivity().getApplicationContext(), "File Not Renamed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_not_renamed), Toast.LENGTH_SHORT).show();
                     renameDialog.cancel();
                 }
             }//outer else
