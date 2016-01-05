@@ -339,13 +339,21 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
                 } else if (fileExtension.equals("pdf")) {
                     getPdfReader(model.getFilePath());
+                } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+                    videoHandler(model.getFilePath());
                 } else {
-
                 }
 
             }//onItemClick
         });
         return rootView;
+    }
+
+    private void videoHandler(String filePath) {
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        Uri data = Uri.parse(filePath);
+        intent.setDataAndType(data, "video/mp4");
+        getActivity().startActivity(intent);
     }
 
     private void deleteFile() {
