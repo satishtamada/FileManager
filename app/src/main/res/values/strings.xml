@@ -13,13 +13,18 @@
         <item>@string/nav_item_friends</item>
     </string-array>
 
+    <string name="title_external">External</string>
+    <string name="title_internal">Internal</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
     <string name="action_delete">delete</string>
     <string name="action_add_folder">new folder</string>
     <string name="action_add_file">new file</string>
-    <string name="title_external">External</string>
-    <string name="title_internal">Internal</string>
+    <string name="action_change_text_size">Font size</string>
+    <string name="action_change_text_color">Text color</string>
+    <string name="action_change_background_color">Background</string>
+
     <string name="lbl_property">Property</string>
     <string name="lbl_refresh">Refresh</string>
     <string name="lbl_new_folder">New folder</string>
@@ -32,23 +37,28 @@
     <string name="lbl_add_bookmark">Add  bookmark</string>
     <string name="lbl_rename_file">Rename</string>
     <string name="lbl_cancel">Cancel</string>
-    <string name="btn_cancel">cancel</string>
-    <string name="btn_confirm">confirm</string>
-    <string name="msg_prompt_delete_folder">Are you sure you want delete #name# folder?</string>
-    <string name="msg_prompt_delete_folders">Are you sure you want delete selected folders?</string>
-    <string name="msg_prompt_unzip_folder">Are you sure you want to unzip folder</string>
-    <string name="msg_prompt_save_text_file">Are you sure you want to save file</string>
-    <string name="action_change_text_size">Font size</string>
-    <string name="action_change_text_color">Text color</string>
-    <string name="action_change_background_color">Background</string>
     <string name="lbl_audios">Audios</string>
     <string name="lbl_videos">Videos</string>
     <string name="lbl_images">Images</string>
     <string name="lbl_internal_storage">Internal storage</string>
     <string name="lbl_external_storage">SD storage</string>
     <string name="lbl_ram">RAM</string>
+
     <string name="btn_lbl_create">create</string>
     <string name="btn_lbl_cancel">cancel</string>
     <string name="btn_lbl_rename">rename</string>
+    <string name="btn_cancel">cancel</string>
+    <string name="btn_confirm">confirm</string>
+
+    <string name="msg_prompt_delete_folder">Are you sure you want delete #name# folder?</string>
+    <string name="msg_prompt_delete_folders">Are you sure you want delete selected folders?</string>
+    <string name="msg_prompt_unzip_folder">Are you sure you want to unzip folder</string>
+    <string name="msg_prompt_save_text_file">Are you sure you want to save file</string>
+    <string name="msg_prompt_file_created">File created.</string>
+    <string name="msg_prompt_file_not_created">File not created..!</string>
+    <string name="msg_prompt_file_already_exits">File already exits</string>
+    <string name="msg_prompt_folder_created">Folder created.</string>
+    <string name="msg_prompt_folder_not_created">Folder not created ..!</string>
+    <string name="msg_prompt_folder_already_exits">Folder already exits</string>
 
 </resources>

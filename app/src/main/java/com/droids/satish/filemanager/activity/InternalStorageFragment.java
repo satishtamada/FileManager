@@ -568,15 +568,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 try {
                     File file = new File(rootPath + "/" + fileName + ".txt");
                     if (file.exists()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "File already exits", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
                     } else {
                         boolean isCreated = file.createNewFile();
                         if (isCreated) {
                             InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
                             filesModelArrayList.add(model);
                             internalStorageFilesAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "File not created..!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (Exception e) {
@@ -608,16 +609,20 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 String folderName = txtNewFolder.getText().toString();
                 try {
                     File file = new File(root + "/" + folderName);
-                    Log.d("new location", root + "/" + folderName);
-                    boolean isFolderCreated = file.mkdir();
-                    if (isFolderCreated) {
-                        InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
-                        filesModelArrayList.add(model);
-                        internalStorageFilesAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "Folder Not Created..!", Toast.LENGTH_SHORT).show();
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
                     }
-
+                   else {
+                        boolean isFolderCreated = file.mkdir();
+                        if (isFolderCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
+                            filesModelArrayList.add(model);
+                            internalStorageFilesAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
