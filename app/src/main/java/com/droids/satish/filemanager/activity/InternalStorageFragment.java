@@ -246,6 +246,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
         });
         toolbar.inflateMenu(R.menu.menu_bottom);
+        toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -764,10 +765,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         if (isChecked) {
             menu_type = "dirmenu";
             getActivity().invalidateOptionsMenu();
+            toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
             selectedFilePositions.add(selectedFilePath);
         } else {
             menu_type = "main";
             getActivity().invalidateOptionsMenu();
+            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
             root = selectedFileRootPath;
         }//end of else
     }
