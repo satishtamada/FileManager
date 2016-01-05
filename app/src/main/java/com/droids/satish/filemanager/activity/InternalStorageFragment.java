@@ -677,7 +677,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 File oldFile = new File(selectedFilePath);//create file with old name
                 File newFile = new File(selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1) + renamed_file.getText().toString());
-                if (newFile.exists()) {
+                if (newFile.exists()) {//if renamed file already exits
                     Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_name_already_exits), Toast.LENGTH_LONG).show();
                     renameDialog.cancel();
                 } else {
@@ -755,13 +755,25 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
             InternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
-            if (!fileModel.getFileName().equals("/"))
+            if (!fileModel.getFileName().equals("/")) {
                 fileModel.setSelected(isChecked);
-            else
-                fileModel.setSelected(false);//set  is checked value by getting from the selected or deselected btn
-            filesModelArrayList.set(i, fileModel);//replace the element on arraylist
+            } else {
+                fileModel.setSelected(false);
+            }
+            //set  is checked value by getting from the selected or deselected btn
+            filesModelArrayList.set(i, fileModel);//replace the element on array list
         }
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
+
+        if (isChecked) {
+            menu_type = "dirmenu";
+            getActivity().invalidateOptionsMenu();
+            toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+        } else {
+            menu_type = "main";//change menu type to main menu
+            getActivity().invalidateOptionsMenu();
+            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);//disappear delete button
+        }
     }
 
     @Override
