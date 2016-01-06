@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         loadFragment(new InternalStorageFragment(), getResources().getString(R.string.title_internal));
-
     }
 
     @Override
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             default:
                 break;
         }
-
         if (fragment != null) {
             loadFragment(fragment, title);
         }
@@ -77,12 +75,9 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 doubleBackToExitPressedOnce = false;

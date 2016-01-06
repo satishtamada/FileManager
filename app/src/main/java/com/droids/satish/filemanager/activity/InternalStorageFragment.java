@@ -450,16 +450,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private void getUnZipDirectory(String zipFile, String outputFolder) {
         byte[] buffer = new byte[1024];
         try {
-            //create output directory is not exists
-            File folder = new File(outputFolder);
+            File folder = new File(outputFolder);//create output directory is not exists
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            //get the zip file content
             ZipInputStream zis =
-                    new ZipInputStream(new FileInputStream(zipFile));
-            //get the zipped file list entry
-            ZipEntry ze = zis.getNextEntry();
+                    new ZipInputStream(new FileInputStream(zipFile));//get the zip file content
+            ZipEntry ze = zis.getNextEntry(); //get the zipped file list entry
             while (ze != null) {
                 String unzipFileName = ze.getName();
                 File newFile = new File(outputFolder + File.separator + unzipFileName);
@@ -477,14 +474,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
             zis.closeEntry();
             zis.close();
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     private void getAudioPlayer(String fileName, String filePath) throws IOException {
-
         Dialog dialogMusicPlayer = new Dialog(getActivity());
         dialogMusicPlayer.setContentView(R.layout.custom_dialog_music_player);
         dialogMusicPlayer.setTitle(fileName);
@@ -524,8 +519,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 }
             }
         });
-
-
         MediaPlayer mp = new MediaPlayer();
         mp.setDataSource(filePath);
         mp.prepare();
@@ -536,23 +529,18 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         endTime.setText("" + seekBar.getMax());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
-
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
             }
-
             public void onStartTrackingTouch(SeekBar seekBar) {
                 mHandler.removeCallbacks(mUpdateTimeTask);
             }
-
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 int totalDuration = mediaPlayer.getDuration();
                 int currentPosition = utilities.progressToTimer(seekBar.getProgress(), totalDuration);
-                // forward or backward to certain seconds
-                mediaPlayer.seekTo(currentPosition);
-                // update timer progress again
-                updateProgressBar();
+                mediaPlayer.seekTo(currentPosition); // forward or backward to certain seconds
+                updateProgressBar(); // update timer progress again
             }
         });
     }
