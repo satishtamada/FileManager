@@ -37,7 +37,8 @@
         <!--activity for settings-->
         <activity
             android:name="com.droids.satish.filemanager.activity.SettingsActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.droids.satish.filemanager.activity.MainActivity">
 
         </activity>
         <!--activity for images list-->

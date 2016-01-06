@@ -2,13 +2,14 @@ package com.droids.satish.filemanager.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.example.satish.filemanager.R;
 import com.droids.satish.filemanager.adapter.ExpandableListAdapter;
 import com.droids.satish.filemanager.model.TextEditorOptionsModel;
+import com.example.satish.filemanager.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +26,16 @@ public class SettingsActivity extends AppCompatActivity {
     HashMap<String, List<String>> listDataChild;
     String child = null;
     TextEditorOptionsModel textEditorOptionsModel;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
         textEditorOptionsModel = new TextEditorOptionsModel();
         // preparing list data
@@ -68,7 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        // Listview Group collasped listener
+        // Listview Group collapsed listener
         expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
