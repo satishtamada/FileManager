@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -58,17 +59,18 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
     private boolean isChecked = false;
-    private String menu_type = "main";
+    private String menu_type = "mainMenu";
     private String root = "/sdcard";
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
     private String selectedFileRootPath;
-    private List<String> selectedFilePositions = new ArrayList<String>();
+    private HashMap selectedFileHashMap = new HashMap();
     private Handler mHandler = new Handler();
     private Utilities utilities;
     private Toolbar toolbar;
+    private String selectAllLabel = "selectAll";
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -182,11 +184,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (menu_type.equals("main"))
+        if (menu_type.equals("mainMenu"))
             inflater.inflate(R.menu.main_menu, menu);
-
-        else
+        else {
             inflater.inflate(R.menu.menu_directory, menu);
+            if (selectAllLabel.equals("selectAll")) {
+                menu.findItem(R.id.action_rename).setVisible(false);
+                menu.findItem(R.id.action_select_all).setVisible(false);
+            } else
+                menu.findItem(R.id.action_rename).setVisible(false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -202,6 +209,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 break;
             case R.id.action_de_select_all:
                 isChecked = false;
+                selectAllLabel = "deselectAll";
+                getActivity().invalidateOptionsMenu();
                 changeCheckboxStatus();
                 break;
             case R.id.action_rename:
@@ -257,12 +266,26 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     filesModelArrayList.add(position, model);//add the updated item to list
                     internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
                     //display the delete button
-                    menu_type = "dirmenu"; //set menu tag as directory menu
+                    if (!selectedFileHashMap.containsKey(position))//if selected list item is not exits in selected hash map
+                        selectedFileHashMap.put(position, model.getFilePath());//added the selected item to selected hash map
+                    menu_type = "dirMenu";
+                    getActivity().invalidateOptionsMenu();
+                    toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);//set menu tag as directory menu
                 } else {
                     model.setSelected(false);
                     filesModelArrayList.remove(position);
                     filesModelArrayList.add(position, model);
                     internalStorageFilesAdapter.notifyDataSetChanged();
+                    selectedFileHashMap.remove(position);
+                    if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
+                        menu_type = "mainMenu";
+                        getActivity().invalidateOptionsMenu();
+                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+                    } else {
+                        menu_type = "dirMenu";//if checked items list not empty then display directory menu and enable delete menu button
+                        getActivity().invalidateOptionsMenu();
+                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+                    }
                 }
                 return true;
             }
@@ -363,7 +386,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         // Setting Dialog Message
         alertDialog.setTitle("Delete Folder");
         alertDialog.setIcon(R.mipmap.ic_delete_folder);
-        if (selectedFilePositions.size() == 1)//if user select single folder
+        if (selectedFileHashMap.size() == 1)//if user select single folder
             alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
         else //if user select multi folders
             alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folders));
@@ -697,7 +720,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         filesModelArrayList.add(selectedFilePosition, model);
                         internalStorageFilesAdapter.notifyDataSetChanged();
                         toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
-                        menu_type = "main";
+                        menu_type = "mainMenu";
                         getActivity().invalidateOptionsMenu();
                         Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_renamed), Toast.LENGTH_SHORT).show();
                     } else
@@ -766,11 +789,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
 
         if (isChecked) {
-            menu_type = "dirmenu";
+            menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();
             toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
         } else {
-            menu_type = "main";//change menu type to main menu
+            menu_type = "mainMenu";//change menu type to main menu
             getActivity().invalidateOptionsMenu();
             toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);//disappear delete button
         }
@@ -798,15 +821,22 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.remove(position);
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
-        if (isChecked) {
-            menu_type = "dirmenu";
+        if (isChecked) {//add the item to selected hash map,display directory menu and enable delete menu button
+            selectedFileHashMap.put(position, selectedFilePath);
+            menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();
             toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
-            selectedFilePositions.add(selectedFilePath);
         } else {
-            menu_type = "main";
-            getActivity().invalidateOptionsMenu();
-            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+            selectedFileHashMap.remove(position);
+            if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
+                menu_type = "mainMenu";
+                getActivity().invalidateOptionsMenu();
+                toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+            } else {
+                menu_type = "dirMenu";//if checked items list not empty then display directory menu and enable delete menu button
+                getActivity().invalidateOptionsMenu();
+                toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+            }
             root = selectedFileRootPath;
         }//end of else
     }
