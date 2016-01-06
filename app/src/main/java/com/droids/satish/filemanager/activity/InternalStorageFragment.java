@@ -188,7 +188,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             inflater.inflate(R.menu.main_menu, menu);
         else {
             inflater.inflate(R.menu.menu_directory, menu);
-            if (selectedFileHashMap.size()>1) {
+            if (selectedFileHashMap.size() > 1) {
                 menu.findItem(R.id.action_rename).setVisible(false);
                 menu.findItem(R.id.action_select_all).setVisible(false);
             } else {
@@ -208,12 +208,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             case R.id.action_select_all:
                 isChecked = true;
                 changeCheckboxStatus();
+                Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_de_select_all:
                 isChecked = false;
                 selectAllLabel = "deselectAll";
                 getActivity().invalidateOptionsMenu();
                 changeCheckboxStatus();
+                Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_rename:
                 renameFile();
@@ -269,7 +271,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
                     //display the delete button
                     if (!selectedFileHashMap.containsKey(position))//if selected list item is not exits in selected hash map
-                        selectedFileHashMap.put(position, model.getFilePath());//added the selected item to selected hash map
+                        selectedFileHashMap.put(model.getFileName(), model.getFilePath());//added the selected item to selected hash map
+                    Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                     menu_type = "dirMenu";
                     getActivity().invalidateOptionsMenu();
                     toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);//set menu tag as directory menu
@@ -278,7 +281,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     filesModelArrayList.remove(position);
                     filesModelArrayList.add(position, model);
                     internalStorageFilesAdapter.notifyDataSetChanged();
-                    selectedFileHashMap.remove(position);
+                    selectedFileHashMap.remove(model.getFileName());
+                    Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                     if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
                         menu_type = "mainMenu";
                         getActivity().invalidateOptionsMenu();
@@ -401,14 +405,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    File deleteFile = new File(selectedFilePath);//create file for selected file
-                    boolean isDeleteFile = deleteFile.delete();//delete the file from memory
-                    Log.d("delete file", selectedFilePath + "" + Boolean.toString(isDeleteFile));
-                    if (isDeleteFile) {
-                        InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
-                        filesModelArrayList.remove(model);//remove file from listview
-                        internalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
-                        //set menu tag for display main menu
+                    for (int i = 0; i < selectedFileHashMap.size(); i++) {
+                        File deleteFile = new File(selectedFilePath);//create file for selected file
+                        boolean isDeleteFile = deleteFile.delete();//delete the file from memory
+                        Log.d("delete file", selectedFilePath + "" + Boolean.toString(isDeleteFile));
+                        if (isDeleteFile) {
+                            InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
+                            filesModelArrayList.remove(model);//remove file from listview
+                            internalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
+                            //set menu tag for display main menu
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -787,10 +793,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
             //set  is checked value by getting from the selected or deselected btn
             filesModelArrayList.set(i, fileModel);//replace the element on array list
-            if (selectedFileHashMap.containsKey(fileModel.getFilePath()) && isChecked) {
-                selectedFileHashMap.remove(i);
-            } else
-                selectedFileHashMap.put(i, fileModel.getFilePath());
+            if (!isChecked) {
+                selectedFileHashMap.remove(fileModel.getFileName());
+            } else if (!selectAllLabel.contains(fileModel.getFileName())) {
+                selectedFileHashMap.put(fileModel.getFileName(), fileModel.getFilePath());
+            }
         }
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
 
@@ -813,6 +820,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void onDetach() {
         super.onDetach();
+        Toast.makeText(getActivity().getApplicationContext(), "backpressed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -828,12 +836,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {//add the item to selected hash map,display directory menu and enable delete menu button
-            selectedFileHashMap.put(position, selectedFilePath);
+            selectedFileHashMap.put(selectedFolderName, selectedFilePath);
             menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();
             toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+            Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
         } else {
-            selectedFileHashMap.remove(position);
+            selectedFileHashMap.remove(selectedFolderName);
+            Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
             if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
                 menu_type = "mainMenu";
                 getActivity().invalidateOptionsMenu();
