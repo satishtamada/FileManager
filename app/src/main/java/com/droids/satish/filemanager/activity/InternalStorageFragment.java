@@ -232,7 +232,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             default:
                 break;
         }
-
         return false;
     }
 
@@ -430,7 +429,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         });
         alertDialog.show();
     }
-
 
     private void getPdfReader(String filePath) {
         File file = new File(filePath);

@@ -16,9 +16,9 @@ import com.example.satish.filemanager.R;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
+    boolean doubleBackToExitPressedOnce = false;
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
-    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
