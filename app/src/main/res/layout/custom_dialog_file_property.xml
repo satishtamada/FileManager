@@ -71,7 +71,7 @@
         android:background="@color/colorWhite"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/btn_lbl_cancel"
+        android:text="@string/btn_lbl_okay"
         android:textAllCaps="false"
         android:textColor="@color/btn_cancel_boarder" />
 

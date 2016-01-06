@@ -396,7 +396,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         alertDialog.setTitle("Delete Folder");
         alertDialog.setIcon(R.mipmap.ic_delete_folder);
         if (selectedFileHashMap.size() == 1)//if user select single folder
-            alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName));
+            alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folder).replace("#name#", selectedFolderName.substring(0, selectedFolderName.length() - 1)));
         else //if user select multi folders
             alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_delete_folders));
         alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
@@ -416,6 +416,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                             InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                             filesModelArrayList.remove(model);//remove file from listview
                             internalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
+                            selectedFileHashMap.remove(selectedFolderName);
+                            menu_type = "mainMenu";
+                            getActivity().invalidateOptionsMenu();
+                            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
                             //set menu tag for display main menu
                         }
                     }
