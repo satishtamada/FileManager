@@ -14,11 +14,12 @@
         android:clickable="false"
         android:divider="@null"
         android:focusable="false" />
+
     <LinearLayout
         android:id="@+id/container_toolbar"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <include
             android:id="@+id/toolbarbottom"

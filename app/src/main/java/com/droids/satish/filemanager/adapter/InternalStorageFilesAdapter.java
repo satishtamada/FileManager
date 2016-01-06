@@ -92,7 +92,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
-        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp")) {
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(model.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
             imgItemIcon.setImageBitmap(bMap);
 
@@ -105,6 +105,10 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         } else {
             lblFilePath.setText(model.getFilePath());
         }
+        if (!model.getFileName().equals("/"))//if file is not parent
+            checkBox.setVisibility(View.VISIBLE);//checkbox visible
+        else //if file is parent
+            checkBox.setVisibility(View.INVISIBLE);//checkbox invisible
         checkBox.setChecked(model.isSelected());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,20 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.droids.satish.filemanager.activity.SettingsActivity">
     <item
-        android:id="@+id/action_delete"
-        android:icon="@mipmap/ic_menu_delete"
-        android:orderInCategory="100"
-        android:title="@string/action_delete"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_add_folder"
-        android:icon="@mipmap/ic_menu_plus"
-        android:orderInCategory="100"
-        android:title="@string/action_add"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_settings"
-        android:icon="@mipmap/ic_menu_bottom"
+        android:icon="@mipmap/ic_menu"
         android:orderInCategory="100"
         android:title="more"
         app:showAsAction="always">
@@ -26,11 +14,6 @@
                 android:id="@+id/action_property"
                 android:orderInCategory="100"
                 android:title="@string/lbl_property"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/action_new_file"
-                android:orderInCategory="100"
-                android:title="@string/lbl_new_file"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/action_select_all"

@@ -3,7 +3,7 @@
     <!--material colors-->
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#40BCD8</color>
     <color name="colorWhite">#FFFFFF</color>
 
     <color name="rounded_container_bg">#222222</color>
@@ -18,4 +18,4 @@
     <color name="txt_white">#fff</color>
     <color name="txt_green">#0f0</color>
     <color name="txt_blue">#2196F3</color>
-    </resources>
+</resources>
