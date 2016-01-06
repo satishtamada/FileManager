@@ -203,7 +203,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_property:
-                getProperties();
+                if (selectedFileHashMap.size() == 0)
+                    getProperties();
+                else
+                    getFileProperty(selectedFilePath, selectedFolderName);
                 break;
             case R.id.action_select_all:
                 isChecked = true;
@@ -642,7 +645,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 String folderName = txtNewFolder.getText().toString();
                 if (folderName.equals("")) {//if user not enter text file name
-                    folderName = "NewFile";
+                    folderName = "NewFolder";
                 } else {
                     folderName = txtNewFolder.getText().toString();
                 }
@@ -746,25 +749,17 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void getFileProperty(String selectedFilePath, String selectedFileName) {
+        Log.d("filePath", selectedFilePath);
         final Dialog propertyDialog = new Dialog(getActivity());
+        propertyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         propertyDialog.setContentView(R.layout.custom_dialog_file_property);
         propertyDialog.show();
         TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
         TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.song_size);
-        TextView lbl_file_size_name = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
-        TextView lblCancel = (TextView) propertyDialog.findViewById(R.id.btn_cancel);
-        if (selectedFileName.equals("/") || selectedFileName.equals("../") || selectedFileName.equals("sdcard/"))
-            lbl_file_size_name.setText("Used :");
-        else
-            lbl_file_size_name.setText("Size :");
-        if (selectedFileName.equals("/"))//set label for file name
-            lbl_file_name.setText("sdcard");
-        else if (selectedFileName.equals("../"))
-            lbl_file_name.setText("root");
-        else
-            lbl_file_name.setText(selectedFileName);
+        Button btnCancel = (Button) propertyDialog.findViewById(R.id.btn_cancel);
+        lbl_file_name.setText(selectedFileName.substring(0, selectedFileName.length() - 1));
         lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-        lblCancel.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 propertyDialog.cancel();
