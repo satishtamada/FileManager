@@ -188,11 +188,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             inflater.inflate(R.menu.main_menu, menu);
         else {
             inflater.inflate(R.menu.menu_directory, menu);
-            if (selectAllLabel.equals("selectAll")) {
+            if (selectedFileHashMap.size()>1) {
                 menu.findItem(R.id.action_rename).setVisible(false);
                 menu.findItem(R.id.action_select_all).setVisible(false);
-            } else
-                menu.findItem(R.id.action_rename).setVisible(false);
+            } else {
+                menu.findItem(R.id.action_rename).setVisible(true);
+                menu.findItem(R.id.action_select_all).setVisible(true);
+            }
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -785,6 +787,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
             //set  is checked value by getting from the selected or deselected btn
             filesModelArrayList.set(i, fileModel);//replace the element on array list
+            if (selectedFileHashMap.containsKey(fileModel.getFilePath()) && isChecked) {
+                selectedFileHashMap.remove(i);
+            } else
+                selectedFileHashMap.put(i, fileModel.getFilePath());
         }
         internalStorageFilesAdapter.notifyDataSetChanged();//set notify to list adapter
 

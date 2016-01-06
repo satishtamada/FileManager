@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by Satish on 05-12-2015.
  */
-public class InternalStorageFilesAdapter extends BaseAdapter implements Filterable {
+public class InternalStorageFilesAdapter extends BaseAdapter {
     public CustomListener customListener;
     private LayoutInflater inflater;
     private Activity activity;
@@ -124,39 +124,6 @@ public class InternalStorageFilesAdapter extends BaseAdapter implements Filterab
         });
         return view;
     }
-
-    @Override
-    public Filter getFilter() {
-        Filter filter = new Filter() {
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                filesModelArrayList = (ArrayList<InternalStorageFilesModel>) results.values;
-                notifyDataSetChanged();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                ArrayList<InternalStorageFilesModel> FilteredList = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-                    // No filter implemented we return all the list
-                    results.values = filesModelArrayList;
-                    results.count = filesModelArrayList.size();
-                } else {
-                    for (int i = 0; i < filesModelArrayList.size(); i++) {
-                        InternalStorageFilesModel data = filesModelArrayList.get(i);
-                        FilteredList.add(data);
-                    }
-                    results.values = FilteredList;
-                    results.count = FilteredList.size();
-                }
-                return results;
-            }
-        };
-        return filter;
-    }
-
     public interface CustomListener {
         void isCheckboxSelectedListener(int position, boolean isChecked);
     }
