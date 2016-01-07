@@ -8,6 +8,7 @@
         android:id="@+id/toolbar"
         layout="@layout/tool_bar" />
     <ExpandableListView
+        android:background="@color/colorWhite"
         android:id="@+id/lvExp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

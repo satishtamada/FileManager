@@ -107,10 +107,12 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         List<String> about = new ArrayList<String>();
-        about.add("FileManager 2.5 " + "\t" + "Created by Tamada Satish");
+        about.add("FileManager  \n" +
+                "Current Version 1.0 \n" +
+                "Created by Androidhive.info");
 
-        listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), storageOptions);
-        listDataChild.put(listDataHeader.get(3), about);
+        //listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
+        //listDataChild.put(listDataHeader.get(1), storageOptions);
+        listDataChild.put(listDataHeader.get(0), about);
     }
 }
