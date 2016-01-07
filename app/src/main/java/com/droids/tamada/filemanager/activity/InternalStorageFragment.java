@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -32,9 +32,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.droids.satish.filemanager.adapter.InternalStorageFilesAdapter;
-import com.droids.satish.filemanager.helper.Utilities;
-import com.droids.satish.filemanager.model.InternalStorageFilesModel;
+import com.droids.tamada.filemanager.adapter.InternalStorageFilesAdapter;
+import com.droids.tamada.filemanager.helper.Utilities;
+import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
@@ -211,14 +211,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             case R.id.action_select_all:
                 isChecked = true;
                 changeCheckboxStatus();
-                Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_de_select_all:
                 isChecked = false;
                 selectAllLabel = "deselectAll";
                 getActivity().invalidateOptionsMenu();
                 changeCheckboxStatus();
-                Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_rename:
                 renameFile();
@@ -284,7 +282,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     filesModelArrayList.add(position, model);
                     internalStorageFilesAdapter.notifyDataSetChanged();
                     selectedFileHashMap.remove(model.getFileName());
-                    Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                     if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
                         menu_type = "mainMenu";
                         getActivity().invalidateOptionsMenu();
@@ -304,7 +301,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final InternalStorageFilesModel model = filesModelArrayList.get(position);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                Toast.makeText(getActivity().getApplicationContext(), model.getFilePath(), Toast.LENGTH_LONG).show();
                 fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
@@ -529,12 +525,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         endTime.setText("" + seekBar.getMax());
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
+
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
             }
+
             public void onStartTrackingTouch(SeekBar seekBar) {
                 mHandler.removeCallbacks(mUpdateTimeTask);
             }
+
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mHandler.removeCallbacks(mUpdateTimeTask);
                 int totalDuration = mediaPlayer.getDuration();
@@ -825,10 +824,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();
             toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
-            Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
         } else {
             selectedFileHashMap.remove(selectedFolderName);
-            Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
             if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
                 menu_type = "mainMenu";
                 getActivity().invalidateOptionsMenu();

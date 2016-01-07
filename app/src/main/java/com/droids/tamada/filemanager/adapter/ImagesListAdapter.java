@@ -1,7 +1,10 @@
-package com.droids.satish.filemanager.adapter;
+package com.droids.tamada.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +12,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.satish.filemanager.activity.AudiosListActivity;
-import com.droids.satish.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
+import com.droids.tamada.filemanager.activity.ImagesListActivity;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Satish on 29-12-2015.
+ * Created by Satish on 30-12-2015.
  */
-public class AudioListAdapter extends BaseAdapter {
+public class ImagesListAdapter extends BaseAdapter {
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private Activity activity;
     private LayoutInflater layoutInflater;
 
-    public AudioListAdapter(AudiosListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
+    public ImagesListAdapter(ImagesListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
         this.activity = audiosListActivity;
         this.mediaFileListModelsArray = mediaFileListModelsArray;
     }
@@ -54,7 +58,12 @@ public class AudioListAdapter extends BaseAdapter {
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
         lblFileName.setText(mediaFileListModel.getFileName());
-        imgItemIcon.setImageResource(R.mipmap.ic_mp3);
+        File imgFile = new File(mediaFileListModel.getFilePath());
+        if (imgFile.exists()) {
+            Log.d("action", mediaFileListModel.getFilePath());
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            imgItemIcon.setImageBitmap(myBitmap);
+        }
         return view;
     }
 }

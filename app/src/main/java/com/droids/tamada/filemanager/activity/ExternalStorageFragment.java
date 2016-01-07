@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -25,9 +25,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.droids.satish.filemanager.model.ExternalStorageFilesModel;
+import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
-import com.droids.satish.filemanager.adapter.ExternalStorageFilesAdapter;
+import com.droids.tamada.filemanager.adapter.ExternalStorageFilesAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;

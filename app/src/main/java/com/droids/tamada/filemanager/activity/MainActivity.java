@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.satish.filemanager.R;
-import com.droids.satish.filemanager.adapter.VideoListAdapter;
-import com.droids.satish.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.adapter.VideoListAdapter;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 
 import java.util.ArrayList;
 

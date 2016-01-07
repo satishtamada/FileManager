@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.adapter;
+package com.droids.tamada.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.satish.filemanager.activity.InternalStorageFragment;
-import com.droids.satish.filemanager.model.InternalStorageFilesModel;
+import com.droids.tamada.filemanager.activity.InternalStorageFragment;
+import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;

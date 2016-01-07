@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.adapter;
+package com.droids.tamada.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +16,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.satish.filemanager.activity.ExternalStorageFragment;
-import com.droids.satish.filemanager.model.ExternalStorageFilesModel;
+import com.droids.tamada.filemanager.activity.ExternalStorageFragment;
+import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;

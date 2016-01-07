@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.model;
+package com.droids.tamada.filemanager.model;
 
 /**
  * Created by Satish on 04-12-2015.

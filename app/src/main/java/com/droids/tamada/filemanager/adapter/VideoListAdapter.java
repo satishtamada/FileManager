@@ -1,10 +1,10 @@
-package com.droids.satish.filemanager.adapter;
+package com.droids.tamada.filemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +12,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.activity.VideosListActivity;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
-import com.droids.satish.filemanager.activity.ImagesListActivity;
-import com.droids.satish.filemanager.model.MediaFileListModel;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Satish on 30-12-2015.
+ * Created by Satish on 29-12-2015.
  */
-public class ImagesListAdapter extends BaseAdapter {
+public class VideoListAdapter extends BaseAdapter {
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private Activity activity;
     private LayoutInflater layoutInflater;
 
-    public ImagesListAdapter(ImagesListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
+    public VideoListAdapter(VideosListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {
         this.activity = audiosListActivity;
         this.mediaFileListModelsArray = mediaFileListModelsArray;
     }
@@ -58,12 +57,8 @@ public class ImagesListAdapter extends BaseAdapter {
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         MediaFileListModel mediaFileListModel = mediaFileListModelsArray.get(position);
         lblFileName.setText(mediaFileListModel.getFileName());
-        File imgFile = new File(mediaFileListModel.getFilePath());
-        if (imgFile.exists()) {
-            Log.d("action", mediaFileListModel.getFilePath());
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            imgItemIcon.setImageBitmap(myBitmap);
-        }
+        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+        imgItemIcon.setImageBitmap(bMap);
         return view;
     }
 }

@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,10 +18,10 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.droids.satish.filemanager.helper.Utilities;
+import com.droids.tamada.filemanager.helper.Utilities;
 import com.example.satish.filemanager.R;
-import com.droids.satish.filemanager.adapter.AudioListAdapter;
-import com.droids.satish.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.adapter.AudioListAdapter;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 
 import java.io.IOException;
 import java.util.ArrayList;

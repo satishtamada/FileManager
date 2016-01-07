@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
         <activity
-            android:name="com.droids.satish.filemanager.activity.MainActivity"
+            android:name="com.droids.tamada.filemanager.activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,37 +24,37 @@
         </activity>
         <!--activity for ImageViewer-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.ImageViewActivity"
+            android:name="com.droids.tamada.filemanager.activity.ImageViewActivity"
             android:screenOrientation="portrait">
 
         </activity>
         <!--activity for text editor-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.TextFileViewActivity"
+            android:name="com.droids.tamada.filemanager.activity.TextFileViewActivity"
             android:screenOrientation="portrait">
 
         </activity>
         <!--activity for settings-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.SettingsActivity"
+            android:name="com.droids.tamada.filemanager.activity.SettingsActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName="com.droids.satish.filemanager.activity.MainActivity">
+            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity">
 
         </activity>
         <!--activity for images list-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.ImagesListActivity"
-            android:parentActivityName="com.droids.satish.filemanager.activity.MainActivity"></activity>
+            android:name="com.droids.tamada.filemanager.activity.ImagesListActivity"
+            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity"></activity>
         <!--activity for audio list-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.AudiosListActivity"
-            android:parentActivityName="com.droids.satish.filemanager.activity.MainActivity">
+            android:name="com.droids.tamada.filemanager.activity.AudiosListActivity"
+            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity">
 
         </activity>
         <!--activity for video list-->
         <activity
-            android:name="com.droids.satish.filemanager.activity.VideosListActivity"
-            android:parentActivityName="com.droids.satish.filemanager.activity.MainActivity">
+            android:name="com.droids.tamada.filemanager.activity.VideosListActivity"
+            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity">
 
         </activity>
 

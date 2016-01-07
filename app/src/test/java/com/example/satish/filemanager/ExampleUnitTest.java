@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager;
+package com.droids.tamada.filemanager;
 
 import org.junit.Test;
 

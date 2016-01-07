@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -25,9 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.droids.satish.filemanager.model.NavDrawerItem;
+import com.droids.tamada.filemanager.model.NavDrawerItem;
 import com.example.satish.filemanager.R;
-import com.droids.satish.filemanager.adapter.NavigationDrawerAdapter;
+import com.droids.tamada.filemanager.adapter.NavigationDrawerAdapter;
 
 import java.io.File;
 import java.util.ArrayList;

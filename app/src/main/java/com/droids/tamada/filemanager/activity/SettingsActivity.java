@@ -1,4 +1,4 @@
-package com.droids.satish.filemanager.activity;
+package com.droids.tamada.filemanager.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.droids.satish.filemanager.adapter.ExpandableListAdapter;
-import com.droids.satish.filemanager.model.TextEditorOptionsModel;
+import com.droids.tamada.filemanager.adapter.ExpandableListAdapter;
+import com.droids.tamada.filemanager.model.TextEditorOptionsModel;
 import com.example.satish.filemanager.R;
 
 import java.util.ArrayList;
