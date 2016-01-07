@@ -77,7 +77,6 @@ public class TextFileViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
@@ -128,13 +127,19 @@ public class TextFileViewActivity extends AppCompatActivity {
                 return true;
             case R.id.action_text_black://if text black color
                 txtTextData.setTextColor(getResources().getColor(R.color.txt_black));
+                txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_white));
+                break;
             case R.id.action_bg_white://background white
                 txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_white));
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_black));
                 return true;
             case R.id.action_text_white://if text white color
                 txtTextData.setTextColor(getResources().getColor(R.color.txt_white));
+                txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_black));
+                return true;
             case R.id.action_bg_black://background color black
                 txtTextData.setBackgroundColor(getResources().getColor(R.color.txt_black));
+                txtTextData.setTextColor(getResources().getColor(R.color.txt_white));
                 return true;
             case R.id.action_text_gray:
                 txtTextData.setTextColor(getResources().getColor(R.color.txt_gray));
@@ -153,6 +158,7 @@ public class TextFileViewActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+        return false;
     }
 
     @Override

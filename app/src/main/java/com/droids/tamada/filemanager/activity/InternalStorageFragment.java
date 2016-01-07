@@ -634,11 +634,12 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             public void onClick(View v) {
                 String folderName = txtNewFolder.getText().toString();
                 if (folderName.equals("")) {//if user not enter text file name
-                    folderName = "NewFolder";
+                    folderName = "NewFolder/";
                 } else {
                     folderName = txtNewFolder.getText().toString();
                 }
                 try {
+                    Log.d("root", root + "/" + folderName);
                     File file = new File(root + "/" + folderName);
                     if (file.exists()) {
                         Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();

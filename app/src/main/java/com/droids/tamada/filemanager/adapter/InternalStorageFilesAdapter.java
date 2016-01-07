@@ -95,7 +95,9 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
             imgItemIcon.setImageBitmap(bMap);
 
         } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
-        lblFileName.setText(model.getFileName());
+        if (model.isDir())
+            lblFileName.setText(model.getFileName().substring(0, model.getFileName().length() - 1));
+        else lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");
             lblFileName.setText("parent");
@@ -122,6 +124,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
         });
         return view;
     }
+
     public interface CustomListener {
         void isCheckboxSelectedListener(int position, boolean isChecked);
     }
