@@ -9,6 +9,7 @@
     <color name="rounded_container_bg">#222222</color>
     <color name="rounded_container_border">#3b3f44</color>
     <color name="light_gray_header_color">#646663</color>
+    <color name="lbl_text_color">#3B3B3B</color>
 
     <!--editor text colors-->
     <color name="btn_cancel_boarder">#525151</color>

@@ -762,11 +762,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         propertyDialog.setContentView(R.layout.custom_dialog_file_property);
         propertyDialog.show();
         TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
-        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.song_size);
-        Button btnCancel = (Button) propertyDialog.findViewById(R.id.btn_cancel);
+        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
+        Button btnOk = (Button) propertyDialog.findViewById(R.id.btn_cancel);
         lbl_file_name.setText(selectedFileName.substring(0, selectedFileName.length() - 1));
-        lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        if (getTotalFileMemorySize(selectedFilePath).equals("0"))
+            lbl_file_size.setText("0KB");
+        else
+            lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
+        btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 propertyDialog.cancel();

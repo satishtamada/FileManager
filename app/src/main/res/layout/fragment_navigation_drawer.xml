@@ -202,7 +202,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/drawerList"
         android:layout_margin="5dp"
-        android:background="@drawable/bg_comment_like_layout"
+        android:background="@drawable/bg_layout"
         android:orientation="vertical"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
@@ -283,7 +283,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
-        android:background="@drawable/bg_comment_like_layout"
+        android:background="@drawable/bg_layout"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
 

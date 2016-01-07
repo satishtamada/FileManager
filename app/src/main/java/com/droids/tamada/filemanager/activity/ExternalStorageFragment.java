@@ -567,7 +567,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         propertyDialog.setContentView(R.layout.custom_dialog_file_property);
         propertyDialog.show();
         TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
-        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.song_size);
+        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
         TextView lbl_file_size_name = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
         TextView lblCancel = (TextView) propertyDialog.findViewById(R.id.btn_cancel);
         if (selectedFileName.equals("/") || selectedFileName.equals("../") || selectedFileName.equals("sdcard/"))

@@ -46,7 +46,7 @@
 
     <string name="btn_lbl_create">Create</string>
     <string name="btn_lbl_cancel">Cancel</string>
-    <string name="btn_lbl_okay">Ok</string>
+    <string name="btn_lbl_okay">OK</string>
     <string name="btn_lbl_rename">Rename</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_confirm">Confirm</string>
