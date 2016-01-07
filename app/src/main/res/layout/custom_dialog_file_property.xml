@@ -77,17 +77,24 @@
             android:textSize="20dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_cancel"
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_dialog_menu"
-        android:padding="10dp"
-        android:text="@string/btn_lbl_okay"
-        android:textAllCaps="false"
-        android:textColor="#35b8e8" />
+        android:layout_margin="5dp"
+        android:paddingTop="2dp"
+        android:layout_marginTop="20dp" >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@null"
+            android:padding="10dp"
+            android:text="@string/btn_lbl_okay"
+            android:textAllCaps="false"
+            android:textColor="#35b8e8" />
+    </LinearLayout>
 
 </LinearLayout>
