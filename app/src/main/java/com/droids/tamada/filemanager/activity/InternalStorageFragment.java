@@ -210,7 +210,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 break;
             case R.id.action_select_all:
                 isChecked = true;
-                changeCheckboxStatus();
+           changeCheckboxStatus();
                 break;
             case R.id.action_de_select_all:
                 isChecked = false;
