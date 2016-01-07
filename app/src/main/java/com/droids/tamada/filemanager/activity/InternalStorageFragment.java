@@ -70,6 +70,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private Handler mHandler = new Handler();
     private Utilities utilities;
     private Toolbar toolbar;
+    private ArrayList<String> listItemClickPaths;
     private String selectAllLabel = "selectAll";
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
@@ -239,6 +240,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         View rootView = inflater.inflate(R.layout.fragment_interanl, container, false);
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
+        listItemClickPaths = new ArrayList<>();
+        listItemClickPaths.add(root);
         getDirectory(root);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -254,6 +257,8 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     case R.id.action_delete:
                         deleteFile();
                         break;
+                    case R.id.action_back_button:
+                        navigateBackDir();
                 }
                 return true;
             }
@@ -300,17 +305,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final InternalStorageFilesModel model = filesModelArrayList.get(position);
-                File file = new File(model.getFilePath());//get the selected item path in list view
                 fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
+                File file = new File(model.getFilePath());//get the selected item path in list view
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
-                    Log.d("here ", Boolean.toString(file.isDirectory()));
                     if (file.canRead()) {//if selected directory is readable
-                        Log.d("here", Boolean.toString(file.canRead()));
                         if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
                             getDirectory("/sdcard");
                         else
                             getDirectory(model.getFilePath());//if filename not root
+                        listItemClickPaths.add(model.getFilePath());
                         root = model.getFilePath();
                     } else {
                         final Dialog dialog = new Dialog(getActivity());
@@ -376,6 +380,19 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }//onItemClick
         });
         return rootView;
+    }
+
+    private void navigateBackDir() {
+        if (listItemClickPaths.size() == 1)
+            Toast.makeText(getActivity().getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        if (listItemClickPaths.size() != 0) {
+            if (listItemClickPaths.size() >= 2)
+                getDirectory(listItemClickPaths.get(listItemClickPaths.size() - 2));
+            listItemClickPaths.remove(listItemClickPaths.size() - 1);
+        } else {
+            getActivity().finish();
+            System.exit(0);
+        }
     }
 
     private void videoHandler(String filePath) {
@@ -636,7 +653,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 if (folderName.equals("")) {//if user not enter text file name
                     folderName = "NewFolder/";
                 } else {
-                    folderName = txtNewFolder.getText().toString();
+                    folderName = txtNewFolder.getText().toString() + "/";
                 }
                 try {
                     Log.d("root", root + "/" + folderName);
@@ -805,7 +822,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void onDetach() {
         super.onDetach();
-        Toast.makeText(getActivity().getApplicationContext(), "backpressed", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -92,9 +92,8 @@ public class SettingsActivity extends AppCompatActivity {
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("General settings");
-        listDataHeader.add("Storage options");
-        listDataHeader.add("Editor options");
+        //listDataHeader.add("General settings");
+        //listDataHeader.add("Storage options");
         listDataHeader.add("About");
 
         // Adding child data
@@ -106,17 +105,12 @@ public class SettingsActivity extends AppCompatActivity {
         storageOptions.add("Set password");
         storageOptions.add("Formant Disk");
 
-        List<String> editorOptions = new ArrayList<String>();
-        editorOptions.add("Change text color");
-        editorOptions.add("Change editor background");
-        editorOptions.add("Change font size");
 
         List<String> about = new ArrayList<String>();
         about.add("FileManager 2.5 " + "\t" + "Created by Tamada Satish");
 
         listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
         listDataChild.put(listDataHeader.get(1), storageOptions);
-        listDataChild.put(listDataHeader.get(2), editorOptions);
         listDataChild.put(listDataHeader.get(3), about);
     }
 }
