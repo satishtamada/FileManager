@@ -2,16 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
+    android:background="@drawable/round_corner"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:paddingBottom="10dp">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:text="Create File"
-        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="2dp"
+            android:text="Create File"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,10 +31,10 @@
         <EditText
             android:id="@+id/txt_new_file"
             android:layout_width="250dp"
-            android:layout_height="35dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
-            android:background="@drawable/bg_et_input"
+            android:background="@drawable/bg_btn_confirm"
             android:hint="New File"
             android:paddingLeft="10dp"
             android:singleLine="true">
@@ -43,19 +51,17 @@
             <Button
                 android:id="@+id/btn_create"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/bg_btn_confirm"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:background="@drawable/bg_button_style"
                 android:text="@string/btn_lbl_create"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/bg_btn_delete"
                 android:paddingLeft="10dp"
