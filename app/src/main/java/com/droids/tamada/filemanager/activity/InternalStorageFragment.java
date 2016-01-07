@@ -769,7 +769,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             lbl_file_size.setText("0KB");
         else
             lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-        btnOk.setOnClickListener(new View.OnClickListener() {
+        btnOkg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 propertyDialog.cancel();

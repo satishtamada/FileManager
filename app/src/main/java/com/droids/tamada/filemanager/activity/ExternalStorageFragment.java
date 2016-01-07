@@ -25,9 +25,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.droids.tamada.filemanager.adapter.ExternalStorageFilesAdapter;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
-import com.droids.tamada.filemanager.adapter.ExternalStorageFilesAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -159,7 +159,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_external, container, false);
         //btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
-       // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
+        // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.external_files_list);
         linearLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
         if (!Environment.isExternalStorageRemovable())
@@ -417,7 +417,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
 
     }
 
-   
 
     private void getNewFile(final String rootPath) {
         dialog.cancel();
