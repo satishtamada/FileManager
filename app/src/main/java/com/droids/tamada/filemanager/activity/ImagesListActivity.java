@@ -28,9 +28,6 @@ import java.util.ArrayList;
  */
 public class ImagesListActivity extends AppCompatActivity {
     private ArrayList<MediaFileListModel> imageListModelsArray;
-    private Toolbar toolbar;
-    private ImagesListAdapter audioListAdapter;
-    private ListView listview;
     private LinearLayout noMediaLayout;
 
     /**
@@ -40,15 +37,15 @@ public class ImagesListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_list);
-        listview = (ListView) findViewById(R.id.audio_listview);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ListView listview = (ListView) findViewById(R.id.audio_listview);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Images");
         imageListModelsArray = new ArrayList<>();
         getImagesList();
-        audioListAdapter = new ImagesListAdapter(this, imageListModelsArray);
+        ImagesListAdapter audioListAdapter = new ImagesListAdapter(this, imageListModelsArray);
         listview.setAdapter(audioListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -43,16 +43,10 @@ public class FragmentDrawer extends Fragment {
     private static String TAG = FragmentDrawer.class.getSimpleName();
     private static String[] titles = null;
     private static int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
-    private ImageButton imgBtnSettings;
-    private RecyclerView recyclerView;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private NavigationDrawerAdapter adapter;
     private View containerView;
     private FragmentDrawerListener drawerListener;
-    private LinearLayout imagesLayout, audiosLayout, videosLayout;
-    private ProgressBar internal_progress, external_progress;
-    private TextView lbl_free_internal_memory, lbl_total_internal_memory, lbl_free_external_memory, lbl_total_external_memory, lbl_ram_size, lbl_ram_free_size;
 
     public FragmentDrawer() {
 
@@ -160,19 +154,19 @@ public class FragmentDrawer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflating view layout
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        imgBtnSettings = (ImageButton) layout.findViewById(R.id.img_btn_settings);
-        recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-        audiosLayout = (LinearLayout) layout.findViewById(R.id.layout_audios);
-        videosLayout = (LinearLayout) layout.findViewById(R.id.layout_videos);
-        imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
-        internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);//internal memory status
-        external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);//external memory status
-        lbl_free_external_memory = (TextView) layout.findViewById(R.id.free_external_memory);
-        lbl_free_internal_memory = (TextView) layout.findViewById(R.id.free_internal_memory);
-        lbl_total_external_memory = (TextView) layout.findViewById(R.id.total_external_memory);
-        lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
-        lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
-        lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
+        ImageButton imgBtnSettings = (ImageButton) layout.findViewById(R.id.img_btn_settings);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
+        LinearLayout audiosLayout = (LinearLayout) layout.findViewById(R.id.layout_audios);
+        LinearLayout videosLayout = (LinearLayout) layout.findViewById(R.id.layout_videos);
+        LinearLayout imagesLayout = (LinearLayout) layout.findViewById(R.id.layout_images);
+        ProgressBar internal_progress = (ProgressBar) layout.findViewById(R.id.progressbar1);
+        ProgressBar external_progress = (ProgressBar) layout.findViewById(R.id.progressbar2);
+        TextView lbl_free_external_memory = (TextView) layout.findViewById(R.id.free_external_memory);
+        TextView lbl_free_internal_memory = (TextView) layout.findViewById(R.id.free_internal_memory);
+        TextView lbl_total_external_memory = (TextView) layout.findViewById(R.id.total_external_memory);
+        TextView lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
+        TextView lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
+        TextView lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
         lbl_ram_free_size.setText(getRamUsageSize() + "/");
         lbl_ram_size.setText(getRamMemorySize());
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
@@ -192,7 +186,7 @@ public class FragmentDrawer extends Fragment {
         internal_progress.setMax((int) freeSize); // Maximum Progress
         // Maximum Progress
 
-        adapter = new NavigationDrawerAdapter(getActivity(), getData());
+        NavigationDrawerAdapter adapter = new NavigationDrawerAdapter(getActivity(), getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
@@ -292,14 +286,14 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
+    public interface ClickListener {
+        void onClick(View view, int position);
 
-        public void onLongClick(View view, int position);
+        void onLongClick(View view, int position);
     }
 
     public interface FragmentDrawerListener {
-        public void onDrawerItemSelected(View view, int position);
+        void onDrawerItemSelected(View view, int position);
     }
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

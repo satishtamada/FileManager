@@ -42,21 +42,17 @@ import java.util.zip.ZipInputStream;
  * Created by Satish on 04-12-2015.
  */
 public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener {
-    private LinearLayout linearLayout;
     private ListView listView;
     private ArrayList<ExternalStorageFilesModel> filesModelArrayList;
     private ExternalStorageFilesAdapter externalStorageFilesAdapter;
     private ImageButton btnMenu;
     private ImageButton btnDelete;
-    private boolean isChecked = false;
     private Dialog dialog;
-    private String MENU_TAG = "main";
     private String root;
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
-    private String selectedFileRootPath;
     private List<String> selectedFilePositions = new ArrayList<String>();
 
     public ExternalStorageFragment() {
@@ -161,7 +157,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         //btnMenu = (ImageButton) rootView.findViewById(R.id.btn_menu);
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.external_files_list);
-        linearLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
+        LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
         if (!Environment.isExternalStorageRemovable())
             linearLayout.setVisibility(View.VISIBLE);
         else {
@@ -602,6 +598,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     public void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
             ExternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
+            boolean isChecked = false;
             fileModel.setSelected(isChecked);//set the is checked value by getting from the selected or deselected btn
             filesModelArrayList.set(i, fileModel);//replace the element on arraylist
         }
@@ -623,7 +620,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     @Override
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         ExternalStorageFilesModel model = filesModelArrayList.get(position);
-        selectedFileRootPath = root;
+        String selectedFileRootPath = root;
         root = model.getFilePath();//set the root to selected filepath
         selectedFilePath = model.getFilePath();
         selectedFolderName = model.getFileName();
@@ -637,6 +634,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             btnMenu.setTag("dirmenu");
             btnDelete.setVisibility(View.VISIBLE);
         } else {
+            String MENU_TAG = "main";
             btnMenu.setTag(MENU_TAG);//if checkbox is not selected change menu to main menu and disappear the delete icon
             btnDelete.setVisibility(View.GONE);
             root = selectedFileRootPath;

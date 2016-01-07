@@ -25,21 +25,20 @@ import java.io.IOException;
  * Created by Satish on 16-12-2015.
  */
 public class TextFileViewActivity extends AppCompatActivity {
-    private String fileName, filePath;
+    private String filePath;
     private EditText txtTextData;
-    private Toolbar mToolbar;
     private String currentText, newText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_textview);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         txtTextData = (EditText) findViewById(R.id.txt_file_data);
         Intent txtIntent = getIntent();
-        fileName = txtIntent.getStringExtra("fileName");
+        String fileName = txtIntent.getStringExtra("fileName");
         filePath = txtIntent.getStringExtra("filePath");
         getSupportActionBar().setTitle(fileName);
         try {

@@ -31,7 +31,6 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Activity activity;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
-    private String fileExtension;
 
     public InternalStorageFilesAdapter(ArrayList<InternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
         this.activity = activity;
@@ -69,7 +68,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final InternalStorageFilesModel model = filesModelArrayList.get(position);
-        fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);//file extension
+        String fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
 
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);

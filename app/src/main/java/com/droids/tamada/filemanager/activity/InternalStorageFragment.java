@@ -65,7 +65,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
-    private String selectedFileRootPath;
     private HashMap selectedFileHashMap = new HashMap();
     private Handler mHandler = new Handler();
     private Utilities utilities;
@@ -276,6 +275,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
                     //display the delete button
                     if (!selectedFileHashMap.containsKey(position))//if selected list item is not exits in selected hash map
+                        //noinspection unchecked
                         selectedFileHashMap.put(model.getFileName(), model.getFilePath());//added the selected item to selected hash map
                     Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
                     menu_type = "dirMenu";
@@ -769,7 +769,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             lbl_file_size.setText("0KB");
         else
             lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-        btnOkg.setOnClickListener(new View.OnClickListener() {
+        btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 propertyDialog.cancel();
@@ -830,7 +830,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public void isCheckboxSelectedListener(int position, boolean isChecked) {
         InternalStorageFilesModel model = filesModelArrayList.get(position);
-        selectedFileRootPath = root;
+        String selectedFileRootPath = root;
         root = model.getFilePath();//set the root to selected filepath
         selectedFilePath = model.getFilePath();
         selectedFolderName = model.getFileName();

@@ -17,15 +17,13 @@ import java.io.File;
  * Created by Satish on 15-12-2015.
  */
 public class ImageViewActivity extends AppCompatActivity {
-    private ImageView imageFile;
-    private TextView lblImageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imageview);
-        imageFile = (ImageView) findViewById(R.id.image_file);
-        lblImageName = (TextView) findViewById(R.id.lbl_image_name);
+        ImageView imageFile = (ImageView) findViewById(R.id.image_file);
+        TextView lblImageName = (TextView) findViewById(R.id.lbl_image_name);
         Intent imagePath = getIntent();
         String imageFilePath = imagePath.getStringExtra("imagePath");
         lblImageName.setText(imagePath.getStringExtra("imageName"));

@@ -31,7 +31,6 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
     private LayoutInflater inflater;
     private Activity activity;
     private ArrayList<ExternalStorageFilesModel> filesModelArrayList;
-    private String fileExtension;
 
     public ExternalStorageFilesAdapter(ArrayList<ExternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
         this.activity = activity;
@@ -69,7 +68,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
         ImageView imgItemIcon = (ImageView) view.findViewById(R.id.icon);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final ExternalStorageFilesModel model = filesModelArrayList.get(position);
-        fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);//file extension
+        String fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
 
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);

@@ -44,7 +44,7 @@
         <!--activity for images list-->
         <activity
             android:name="com.droids.tamada.filemanager.activity.ImagesListActivity"
-            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity"></activity>
+            android:parentActivityName="com.droids.tamada.filemanager.activity.MainActivity"/>
         <!--activity for audio list-->
         <activity
             android:name="com.droids.tamada.filemanager.activity.AudiosListActivity"

@@ -35,9 +35,6 @@ public class AudiosListActivity extends AppCompatActivity {
     SeekBar seekBar;
     private LinearLayout noMediaLayout;
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
-    private Toolbar toolbar;
-    private AudioListAdapter audioListAdapter;
-    private ListView listview;
     private MediaPlayer mediaPlayer;
     private Handler mHandler = new Handler();
     private Utilities utilities;
@@ -52,7 +49,7 @@ public class AudiosListActivity extends AppCompatActivity {
             startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
 
             // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            int progress = utilities.getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             seekBar.setProgress(progress);
 
@@ -68,8 +65,8 @@ public class AudiosListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_list);
-        listview = (ListView) findViewById(R.id.audio_listview);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ListView listview = (ListView) findViewById(R.id.audio_listview);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,7 +74,7 @@ public class AudiosListActivity extends AppCompatActivity {
         mediaPlayer = new MediaPlayer();
         mediaFileListModelsArray = new ArrayList<>();
         getMusicList();
-        audioListAdapter = new AudioListAdapter(this, mediaFileListModelsArray);
+        AudioListAdapter audioListAdapter = new AudioListAdapter(this, mediaFileListModelsArray);
         listview.setAdapter(audioListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

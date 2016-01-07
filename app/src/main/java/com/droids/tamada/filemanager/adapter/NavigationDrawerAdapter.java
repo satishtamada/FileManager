@@ -20,10 +20,9 @@ import java.util.List;
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
     List<NavDrawerItem> data = Collections.emptyList();
     private LayoutInflater inflater;
-    private Context context;
 
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
-        this.context = context;
+        Context context1 = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
     }

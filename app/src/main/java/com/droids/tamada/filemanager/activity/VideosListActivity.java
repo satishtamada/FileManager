@@ -21,9 +21,6 @@ import java.util.ArrayList;
  */
 public class VideosListActivity extends AppCompatActivity {
     private ArrayList<MediaFileListModel> videoListModelsArray;
-    private Toolbar toolbar;
-    private VideoListAdapter audioListAdapter;
-    private ListView listview;
     private LinearLayout noMediaLayout;
     /**
      * Called when the activity is first created.
@@ -32,14 +29,14 @@ public class VideosListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_list);
-        listview = (ListView) findViewById(R.id.audio_listview);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ListView listview = (ListView) findViewById(R.id.audio_listview);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         videoListModelsArray = new ArrayList<>();
         getVideoList();
-        audioListAdapter = new VideoListAdapter(this, videoListModelsArray);
+        VideoListAdapter audioListAdapter = new VideoListAdapter(this, videoListModelsArray);
         listview.setAdapter(audioListAdapter);
 
     }
