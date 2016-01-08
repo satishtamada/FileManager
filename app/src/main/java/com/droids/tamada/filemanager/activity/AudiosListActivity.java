@@ -86,7 +86,6 @@ public class AudiosListActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getApplicationContext(), model.getFilePath(), Toast.LENGTH_LONG).show();
             }
         });
     }
