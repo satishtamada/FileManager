@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by Satish on 26-12-2015.
  */
-public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterable {
+public class ExternalStorageFilesAdapter extends BaseAdapter {
     public CustomListener customListener;
     private LayoutInflater inflater;
     private Activity activity;
@@ -70,6 +70,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
         final ExternalStorageFilesModel model = filesModelArrayList.get(position);
         String fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
 
+
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);
         } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if list item any image then
@@ -89,8 +90,14 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
             imgItemIcon.setImageResource(R.mipmap.ic_zip);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(model.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+            imgItemIcon.setImageBitmap(bMap);
+
         } else imgItemIcon.setImageResource(R.mipmap.ic_unknown_file);
-        lblFileName.setText(model.getFileName());
+        if (model.isDir())
+            lblFileName.setText(model.getFileName().substring(0, model.getFileName().length() - 1));
+        else lblFileName.setText(model.getFileName());
         if (model.getFileName().equals("/")) {
             lblFilePath.setText("/sdcard");
             lblFileName.setText("parent");
@@ -98,6 +105,10 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
         } else {
             lblFilePath.setText(model.getFilePath());
         }
+        if (!model.getFileName().equals("/"))//if file is not parent
+            checkBox.setVisibility(View.VISIBLE);//checkbox visible
+        else //if file is parent
+            checkBox.setVisibility(View.INVISIBLE);//checkbox invisible
         checkBox.setChecked(model.isSelected());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,38 +123,6 @@ public class ExternalStorageFilesAdapter extends BaseAdapter implements Filterab
             }
         });
         return view;
-    }
-
-    @Override
-    public Filter getFilter() {
-        Filter filter = new Filter() {
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                filesModelArrayList = (ArrayList<ExternalStorageFilesModel>) results.values;
-                notifyDataSetChanged();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();
-                ArrayList<ExternalStorageFilesModel> FilteredList = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-                    // No filter implemented we return all the list
-                    results.values = filesModelArrayList;
-                    results.count = filesModelArrayList.size();
-                } else {
-                    for (int i = 0; i < filesModelArrayList.size(); i++) {
-                        ExternalStorageFilesModel data = filesModelArrayList.get(i);
-                        FilteredList.add(data);
-                    }
-                    results.values = FilteredList;
-                    results.count = FilteredList.size();
-                }
-                return results;
-            }
-        };
-        return filter;
     }
 
     public interface CustomListener {
