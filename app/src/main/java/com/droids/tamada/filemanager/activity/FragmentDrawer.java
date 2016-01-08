@@ -25,9 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.adapter.NavigationDrawerAdapter;
 import com.droids.tamada.filemanager.model.NavDrawerItem;
 import com.example.satish.filemanager.R;
-import com.droids.tamada.filemanager.adapter.NavigationDrawerAdapter;
 
 import java.io.File;
 import java.util.ArrayList;

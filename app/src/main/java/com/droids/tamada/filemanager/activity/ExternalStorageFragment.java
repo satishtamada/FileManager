@@ -73,9 +73,100 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private Toolbar toolbar;
     private ArrayList<String> listItemClickPaths;
     private String selectAllLabel = "selectAll";
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mediaPlayer.getDuration();
+            long currentDuration = mediaPlayer.getCurrentPosition();
+            // Displaying Total Duration time
+            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
+            // Updating progress bar
+            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            seekBar.setProgress(progress);
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
 
     public ExternalStorageFragment() {
         // Required empty public constructor
+    }
+
+    public static String formatSize(long size) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
+    }
+
+    private static long dirSize(File dir) {
+        if (dir.exists()) {
+            long result = 0;
+            File[] fileList = dir.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                // Recursive call if it's a directory
+                if (fileList[i].isDirectory()) {
+                    result += dirSize(fileList[i]);
+                } else {
+                    // Sum the file size in bytes
+                    result += fileList[i].length();
+                }
+            }
+            return result; // return the file size
+        }
+        return 0;
+    }
+
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        Log.d("getPath", path.getPath());
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize, "free");
+    }
+
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize, "total");
+    }
+
+    public static String formatSize(long size, String tag) {
+        String suffix = null;
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
+            }
+        }
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
     }
 
     @Override
@@ -307,98 +398,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             getActivity().finish();
             System.exit(0);
         }
-    }
-
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            long totalDuration = mediaPlayer.getDuration();
-            long currentDuration = mediaPlayer.getCurrentPosition();
-            // Displaying Total Duration time
-            endTime.setText("" + utilities.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
-            // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            seekBar.setProgress(progress);
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
-        }
-    };
-
-    public static String formatSize(long size) {
-        String suffix = null;
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
-    }
-
-    private static long dirSize(File dir) {
-        if (dir.exists()) {
-            long result = 0;
-            File[] fileList = dir.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
-                // Recursive call if it's a directory
-                if (fileList[i].isDirectory()) {
-                    result += dirSize(fileList[i]);
-                } else {
-                    // Sum the file size in bytes
-                    result += fileList[i].length();
-                }
-            }
-            return result; // return the file size
-        }
-        return 0;
-    }
-
-    public static String getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        Log.d("getPath", path.getPath());
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return formatSize(availableBlocks * blockSize, "free");
-    }
-
-    public static String getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return formatSize(totalBlocks * blockSize, "total");
-    }
-
-    public static String formatSize(long size, String tag) {
-        String suffix = null;
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
     }
 
     private void videoHandler(String filePath) {

@@ -13,8 +13,7 @@
 
         <ImageView
             android:layout_width="50dp"
-            android:layout_height="50dp"
-          />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/not_read_file_name"
@@ -80,10 +79,10 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_dialog_menu"
         android:layout_margin="5dp"
-        android:paddingTop="2dp"
-        android:layout_marginTop="20dp" >
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_dialog_menu"
+        android:paddingTop="2dp">
 
         <Button
             android:id="@+id/btn_cancel"

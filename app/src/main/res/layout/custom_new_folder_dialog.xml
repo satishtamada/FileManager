@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/round_corner"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    >
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="300dp"
