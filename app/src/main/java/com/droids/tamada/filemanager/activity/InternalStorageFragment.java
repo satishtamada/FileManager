@@ -80,7 +80,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             // Displaying time completed playing
             startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
             // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            int progress = utilities.getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             seekBar.setProgress(progress);
             // Running this thread after 100 milliseconds
@@ -709,15 +709,14 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         renameDialog.setContentView(R.layout.custom_dialog_rename_file);
         renameDialog.show();
-        Log.d("subString", selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1));
         final EditText renamed_file = (EditText) renameDialog.findViewById(R.id.txt_rename_file);
         Button lbl_rename = (Button) renameDialog.findViewById(R.id.btn_rename);
         Button lbl_cancel = (Button) renameDialog.findViewById(R.id.btn_cancel);
         final TextView lbl_type = (TextView) renameDialog.findViewById(R.id.lbl_type);
         if (oldFile.isDirectory()) {
-            lbl_type.setText("Rename Folder");
+            lbl_type.setText(getActivity().getApplicationContext().getString(R.string.lbl_title_rename_folder));
         } else {
-            lbl_type.setText("Rename File");
+            lbl_type.setText(getActivity().getApplicationContext().getString(R.string.lbl_title_rename_file));
         }
         renamed_file.setText(selectedFolderName);
         lbl_rename.setOnClickListener(new View.OnClickListener() {

@@ -59,7 +59,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private ListView listView;
     private ArrayList<ExternalStorageFilesModel> filesModelArrayList;
     private ExternalStorageFilesAdapter externalStorageFilesAdapter;
-    private List<String> selectedFilePositions = new ArrayList<String>();
     private boolean isChecked = false;
     private String menu_type = "mainMenu";
     private String root = "/sdcard";
@@ -245,6 +244,8 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         else {
             root = Environment.getExternalStorageDirectory()
                     .getAbsolutePath();
+            listItemClickPaths = new ArrayList<>();
+            listItemClickPaths.add(root);
             getDirectory(root);
             toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
             toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

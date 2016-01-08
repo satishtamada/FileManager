@@ -51,6 +51,9 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_confirm">Confirm</string>
 
+    <string name="lbl_title_rename_folder">Rename Folder</string>
+    <string name="lbl_title_rename_file">Rename File</string>
+
     <string name="msg_prompt_delete_folder">Are you sure you want delete #name# folder?</string>
     <string name="msg_prompt_delete_folders">Are you sure you want delete selected folders?</string>
     <string name="msg_prompt_unzip_folder">Are you sure you want to unzip folder</string>
