@@ -10,9 +10,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.satish.filemanager.R;
 import com.droids.tamada.filemanager.adapter.VideoListAdapter;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
+import com.example.satish.filemanager.R;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class VideosListActivity extends AppCompatActivity {
     private ArrayList<MediaFileListModel> videoListModelsArray;
     private LinearLayout noMediaLayout;
+
     /**
      * Called when the activity is first created.
      */
@@ -34,6 +35,7 @@ public class VideosListActivity extends AppCompatActivity {
         noMediaLayout = (LinearLayout) findViewById(R.id.noMediaLayout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Videos");
         videoListModelsArray = new ArrayList<>();
         getVideoList();
         VideoListAdapter audioListAdapter = new VideoListAdapter(this, videoListModelsArray);

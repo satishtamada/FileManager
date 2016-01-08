@@ -108,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
         List<String> about = new ArrayList<String>();
         about.add("FileManager  \n" +
                 "Current Version 1.0 \n" +
-                "Created by Androidhive.info");
+                "Developed by Androidhive.info");
 
         //listDataChild.put(listDataHeader.get(0), generalSettings); // Header, Child data
         //listDataChild.put(listDataHeader.get(1), storageOptions);
