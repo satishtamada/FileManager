@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:background="@color/colorPrimary">
+        android:background="@drawable/bg_blue_round_corner">
 
         <ImageView
             android:layout_width="50dp"

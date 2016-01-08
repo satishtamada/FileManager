@@ -210,7 +210,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 break;
             case R.id.action_select_all:
                 isChecked = true;
-           changeCheckboxStatus();
+                changeCheckboxStatus();
                 break;
             case R.id.action_de_select_all:
                 isChecked = false;
@@ -704,19 +704,25 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void renameFile() {
+        final File oldFile = new File(selectedFilePath);//create file with old name
         final Dialog renameDialog = new Dialog(getActivity());
         renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         renameDialog.setContentView(R.layout.custom_dialog_rename_file);
         renameDialog.show();
         Log.d("subString", selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1));
         final EditText renamed_file = (EditText) renameDialog.findViewById(R.id.txt_rename_file);
-        TextView lbl_rename = (TextView) renameDialog.findViewById(R.id.btn_rename);
-        TextView lbl_cancel = (TextView) renameDialog.findViewById(R.id.btn_cancel);
+        Button lbl_rename = (Button) renameDialog.findViewById(R.id.btn_rename);
+        Button lbl_cancel = (Button) renameDialog.findViewById(R.id.btn_cancel);
+        final TextView lbl_type = (TextView) renameDialog.findViewById(R.id.lbl_type);
+        if (oldFile.isDirectory()) {
+            lbl_type.setText("Rename Folder");
+        } else {
+            lbl_type.setText("Rename File");
+        }
         renamed_file.setText(selectedFolderName);
         lbl_rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File oldFile = new File(selectedFilePath);//create file with old name
                 File newFile = new File(selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1) + renamed_file.getText().toString());
                 if (newFile.exists()) {//if renamed file already exits
                     Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_name_already_exits), Toast.LENGTH_LONG).show();
