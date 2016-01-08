@@ -730,7 +730,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 } else {
                     boolean isRenamed = oldFile.renameTo(newFile);
                     if (isRenamed) {
-                        Toast.makeText(getActivity().getApplicationContext(), selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/')) + renamed_file.getText().toString(), Toast.LENGTH_SHORT).show();
                         InternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
                         model.setFileName(renamed_file.getText().toString());
                         model.setFilePath(newFile.getPath());
