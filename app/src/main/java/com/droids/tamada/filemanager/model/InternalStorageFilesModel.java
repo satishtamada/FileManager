@@ -1,7 +1,7 @@
 package com.droids.tamada.filemanager.model;
 
 /**
- * Created by Satish on 05-12-2015.
+ * Created by Satish on 26-12-2015.
  */
 public class InternalStorageFilesModel {
     private String fileName;

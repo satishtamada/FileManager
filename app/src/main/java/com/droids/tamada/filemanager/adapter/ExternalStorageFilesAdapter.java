@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Satish on 26-12-2015.
+ * Created by Satish on 05-12-2015.
  */
 public class ExternalStorageFilesAdapter extends BaseAdapter {
     public CustomListener customListener;
@@ -69,7 +69,6 @@ public class ExternalStorageFilesAdapter extends BaseAdapter {
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         final ExternalStorageFilesModel model = filesModelArrayList.get(position);
         String fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
-
 
         if (model.isDir()) {//if list item folder the set icon
             imgItemIcon.setImageResource(R.mipmap.ic_folder);
@@ -129,3 +128,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter {
         void isCheckboxSelectedListener(int position, boolean isChecked);
     }
 }
+
+
+
+

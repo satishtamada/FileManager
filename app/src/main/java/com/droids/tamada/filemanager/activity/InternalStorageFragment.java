@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ import java.util.zip.ZipInputStream;
  */
 public class InternalStorageFragment extends Fragment implements InternalStorageFilesAdapter.CustomListener {
     private MediaPlayer mediaPlayer;
+    private LinearLayout noMediaLayout;
+    private LinearLayout toolbarLayout;
     private TextView startTime;
     private TextView endTime;
     private SeekBar seekBar;
@@ -60,7 +63,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
     private boolean isChecked = false;
     private String menu_type = "mainMenu";
-    private String root = "/sdcard";
+    private String root;
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
@@ -80,7 +83,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             // Displaying time completed playing
             startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
             // Updating progress bar
-            int progress = utilities.getProgressPercentage(currentDuration, totalDuration);
+            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
             seekBar.setProgress(progress);
             // Running this thread after 100 milliseconds
@@ -88,7 +91,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         }
     };
 
-    //generate conflicts
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -236,149 +238,157 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_interanl, container, false);
-        // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
-        listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
-        listItemClickPaths = new ArrayList<>();
-        listItemClickPaths.add(root);
-        getDirectory(root);
+        View rootView = inflater.inflate(R.layout.fragment_internal, container, false);
+        listView = (ListView) rootView.findViewById(R.id.external_files_list);
+        noMediaLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
+        toolbarLayout = (LinearLayout) rootView.findViewById(R.id.container_toolbar);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_add_folder:
-                        createNewFolder();
-                        break;
-                    case R.id.action_new_file:
-                        createNewFile(root);
-                        break;
-                    case R.id.action_delete:
-                        deleteFile();
-                        break;
-                    case R.id.action_back_button:
-                        navigateBackDir();
-                }
-                return true;
-            }
-        });
-        toolbar.inflateMenu(R.menu.menu_bottom);
-        toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                InternalStorageFilesModel model = filesModelArrayList.get(position);
-                if (!model.isSelected()) {
-                    model.setSelected(true);//set true value for selected item
-                    filesModelArrayList.remove(position);//remove the current selected item from list
-                    filesModelArrayList.add(position, model);//add the updated item to list
-                    internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
-                    //display the delete button
-                    if (!selectedFileHashMap.containsKey(position))//if selected list item is not exits in selected hash map
-                        //noinspection unchecked
-                        selectedFileHashMap.put(model.getFileName(), model.getFilePath());//added the selected item to selected hash map
-                    Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
-                    menu_type = "dirMenu";
-                    getActivity().invalidateOptionsMenu();
-                    toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);//set menu tag as directory menu
-                } else {
-                    model.setSelected(false);
-                    filesModelArrayList.remove(position);
-                    filesModelArrayList.add(position, model);
-                    internalStorageFilesAdapter.notifyDataSetChanged();
-                    selectedFileHashMap.remove(model.getFileName());
-                    if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
-                        menu_type = "mainMenu";
-                        getActivity().invalidateOptionsMenu();
-                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
-                    } else {
-                        menu_type = "dirMenu";//if checked items list not empty then display directory menu and enable delete menu button
-                        getActivity().invalidateOptionsMenu();
-                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+        if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+            noMediaLayout.setVisibility(View.VISIBLE);
+        else {
+            root = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath();
+            listView.setVisibility(View.VISIBLE);
+            listItemClickPaths = new ArrayList<>();
+            listItemClickPaths.add(root);
+            getDirectory(root);
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.action_add_folder:
+                            createNewFolder();
+                            break;
+                        case R.id.action_new_file:
+                            createNewFile(root);
+                            break;
+                        case R.id.action_delete:
+                            deleteFile();
+                            break;
+                        case R.id.action_back_button:
+                            navigateBackDir();
                     }
+                    return true;
                 }
-                return true;
-            }
-        });
-        //event on item click
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final InternalStorageFilesModel model = filesModelArrayList.get(position);
-                fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
-                File file = new File(model.getFilePath());//get the selected item path in list view
-                // getDirectory(model.getFilePath());
-                if (file.isDirectory()) {//check if selected item is directory
-                    if (file.canRead()) {//if selected directory is readable
-                        if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
-                            getDirectory("/sdcard");
-                        else
-                            getDirectory(model.getFilePath());//if filename not root
-                        listItemClickPaths.add(model.getFilePath());
-                        root = model.getFilePath();
+            });
+            toolbar.inflateMenu(R.menu.menu_bottom);
+            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    InternalStorageFilesModel model = filesModelArrayList.get(position);
+                    if (!model.isSelected()) {
+                        model.setSelected(true);//set true value for selected item
+                        filesModelArrayList.remove(position);//remove the current selected item from list
+                        filesModelArrayList.add(position, model);//add the updated item to list
+                        internalStorageFilesAdapter.notifyDataSetChanged();//refresh the listview
+                        //display the delete button
+                        if (!selectedFileHashMap.containsKey(position))//if selected list item is not exits in selected hash map
+                            //noinspection unchecked
+                            selectedFileHashMap.put(model.getFileName(), model.getFilePath());//added the selected item to selected hash map
+                        Toast.makeText(getActivity().getApplicationContext(), "" + selectedFileHashMap.size(), Toast.LENGTH_SHORT).show();
+                        menu_type = "dirMenu";
+                        getActivity().invalidateOptionsMenu();
+                        toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);//set menu tag as directory menu
                     } else {
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.setContentView(R.layout.custom_dialog_file_not_readable);
-                        dialog.show();
-                        TextView folderName = (TextView) dialog.findViewById(R.id.not_read_file_name);
-                        Button btnOkay = (Button) dialog.findViewById(R.id.btn_okay);
-                        folderName.setText(model.getFilePath() + " folder can't be read!");
-                        btnOkay.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
+                        model.setSelected(false);
+                        filesModelArrayList.remove(position);
+                        filesModelArrayList.add(position, model);
+                        internalStorageFilesAdapter.notifyDataSetChanged();
+                        selectedFileHashMap.remove(model.getFileName());
+                        if (selectedFileHashMap.size() == 0) {//if checked items list is empty then display the main menu,disable delete menu button
+                            menu_type = "mainMenu";
+                            getActivity().invalidateOptionsMenu();
+                            toolbar.getMenu().findItem(R.id.action_delete).setVisible(false);
+                        } else {
+                            menu_type = "dirMenu";//if checked items list not empty then display directory menu and enable delete menu button
+                            getActivity().invalidateOptionsMenu();
+                            toolbar.getMenu().findItem(R.id.action_delete).setVisible(true);
+                        }
+                    }
+                    return true;
+                }
+            });
+            //event on item click
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final InternalStorageFilesModel model = filesModelArrayList.get(position);
+                    fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
+                    File file = new File(model.getFilePath());//get the selected item path in list view
+                    // getDirectory(model.getFilePath());
+                    if (file.isDirectory()) {//check if selected item is directory
+                        if (file.canRead()) {//if selected directory is readable
+                            if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
+                                getDirectory("/sdcard");
+                            else
+                                getDirectory(model.getFilePath());//if filename not root
+                            listItemClickPaths.add(model.getFilePath());
+                            root = model.getFilePath();
+                        } else {
+                            final Dialog dialog = new Dialog(getActivity());
+                            dialog.setContentView(R.layout.custom_dialog_file_not_readable);
+                            dialog.show();
+                            TextView folderName = (TextView) dialog.findViewById(R.id.not_read_file_name);
+                            Button btnOkay = (Button) dialog.findViewById(R.id.btn_okay);
+                            folderName.setText(model.getFilePath() + " folder can't be read!");
+                            btnOkay.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                        }//inner if-else
+                    }//if
+                    //if file is not a directory
+                    else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if file type is image
+                        Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
+                        imageIntent.putExtra("imagePath", model.getFilePath());
+                        imageIntent.putExtra("imageName", model.getFileName());
+                        getActivity().startActivity(imageIntent);
+                    } else if (fileExtension.equals("mp3")) {//if file type is audio
+                        try {
+                            getAudioPlayer(model.getFileName(), model.getFilePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {//if file type is text
+                        Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
+                        txtIntent.putExtra("filePath", model.getFilePath());
+                        txtIntent.putExtra("fileName", model.getFileName());
+                        getActivity().startActivity(txtIntent);
+                    } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {//if file type is zip or rar file
+                        //create a alert dialog for unzip folder
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                        // Setting Dialog Message
+                        alertDialog.setTitle("Unzip Folder");
+                        alertDialog.setIcon(R.mipmap.ic_unzip);
+                        alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_unzip_folder));
+                        alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //TODO on dialog cancel button
                             }
                         });
+                        alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                String filePath = model.getFilePath();//zip file path
+                                String outputFolder = model.getFilePath().substring(0, model.getFilePath().lastIndexOf('.'));//unzip folder
+                                getUnZipDirectory(filePath, outputFolder);
+                            }
+                        });
+                        alertDialog.show();
 
-                    }//inner if-else
-                }//if
-                //if file is not a directory
-                else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if file type is image
-                    Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
-                    imageIntent.putExtra("imagePath", model.getFilePath());
-                    imageIntent.putExtra("imageName", model.getFileName());
-                    getActivity().startActivity(imageIntent);
-                } else if (fileExtension.equals("mp3")) {//if file type is audio
-                    try {
-                        getAudioPlayer(model.getFileName(), model.getFilePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } else if (fileExtension.equals("pdf")) {
+                        getPdfReader(model.getFilePath());
+                    } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+                        videoHandler(model.getFilePath());
+                    } else {
                     }
-                } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {//if file type is text
-                    Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
-                    txtIntent.putExtra("filePath", model.getFilePath());
-                    txtIntent.putExtra("fileName", model.getFileName());
-                    getActivity().startActivity(txtIntent);
-                } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {//if file type is zip or rar file
-                    //create a alert dialog for unzip folder
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-                    // Setting Dialog Message
-                    alertDialog.setTitle("Unzip Folder");
-                    alertDialog.setIcon(R.mipmap.ic_unzip);
-                    alertDialog.setMessage(getActivity().getApplicationContext().getString(R.string.msg_prompt_unzip_folder));
-                    alertDialog.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //TODO on dialog cancel button
-                        }
-                    });
-                    alertDialog.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            String filePath = model.getFilePath();//zip file path
-                            String outputFolder = model.getFilePath().substring(0, model.getFilePath().lastIndexOf('.'));//unzip folder
-                            getUnZipDirectory(filePath, outputFolder);
-                        }
-                    });
-                    alertDialog.show();
 
-                } else if (fileExtension.equals("pdf")) {
-                    getPdfReader(model.getFilePath());
-                } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
-                    videoHandler(model.getFilePath());
-                } else {
-                }
-
-            }//onItemClick
-        });
+                }//onItemClick
+            });
+        }
         return rootView;
     }
 
@@ -570,10 +580,18 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
+        if (files.length == 0 & root == Environment.getExternalStorageDirectory()
+                .getAbsolutePath()) {
+            noMediaLayout.setVisibility(View.VISIBLE);
+            toolbarLayout.setVisibility(View.GONE);
+        } else {
+            toolbarLayout.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
+        }
         if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
             InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false, true);
             filesModelArrayList.add(model);
-            // InternalStorageFilesModel model1 = new InternalStorageFilesModel("../", f.getParent(), false, true);
+            // ExternalStorageFilesModel model1 = new ExternalStorageFilesModel("../", f.getParent(), false, true);
             // filesModelArrayList.add(model1);
         }
         for (int i = 0; i < files.length; i++) {
@@ -709,14 +727,15 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         renameDialog.setContentView(R.layout.custom_dialog_rename_file);
         renameDialog.show();
+        Log.d("subString", selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1));
         final EditText renamed_file = (EditText) renameDialog.findViewById(R.id.txt_rename_file);
         Button lbl_rename = (Button) renameDialog.findViewById(R.id.btn_rename);
         Button lbl_cancel = (Button) renameDialog.findViewById(R.id.btn_cancel);
         final TextView lbl_type = (TextView) renameDialog.findViewById(R.id.lbl_type);
         if (oldFile.isDirectory()) {
-            lbl_type.setText(getActivity().getApplicationContext().getString(R.string.lbl_title_rename_folder));
+            lbl_type.setText("Rename Folder");
         } else {
-            lbl_type.setText(getActivity().getApplicationContext().getString(R.string.lbl_title_rename_file));
+            lbl_type.setText("Rename File");
         }
         renamed_file.setText(selectedFolderName);
         lbl_rename.setOnClickListener(new View.OnClickListener() {
