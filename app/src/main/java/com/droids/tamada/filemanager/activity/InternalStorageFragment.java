@@ -314,7 +314,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     // getDirectory(model.getFilePath());
                     if (file.isDirectory()) {//check if selected item is directory
                         if (file.canRead()) {//if selected directory is readable
-                            if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
+                            if (model.getFileName().equals("/"))//if filename root the we set directory path ../
                                 getDirectory("/sdcard");
                             else
                                 getDirectory(model.getFilePath());//if filename not root
@@ -333,7 +333,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                                     dialog.cancel();
                                 }
                             });
-
                         }//inner if-else
                     }//if
                     //if file is not a directory
