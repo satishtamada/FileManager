@@ -20,8 +20,6 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    private ExpandableListAdapter listAdapter;
-    private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
     private String child = null;
@@ -35,11 +33,11 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        ExpandableListView expListView = (ExpandableListView) findViewById(R.id.lvExp);
         textEditorOptionsModel = new TextEditorOptionsModel();
         // preparing list data
         prepareListData();
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+        ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
