@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,7 +50,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by Satish on 04-12-2015.
  */
-public class InternalStorageFragment extends Fragment implements InternalStorageFilesAdapter.CustomListener {
+public class InternalStorageFragment extends Fragment implements InternalStorageFilesAdapter.CustomListener, MainActivity.CustomBackPressListener {
     private MediaPlayer mediaPlayer;
     private LinearLayout noMediaLayout;
     private LinearLayout toolbarLayout;
@@ -61,6 +60,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private ListView listView;
     private ArrayList<InternalStorageFilesModel> filesModelArrayList;
     private InternalStorageFilesAdapter internalStorageFilesAdapter;
+    private MainActivity mainActivity;
     private boolean isChecked = false;
     private String menu_type = "mainMenu";
     private String root;
@@ -92,7 +92,11 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     };
 
     public InternalStorageFragment() {
-        // Required empty public constructor
+
+    }
+
+    public InternalStorageFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     public static String formatSize(long size) {
@@ -174,14 +178,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        super.onCreate(savedInstanceState);
-        FragmentManager fm = getFragmentManager();
-        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                Toast.makeText(getActivity().getApplicationContext(), "back pressed", Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     @Override
@@ -243,6 +239,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         noMediaLayout = (LinearLayout) rootView.findViewById(R.id.noExternalStorageLayout);
         toolbarLayout = (LinearLayout) rootView.findViewById(R.id.container_toolbar);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
+        mainActivity.setCustomBackPressInternalListener(this);
         if (!android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
             noMediaLayout.setVisibility(View.VISIBLE);
         else {
@@ -265,8 +262,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                         case R.id.action_delete:
                             deleteFile();
                             break;
-                        case R.id.action_back_button:
-                            navigateBackDir();
                     }
                     return true;
                 }
@@ -880,5 +875,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             }
             root = selectedFileRootPath;
         }//end of else
+    }
+
+    @Override
+    public void isBackPressed() {
+        navigateBackDir();
     }
 }

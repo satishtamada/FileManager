@@ -50,7 +50,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by Satish on 04-12-2015.
  */
-public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener {
+public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener,MainActivity.CustomBackPressListener {
     private MediaPlayer mediaPlayer;
     private TextView startTime;
     private TextView endTime;
@@ -63,6 +63,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private String root = "/sdcard";
     private String selectedFilePath;
     private String selectedFolderName;
+    private MainActivity mainActivity;
     private int selectedFilePosition;
     private String fileExtension;
     private HashMap selectedFileHashMap = new HashMap();
@@ -88,9 +89,11 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         }
     };
 
-    //generate conflicts
     public ExternalStorageFragment() {
-        // Required empty public constructor
+    }
+
+    public ExternalStorageFragment(MainActivity mainActivity) {
+        this.mainActivity=mainActivity;
     }
 
     public static String formatSize(long size) {
@@ -240,6 +243,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
         listItemClickPaths = new ArrayList<>();
+        mainActivity.setCustomBackPressExternalListener(this);
         listItemClickPaths.add(root);
         getDirectory(root);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
@@ -256,8 +260,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     case R.id.action_delete:
                         deleteFile();
                         break;
-                    case R.id.action_back_button:
-                        navigateBackDir();
                 }
                 return true;
             }
@@ -861,5 +863,10 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             }
             root = selectedFileRootPath;
         }//end of else
+    }
+
+    @Override
+    public void isBackPressed() {
+        navigateBackDir();
     }
 }

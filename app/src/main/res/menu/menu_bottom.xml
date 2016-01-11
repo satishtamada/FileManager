@@ -21,10 +21,4 @@
         android:orderInCategory="100"
         android:title="@string/action_add_folder"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_back_button"
-        android:icon="@mipmap/ic_back"
-        android:orderInCategory="100"
-        android:title="@string/action_add_folder"
-        app:showAsAction="always" />
 </menu>
