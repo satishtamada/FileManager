@@ -2,7 +2,6 @@ package com.droids.tamada.filemanager.activity;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,13 +9,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.satish.filemanager.R;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
-    boolean doubleBackToExitPressedOnce = false;
+
+    private CustomBackPressListener customBackPressListener;
+
+    public void setCustomBackPressInternalListener(InternalStorageFragment customBackPressListener) {
+        this.customBackPressListener = customBackPressListener;
+    }
+
+    public void setCustomBackPressExternalListener(ExternalStorageFragment externalStorageFragment) {
+        this.customBackPressListener = externalStorageFragment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        loadFragment(new InternalStorageFragment(), getResources().getString(R.string.title_internal));
+        loadFragment(new ExternalStorageFragment(this), getResources().getString(R.string.title_external));
     }
 
     @Override
@@ -43,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         String title = getString(R.string.app_name);
         switch (position) {
             case 0:
-                fragment = new InternalStorageFragment();
+                fragment = new InternalStorageFragment(this);
                 title = getString(R.string.title_internal);
                 break;
             case 1:
-                fragment = new ExternalStorageFragment();
+                fragment = new ExternalStorageFragment(this);
                 title = getString(R.string.title_external);
                 break;
             default:
@@ -69,17 +76,10 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
+        customBackPressListener.isBackPressed();
+    }
+
+    public interface CustomBackPressListener {
+        void isBackPressed();
     }
 }

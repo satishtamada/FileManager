@@ -5,49 +5,23 @@
     android:background="@color/colorWhite">
 
     <ListView
-        android:id="@+id/external_files_list"
+        android:id="@+id/internal_files_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@null"
         android:background="@color/colorWhite"
-        android:visibility="gone" />
+        />
 
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone">
+        >
 
         <include
             android:id="@+id/toolbarbottom"
             layout="@layout/toolbar_bottom" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/noExternalStorageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:alpha="0.1"
-            android:background="@mipmap/ic_external_storage" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.4"
-            android:padding="5dp"
-            android:text="Please insert your external storage"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-
-    </LinearLayout>
 </RelativeLayout>

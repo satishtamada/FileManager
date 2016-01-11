@@ -31,12 +31,10 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.droids.tamada.filemanager.adapter.ExternalStorageFilesAdapter;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,7 +48,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by Satish on 04-12-2015.
  */
-public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener {
+public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener, MainActivity.CustomBackPressListener {
     private MediaPlayer mediaPlayer;
     private TextView startTime;
     private TextView endTime;
@@ -63,15 +61,16 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private String root = "/sdcard";
     private String selectedFilePath;
     private String selectedFolderName;
+    private MainActivity mainActivity;
     private int selectedFilePosition;
     private String fileExtension;
-    private HashMap selectedFileHashMap = new HashMap();
-    private Handler mHandler = new Handler();
+    private final HashMap selectedFileHashMap = new HashMap();
+    private final Handler mHandler = new Handler();
     private Utilities utilities;
     private Toolbar toolbar;
     private ArrayList<String> listItemClickPaths;
     private String selectAllLabel = "selectAll";
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
             long currentDuration = mediaPlayer.getCurrentPosition();
@@ -88,12 +87,14 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         }
     };
 
-    //generate conflicts
     public ExternalStorageFragment() {
-        // Required empty public constructor
     }
 
-    public static String formatSize(long size) {
+    public ExternalStorageFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
+
+    private static String formatSize(long size) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -117,13 +118,13 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         if (dir.exists()) {
             long result = 0;
             File[] fileList = dir.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
+            for (File aFileList : fileList) {
                 // Recursive call if it's a directory
-                if (fileList[i].isDirectory()) {
-                    result += dirSize(fileList[i]);
+                if (aFileList.isDirectory()) {
+                    result += dirSize(aFileList);
                 } else {
                     // Sum the file size in bytes
-                    result += fileList[i].length();
+                    result += aFileList.length();
                 }
             }
             return result; // return the file size
@@ -131,7 +132,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         return 0;
     }
 
-    public static String getAvailableInternalMemorySize() {
+    private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
@@ -140,7 +141,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         return formatSize(availableBlocks * blockSize, "free");
     }
 
-    public static String getTotalInternalMemorySize() {
+    private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -148,7 +149,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         return formatSize(totalBlocks * blockSize, "total");
     }
 
-    public static String formatSize(long size, String tag) {
+    private static String formatSize(long size, String tag) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -238,8 +239,9 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exteranl, container, false);
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
-        listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
+        listView = (ListView) rootView.findViewById(R.id.external_file_list_view);
         listItemClickPaths = new ArrayList<>();
+        mainActivity.setCustomBackPressExternalListener(this);
         listItemClickPaths.add(root);
         getDirectory(root);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbarbottom);
@@ -256,8 +258,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     case R.id.action_delete:
                         deleteFile();
                         break;
-                    case R.id.action_back_button:
-                        navigateBackDir();
                 }
                 return true;
             }
@@ -310,7 +310,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                 // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead()) {//if selected directory is readable
-                        if (model.getFileName().equals("/"))//if filename root the we set dirctory path ../
+                        if (model.getFileName().equals("/"))//if filename root the we set directory path ../
                             getDirectory("/sdcard");
                         else
                             getDirectory(model.getFilePath());//if filename not root
@@ -570,19 +570,18 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
-        if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
-            ExternalStorageFilesModel model = new ExternalStorageFilesModel("/", root, false, true);
+        if (!directoryPath.equals(root) & !directoryPath.equals("/sdcard")) {
+            ExternalStorageFilesModel model = new ExternalStorageFilesModel("/", root, true);
             filesModelArrayList.add(model);
             // ExternalStorageFilesModel model1 = new ExternalStorageFilesModel("../", f.getParent(), false, true);
             // filesModelArrayList.add(model1);
         }
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             if (file.isDirectory()) {
-                ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName() + "/", file.getPath(), false, true);
+                ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName() + "/", file.getPath(), true);
                 filesModelArrayList.add(model);
             } else {
-                ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName(), file.getPath(), false, false);
+                ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName(), file.getPath(), false);
                 filesModelArrayList.add(model);
             }
         }
@@ -615,7 +614,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     } else {
                         boolean isCreated = file.createNewFile();
                         if (isCreated) {
-                            ExternalStorageFilesModel model = new ExternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
+                            ExternalStorageFilesModel model = new ExternalStorageFilesModel(fileName + ".txt", file.getPath(), false);
                             filesModelArrayList.add(model);
                             externalStorageFilesAdapter.notifyDataSetChanged();
                             Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
@@ -663,7 +662,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     } else {
                         boolean isFolderCreated = file.mkdir();
                         if (isFolderCreated) {
-                            ExternalStorageFilesModel model = new ExternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
+                            ExternalStorageFilesModel model = new ExternalStorageFilesModel(folderName, root + "/" + folderName, true);
                             filesModelArrayList.add(model);
                             externalStorageFilesAdapter.notifyDataSetChanged();
                             Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
@@ -792,9 +791,9 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         return value;
     }
 
-    public void changeCheckboxStatus() {
+    private void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
-            ExternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
+            ExternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all file model elements
             if (!fileModel.getFileName().equals("/")) {
                 fileModel.setSelected(isChecked);
             } else {
@@ -861,5 +860,10 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             }
             root = selectedFileRootPath;
         }//end of else
+    }
+
+    @Override
+    public void isBackPressed() {
+        navigateBackDir();
     }
 }

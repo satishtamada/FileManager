@@ -18,11 +18,10 @@ import java.util.List;
  * Created by Satish on 04-12-2015.
  */
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.MyViewHolder> {
-    List<NavDrawerItem> data = Collections.emptyList();
-    private LayoutInflater inflater;
+    private List<NavDrawerItem> data = Collections.emptyList();
+    private final LayoutInflater inflater;
 
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
-        Context context1 = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
     }
@@ -35,8 +34,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.nav_drawer_row, parent, false);
-        MyViewHolder holder = new MyViewHolder(view);
-        return holder;
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -52,8 +50,8 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        ImageView icon;
+        final TextView title;
+        final ImageView icon;
 
         public MyViewHolder(View itemView) {
             super(itemView);

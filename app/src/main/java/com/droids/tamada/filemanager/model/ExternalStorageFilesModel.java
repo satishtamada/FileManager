@@ -12,10 +12,10 @@ public class ExternalStorageFilesModel {
     public ExternalStorageFilesModel() {
     }
 
-    public ExternalStorageFilesModel(String fileName, String filePath, boolean selected, boolean isDir) {
+    public ExternalStorageFilesModel(String fileName, String filePath, boolean isDir) {
         this.filePath = filePath;
         this.fileName = fileName;
-        this.selected = selected;
+        this.selected = false;
         this.isDir = isDir;
     }
 

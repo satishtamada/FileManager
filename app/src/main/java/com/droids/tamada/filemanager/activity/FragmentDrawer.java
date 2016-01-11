@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,11 +39,11 @@ import java.util.List;
  */
 public class FragmentDrawer extends Fragment {
 
-    static long totalSize;
-    static long freeSize;
+    private static long totalSize;
+    private static long freeSize;
     private static String TAG = FragmentDrawer.class.getSimpleName();
     private static String[] titles = null;
-    private static int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
+    private static final int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private View containerView;
@@ -52,7 +53,7 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public static List<NavDrawerItem> getData() {
+    private static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
 
@@ -66,12 +67,12 @@ public class FragmentDrawer extends Fragment {
         return data;
     }
 
-    public static boolean externalMemoryAvailable() {
+    private static boolean externalMemoryAvailable() {
         return android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static String getAvailableExternalMemorySize() {
+    private static String getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -83,7 +84,7 @@ public class FragmentDrawer extends Fragment {
         }
     }
 
-    public static String getTotalExternalMemorySize() {
+    private static String getTotalExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -95,7 +96,7 @@ public class FragmentDrawer extends Fragment {
         }
     }
 
-    public static String getAvailableInternalMemorySize() {
+    private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
@@ -104,7 +105,7 @@ public class FragmentDrawer extends Fragment {
         return formatSize(availableBlocks * blockSize, "free");
     }
 
-    public static String getTotalInternalMemorySize() {
+    private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -112,7 +113,7 @@ public class FragmentDrawer extends Fragment {
         return formatSize(totalBlocks * blockSize, "total");
     }
 
-    public static String formatSize(long size, String tag) {
+    private static String formatSize(long size, String tag) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -167,6 +168,12 @@ public class FragmentDrawer extends Fragment {
         TextView lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
         TextView lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
         TextView lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
+        final TextView lblImages = (TextView) layout.findViewById(R.id.lbl_images);
+        final TextView lblAudios = (TextView) layout.findViewById(R.id.lbl_audios);
+        final TextView lblVideos = (TextView) layout.findViewById(R.id.lbl_videos);
+        final ImageView imgImages = (ImageView) layout.findViewById(R.id.img_images);
+        final ImageView imgVideos = (ImageView) layout.findViewById(R.id.img_video);
+        final ImageView imgAudios = (ImageView) layout.findViewById(R.id.img_audio);
         lbl_ram_free_size.setText(getRamUsageSize() + "/");
         lbl_ram_size.setText(getRamMemorySize());
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
@@ -208,6 +215,8 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+
+
         audiosLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,12 +224,41 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        audiosLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgAudios.setImageResource(R.mipmap.ic_audio_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgAudios.setImageResource(R.mipmap.ic_audio_list);
+                }
+                return false;
+            }
+
+        });
+
         videosLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), VideosListActivity.class);
                 getActivity().startActivity(intent);
             }
+        });
+        videosLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgVideos.setImageResource(R.mipmap.ic_video_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgVideos.setImageResource(R.mipmap.ic_video_list);
+                }
+                return false;
+            }
+
         });
         imagesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,11 +267,25 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        imagesLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgImages.setImageResource(R.mipmap.ic_images_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgImages.setImageResource(R.mipmap.ic_image_list);
+                }
+                return false;
+            }
+
+        });
         return layout;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public String getRamMemorySize() {
+    private String getRamMemorySize() {
         ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
@@ -245,7 +297,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public String getRamUsageSize() {
+    private String getRamUsageSize() {
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
         ActivityManager activityManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         activityManager.getMemoryInfo(mi);
@@ -298,8 +350,8 @@ public class FragmentDrawer extends Fragment {
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
-        private GestureDetector gestureDetector;
-        private ClickListener clickListener;
+        private final GestureDetector gestureDetector;
+        private final ClickListener clickListener;
 
         public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
             this.clickListener = clickListener;
