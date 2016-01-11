@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -167,6 +168,12 @@ public class FragmentDrawer extends Fragment {
         TextView lbl_total_internal_memory = (TextView) layout.findViewById(R.id.total_internal_memory);
         TextView lbl_ram_size = (TextView) layout.findViewById(R.id.total_ram_memory);
         TextView lbl_ram_free_size = (TextView) layout.findViewById(R.id.free_ram_memory);
+        final TextView lblImages = (TextView) layout.findViewById(R.id.lbl_images);
+        final TextView lblAudios = (TextView) layout.findViewById(R.id.lbl_audios);
+        final TextView lblVideos = (TextView) layout.findViewById(R.id.lbl_videos);
+        final ImageView imgImages = (ImageView) layout.findViewById(R.id.img_images);
+        final ImageView imgVideos = (ImageView) layout.findViewById(R.id.img_video);
+        final ImageView imgAudios = (ImageView) layout.findViewById(R.id.img_audio);
         lbl_ram_free_size.setText(getRamUsageSize() + "/");
         lbl_ram_size.setText(getRamMemorySize());
         lbl_free_internal_memory.setText(getAvailableInternalMemorySize() + "/");
@@ -208,6 +215,8 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+
+
         audiosLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,6 +224,21 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        audiosLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgAudios.setImageResource(R.mipmap.ic_audio_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgAudios.setImageResource(R.mipmap.ic_audio_list);
+                }
+                return false;
+            }
+
+        });
+
         videosLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,12 +246,40 @@ public class FragmentDrawer extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+        videosLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgVideos.setImageResource(R.mipmap.ic_video_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgVideos.setImageResource(R.mipmap.ic_video_list);
+                }
+                return false;
+            }
+
+        });
         imagesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), ImagesListActivity.class);
                 getActivity().startActivity(intent);
             }
+        });
+        imagesLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
+                    imgImages.setImageResource(R.mipmap.ic_images_blue);
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
+                    imgImages.setImageResource(R.mipmap.ic_image_list);
+                }
+                return false;
+            }
+
         });
         return layout;
     }

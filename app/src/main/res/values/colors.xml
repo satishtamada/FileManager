@@ -10,7 +10,7 @@
     <color name="rounded_container_border">#3b3f44</color>
     <color name="light_gray_header_color">#646663</color>
     <color name="lbl_text_color">#3B3B3B</color>
-
+    <color name="lbl_nav_colors">#616161</color>
     <!--editor text colors-->
     <color name="btn_cancel_boarder">#525151</color>
     <color name="txt_gray">#3b3f44</color>

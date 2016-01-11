@@ -213,6 +213,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/img_images"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
@@ -221,12 +222,13 @@
                 android:src="@mipmap/ic_image_list" />
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/lbl_images"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="10dp"
                 android:text="@string/lbl_images"
+                android:textColor="@color/lbl_nav_colors"
                 android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -237,6 +239,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/img_video"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
@@ -245,11 +248,13 @@
                 android:src="@mipmap/ic_video_list" />
 
             <TextView
+                android:id="@+id/lbl_videos"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="10dp"
                 android:text="@string/lbl_videos"
+                android:textColor="@color/lbl_nav_colors"
                 android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -260,6 +265,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/img_audio"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
@@ -268,11 +274,13 @@
                 android:src="@mipmap/ic_audio_list" />
 
             <TextView
+                android:id="@+id/lbl_audios"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="10dp"
                 android:text="@string/lbl_audios"
+                android:textColor="@color/lbl_nav_colors"
                 android:textSize="15dp"
                 android:textStyle="bold" />
         </LinearLayout>
