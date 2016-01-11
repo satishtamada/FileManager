@@ -12,10 +12,10 @@ public class InternalStorageFilesModel {
     public InternalStorageFilesModel() {
     }
 
-    public InternalStorageFilesModel(String fileName, String filePath, boolean selected, boolean isDir) {
+    public InternalStorageFilesModel(String fileName, String filePath, boolean isDir) {
         this.filePath = filePath;
         this.fileName = fileName;
-        this.selected = selected;
+        this.selected = false;
         this.isDir = isDir;
     }
 

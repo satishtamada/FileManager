@@ -23,8 +23,8 @@ import java.util.ArrayList;
  * Created by Satish on 30-12-2015.
  */
 public class ImagesListAdapter extends BaseAdapter {
-    private ArrayList<MediaFileListModel> mediaFileListModelsArray;
-    private Activity activity;
+    private final ArrayList<MediaFileListModel> mediaFileListModelsArray;
+    private final Activity activity;
     private LayoutInflater layoutInflater;
 
     public ImagesListAdapter(ImagesListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {

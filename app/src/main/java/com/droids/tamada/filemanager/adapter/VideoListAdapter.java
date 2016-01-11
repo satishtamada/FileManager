@@ -22,8 +22,8 @@ import java.util.ArrayList;
  * Created by Satish on 29-12-2015.
  */
 public class VideoListAdapter extends BaseAdapter {
-    private ArrayList<MediaFileListModel> mediaFileListModelsArray;
-    private Activity activity;
+    private final ArrayList<MediaFileListModel> mediaFileListModelsArray;
+    private final Activity activity;
     private LayoutInflater layoutInflater;
 
     public VideoListAdapter(VideosListActivity audiosListActivity, ArrayList<MediaFileListModel> mediaFileListModelsArray) {

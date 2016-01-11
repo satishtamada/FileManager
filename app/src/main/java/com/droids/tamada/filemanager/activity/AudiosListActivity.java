@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.droids.tamada.filemanager.adapter.AudioListAdapter;
 import com.droids.tamada.filemanager.helper.Utilities;
@@ -31,15 +30,15 @@ import java.util.ArrayList;
  * Created by Satish on 28-12-2015.
  */
 public class AudiosListActivity extends AppCompatActivity {
-    TextView startTime;
-    TextView endTime;
-    SeekBar seekBar;
+    private TextView startTime;
+    private TextView endTime;
+    private SeekBar seekBar;
     private LinearLayout noMediaLayout;
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private MediaPlayer mediaPlayer;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private Utilities utilities;
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
             long currentDuration = mediaPlayer.getCurrentPosition();

@@ -20,12 +20,12 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
-    String child = null;
-    TextEditorOptionsModel textEditorOptionsModel;
+    private ExpandableListAdapter listAdapter;
+    private ExpandableListView expListView;
+    private List<String> listDataHeader;
+    private HashMap<String, List<String>> listDataChild;
+    private String child = null;
+    private TextEditorOptionsModel textEditorOptionsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
                         .show();
                 child = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                 if (child.equals("Change font size")) {
-                    textEditorOptionsModel.setTextSize(30);
+                    textEditorOptionsModel.setTextSize();
                 }
                 return false;
             }
@@ -87,8 +87,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
         // Adding child data
         //listDataHeader.add("General settings");
@@ -96,16 +96,16 @@ public class SettingsActivity extends AppCompatActivity {
         listDataHeader.add("About");
 
         // Adding child data
-        List<String> generalSettings = new ArrayList<String>();
+        List<String> generalSettings = new ArrayList<>();
         generalSettings.add("Set password");
         generalSettings.add("Show hidden files");
 
-        List<String> storageOptions = new ArrayList<String>();
+        List<String> storageOptions = new ArrayList<>();
         storageOptions.add("Set password");
         storageOptions.add("Formant Disk");
 
 
-        List<String> about = new ArrayList<String>();
+        List<String> about = new ArrayList<>();
         about.add("FileManager  \n" +
                 "Current Version 1.0 \n" +
                 "Developed by Androidhive.info");

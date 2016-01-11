@@ -15,7 +15,7 @@ import com.example.satish.filemanager.R;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
-    public CustomBackPressListener customBackPressListener;
+    private CustomBackPressListener customBackPressListener;
 
     public void setCustomBackPressInternalListener(InternalStorageFragment customBackPressListener) {
         this.customBackPressListener = customBackPressListener;

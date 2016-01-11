@@ -39,11 +39,11 @@ import java.util.List;
  */
 public class FragmentDrawer extends Fragment {
 
-    static long totalSize;
-    static long freeSize;
+    private static long totalSize;
+    private static long freeSize;
     private static String TAG = FragmentDrawer.class.getSimpleName();
     private static String[] titles = null;
-    private static int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
+    private static final int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private View containerView;
@@ -53,7 +53,7 @@ public class FragmentDrawer extends Fragment {
 
     }
 
-    public static List<NavDrawerItem> getData() {
+    private static List<NavDrawerItem> getData() {
         List<NavDrawerItem> data = new ArrayList<>();
 
 
@@ -67,12 +67,12 @@ public class FragmentDrawer extends Fragment {
         return data;
     }
 
-    public static boolean externalMemoryAvailable() {
+    private static boolean externalMemoryAvailable() {
         return android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static String getAvailableExternalMemorySize() {
+    private static String getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -84,7 +84,7 @@ public class FragmentDrawer extends Fragment {
         }
     }
 
-    public static String getTotalExternalMemorySize() {
+    private static String getTotalExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -96,7 +96,7 @@ public class FragmentDrawer extends Fragment {
         }
     }
 
-    public static String getAvailableInternalMemorySize() {
+    private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
@@ -105,7 +105,7 @@ public class FragmentDrawer extends Fragment {
         return formatSize(availableBlocks * blockSize, "free");
     }
 
-    public static String getTotalInternalMemorySize() {
+    private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -113,7 +113,7 @@ public class FragmentDrawer extends Fragment {
         return formatSize(totalBlocks * blockSize, "total");
     }
 
-    public static String formatSize(long size, String tag) {
+    private static String formatSize(long size, String tag) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -285,7 +285,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public String getRamMemorySize() {
+    private String getRamMemorySize() {
         ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
@@ -297,7 +297,7 @@ public class FragmentDrawer extends Fragment {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public String getRamUsageSize() {
+    private String getRamUsageSize() {
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
         ActivityManager activityManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         activityManager.getMemoryInfo(mi);
@@ -350,8 +350,8 @@ public class FragmentDrawer extends Fragment {
 
     static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
-        private GestureDetector gestureDetector;
-        private ClickListener clickListener;
+        private final GestureDetector gestureDetector;
+        private final ClickListener clickListener;
 
         public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
             this.clickListener = clickListener;

@@ -65,13 +65,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
-    private HashMap selectedFileHashMap = new HashMap();
-    private Handler mHandler = new Handler();
+    private final HashMap selectedFileHashMap = new HashMap();
+    private final Handler mHandler = new Handler();
     private Utilities utilities;
     private Toolbar toolbar;
     private ArrayList<String> listItemClickPaths;
     private String selectAllLabel = "selectAll";
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
             long currentDuration = mediaPlayer.getCurrentPosition();
@@ -80,7 +80,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             // Displaying time completed playing
             startTime.setText("" + utilities.milliSecondsToTimer(currentDuration));
             // Updating progress bar
-            int progress = (int) (utilities.getProgressPercentage(currentDuration, totalDuration));
+            int progress = utilities.getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             seekBar.setProgress(progress);
             // Running this thread after 100 milliseconds
@@ -96,7 +96,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         this.mainActivity = mainActivity;
     }
 
-    public static String formatSize(long size) {
+    private static String formatSize(long size) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -120,13 +120,13 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         if (dir.exists()) {
             long result = 0;
             File[] fileList = dir.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
+            for (File aFileList : fileList) {
                 // Recursive call if it's a directory
-                if (fileList[i].isDirectory()) {
-                    result += dirSize(fileList[i]);
+                if (aFileList.isDirectory()) {
+                    result += dirSize(aFileList);
                 } else {
                     // Sum the file size in bytes
-                    result += fileList[i].length();
+                    result += aFileList.length();
                 }
             }
             return result; // return the file size
@@ -134,7 +134,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         return 0;
     }
 
-    public static String getAvailableInternalMemorySize() {
+    private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
@@ -143,7 +143,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         return formatSize(availableBlocks * blockSize, "free");
     }
 
-    public static String getTotalInternalMemorySize() {
+    private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -151,7 +151,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         return formatSize(totalBlocks * blockSize, "total");
     }
 
-    public static String formatSize(long size, String tag) {
+    private static String formatSize(long size, String tag) {
         String suffix = null;
         if (size >= 1024) {
             suffix = "KB";
@@ -567,18 +567,17 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         File f = new File(directoryPath);
         File[] files = f.listFiles();
         if (!directoryPath.equals(root) & !directoryPath.equals("/sdcard")) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, false, true);
+            InternalStorageFilesModel model = new InternalStorageFilesModel("/", root, true);
             filesModelArrayList.add(model);
             // ExternalStorageFilesModel model1 = new ExternalStorageFilesModel("../", f.getParent(), false, true);
             // filesModelArrayList.add(model1);
         }
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             if (file.isDirectory()) {
-                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName() + "/", file.getPath(), false, true);
+                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName() + "/", file.getPath(), true);
                 filesModelArrayList.add(model);
             } else {
-                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false, false);
+                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
                 filesModelArrayList.add(model);
             }
         }
@@ -611,7 +610,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     } else {
                         boolean isCreated = file.createNewFile();
                         if (isCreated) {
-                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false);
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false);
                             filesModelArrayList.add(model);
                             internalStorageFilesAdapter.notifyDataSetChanged();
                             Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
@@ -659,7 +658,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                     } else {
                         boolean isFolderCreated = file.mkdir();
                         if (isFolderCreated) {
-                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, false, true);
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, root + "/" + folderName, true);
                             filesModelArrayList.add(model);
                             internalStorageFilesAdapter.notifyDataSetChanged();
                             Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
@@ -789,7 +788,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         return value;
     }
 
-    public void changeCheckboxStatus() {
+    private void changeCheckboxStatus() {
         for (int i = 0; i < filesModelArrayList.size(); i++) {
             InternalStorageFilesModel fileModel = filesModelArrayList.get(i);//get the all filemodel elements
             if (!fileModel.getFileName().equals("/")) {
