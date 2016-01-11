@@ -50,7 +50,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by Satish on 04-12-2015.
  */
-public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener,MainActivity.CustomBackPressListener {
+public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener, MainActivity.CustomBackPressListener {
     private MediaPlayer mediaPlayer;
     private TextView startTime;
     private TextView endTime;
@@ -93,7 +93,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     }
 
     public ExternalStorageFragment(MainActivity mainActivity) {
-        this.mainActivity=mainActivity;
+        this.mainActivity = mainActivity;
     }
 
     public static String formatSize(long size) {
@@ -241,7 +241,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exteranl, container, false);
         // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
-        listView = (ListView) rootView.findViewById(R.id.internal_file_list_view);
+        listView = (ListView) rootView.findViewById(R.id.external_file_list_view);
         listItemClickPaths = new ArrayList<>();
         mainActivity.setCustomBackPressExternalListener(this);
         listItemClickPaths.add(root);
@@ -572,7 +572,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         Log.d("in get Directory", directoryPath);
         File f = new File(directoryPath);
         File[] files = f.listFiles();
-        if (!directoryPath.equals(root) & !directoryPath.equals("../")) {
+        if (!directoryPath.equals(root) & !directoryPath.equals("/sdcard")) {
             ExternalStorageFilesModel model = new ExternalStorageFilesModel("/", root, false, true);
             filesModelArrayList.add(model);
             // ExternalStorageFilesModel model1 = new ExternalStorageFilesModel("../", f.getParent(), false, true);

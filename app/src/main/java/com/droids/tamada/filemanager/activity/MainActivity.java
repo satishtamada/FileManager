@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     public void setCustomBackPressExternalListener(ExternalStorageFragment externalStorageFragment) {
-        this.customBackPressListener =  externalStorageFragment;
+        this.customBackPressListener = externalStorageFragment;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        loadFragment(new InternalStorageFragment(this), getResources().getString(R.string.title_internal));
+        loadFragment(new ExternalStorageFragment(this), getResources().getString(R.string.title_external));
     }
 
     @Override
