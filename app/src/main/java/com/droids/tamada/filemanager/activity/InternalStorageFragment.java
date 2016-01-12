@@ -393,9 +393,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private void videoHandler(String filePath) {
+        Uri fileUri = Uri.fromFile(new File(filePath));
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-        Uri data = Uri.parse(filePath);
-        intent.setDataAndType(data, "video/mp4");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(fileUri, "video/mp4");
         getActivity().startActivity(intent);
     }
 

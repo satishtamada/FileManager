@@ -32,10 +32,12 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.droids.tamada.filemanager.adapter.ExternalStorageFilesAdapter;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -91,6 +93,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     public ExternalStorageFragment() {
 
     }
+
     @SuppressLint("ValidFragment")
     public ExternalStorageFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
