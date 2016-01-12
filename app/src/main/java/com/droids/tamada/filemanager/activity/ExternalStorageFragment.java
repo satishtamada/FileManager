@@ -219,15 +219,25 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
                     TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
                     Button btnOk = (Button) propertyDialog.findViewById(R.id.btn_cancel);
-                    if (selectedFileHashMap.size() == 1) {
+                    if (selectedFileHashMap.size() == 1) {//if user select single item
                         String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(selectedFileHashMap.size() - 1);
                         lbl_file_name.setText(selectedFileName.substring(selectedFileName.lastIndexOf('/') + 1));
-                        if (getTotalFileMemorySize(selectedFilePath).equals("0"))
+                        if (getTotalFileMemorySize(selectedFileName).equals("0"))
                             lbl_file_size.setText("0KB");
                         else
-                            lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-                    } else
+                            lbl_file_size.setText(getTotalFileMemorySize(selectedFileName));
+                        String size = getTotalFileMemorySize(selectedFileName);
+                        Log.d("size", size.substring(0, size.length() - 2));//set l
+                    } else {//if user select multiple items
                         lbl_file_name.setText("Selected files properties");
+                        int total_fileSize = 0;
+                        for (int i = 0; i < selectedFileHashMap.size(); i++) {
+                            String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(i);
+                            String size = getTotalFileMemorySize(selectedFileName);
+                            total_fileSize += Integer.parseInt(size.substring(0, size.length() - 2));
+                        }
+                        lbl_file_size.setText(String.valueOf(total_fileSize) + "MB");
+                    }
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
