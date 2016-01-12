@@ -43,7 +43,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -67,7 +67,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private MainActivity mainActivity;
     private int selectedFilePosition;
     private String fileExtension;
-    private final HashMap selectedFileHashMap = new HashMap();
+    private final LinkedHashMap selectedFileHashMap = new LinkedHashMap();
     private final Handler mHandler = new Handler();
     private Utilities utilities;
     private Toolbar toolbar;
@@ -211,8 +211,30 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             case R.id.action_property:
                 if (selectedFileHashMap.size() == 0)
                     getProperties();
-                else
-                    getFileProperty(selectedFilePath, selectedFolderName);
+                else {
+                    final Dialog propertyDialog = new Dialog(getActivity());
+                    propertyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    propertyDialog.setContentView(R.layout.custom_dialog_file_property);
+                    propertyDialog.show();
+                    TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
+                    TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
+                    Button btnOk = (Button) propertyDialog.findViewById(R.id.btn_cancel);
+                    if (selectedFileHashMap.size() == 1) {
+                        String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(selectedFileHashMap.size() - 1);
+                        lbl_file_name.setText(selectedFileName.substring(selectedFileName.lastIndexOf('/') + 1));
+                        if (getTotalFileMemorySize(selectedFilePath).equals("0"))
+                            lbl_file_size.setText("0KB");
+                        else
+                            lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
+                    } else
+                        lbl_file_name.setText("Selected files properties");
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            propertyDialog.cancel();
+                        }
+                    });
+                }
                 break;
             case R.id.action_select_all:
                 isChecked = true;
@@ -759,28 +781,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             @Override
             public void onClick(View v) {
                 renameDialog.cancel();
-            }
-        });
-    }
-
-    private void getFileProperty(String selectedFilePath, String selectedFileName) {
-        Log.d("filePath", selectedFilePath);
-        final Dialog propertyDialog = new Dialog(getActivity());
-        propertyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        propertyDialog.setContentView(R.layout.custom_dialog_file_property);
-        propertyDialog.show();
-        TextView lbl_file_name = (TextView) propertyDialog.findViewById(R.id.selected_file_name);
-        TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
-        Button btnOk = (Button) propertyDialog.findViewById(R.id.btn_cancel);
-        lbl_file_name.setText(selectedFileName.substring(0, selectedFileName.length() - 1));
-        if (getTotalFileMemorySize(selectedFilePath).equals("0"))
-            lbl_file_size.setText("0KB");
-        else
-            lbl_file_size.setText(getTotalFileMemorySize(selectedFilePath));//set l
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                propertyDialog.cancel();
             }
         });
     }
