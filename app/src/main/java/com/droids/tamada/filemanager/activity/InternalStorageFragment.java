@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -91,7 +92,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     public InternalStorageFragment() {
 
     }
-
+    @SuppressLint("ValidFragment")
     public InternalStorageFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }

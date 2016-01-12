@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -88,8 +89,9 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     };
 
     public ExternalStorageFragment() {
-    }
 
+    }
+    @SuppressLint("ValidFragment")
     public ExternalStorageFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
