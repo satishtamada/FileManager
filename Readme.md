@@ -12,11 +12,15 @@ This article will take a comprehensive look at working with files and folders.It
  * open image files
  
 
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/a.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/b.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/c.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/d.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/e.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/f.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/g.png)
-![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/h.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/1.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/2.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/3.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/4.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/5.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/6.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/7.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/8.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/9.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/10.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/11.png)
+![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/12.png)
