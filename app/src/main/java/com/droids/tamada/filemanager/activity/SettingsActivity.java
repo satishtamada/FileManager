@@ -102,7 +102,6 @@ public class SettingsActivity extends AppCompatActivity {
         storageOptions.add("Set password");
         storageOptions.add("Formant Disk");
 
-
         List<String> about = new ArrayList<>();
         about.add("FileManager  \n" +
                 "Current Version 1.0 \n" +
