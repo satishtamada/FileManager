@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.droids.tamada.filemanager.activity.AudiosListActivity;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
