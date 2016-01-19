@@ -71,7 +71,7 @@ public class ImagesListActivity extends AppCompatActivity {
     }
 
     private void getImagesList() {
-        final Cursor mCursor = managedQuery(
+        @SuppressWarnings("deprecation") final Cursor mCursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Images.Media.TITLE + ") ASC");

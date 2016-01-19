@@ -51,6 +51,8 @@ import java.util.zip.ZipInputStream;
  * Created by Satish on 04-12-2015.
  */
 public class InternalStorageFragment extends Fragment implements InternalStorageFilesAdapter.CustomListener, MainActivity.CustomBackPressListener {
+    private final HashMap selectedFileHashMap = new HashMap();
+    private final Handler mHandler = new Handler();
     private MediaPlayer mediaPlayer;
     private TextView startTime;
     private TextView endTime;
@@ -66,12 +68,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     private String selectedFolderName;
     private int selectedFilePosition;
     private String fileExtension;
-    private final HashMap selectedFileHashMap = new HashMap();
-    private final Handler mHandler = new Handler();
     private Utilities utilities;
-    private Toolbar toolbar;
-    private ArrayList<String> listItemClickPaths;
-    private String selectAllLabel = "selectAll";
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -88,6 +85,9 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             mHandler.postDelayed(this, 100);
         }
     };
+    private Toolbar toolbar;
+    private ArrayList<String> listItemClickPaths;
+    private String selectAllLabel = "selectAll";
 
     public InternalStorageFragment() {
 
@@ -139,16 +139,16 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
+        @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
         return formatSize(availableBlocks * blockSize, "free");
     }
 
     private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
+        @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
         return formatSize(totalBlocks * blockSize, "total");
     }
 
@@ -304,7 +304,6 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
                 final InternalStorageFilesModel model = filesModelArrayList.get(position);
                 fileExtension = model.getFileName().substring(model.getFileName().lastIndexOf(".") + 1);
                 File file = new File(model.getFilePath());//get the selected item path in list view
-                // getDirectory(model.getFilePath());
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead()) {//if selected directory is readable
                         if (model.getFileName().equals("/"))//if filename root the we set directory path ../
@@ -780,7 +779,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
     }
 
     private String getTotalFileMemorySize(String selectedFilePath) {
-        String value = null;
+        String value;
         File file = new File(selectedFilePath);
         if (!file.isDirectory()) {//if selected file is not a directory
             value = formatSize(file.length());
@@ -803,6 +802,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
             if (!isChecked) {
                 selectedFileHashMap.remove(fileModel.getFileName());
             } else if (!selectAllLabel.contains(fileModel.getFileName())) {
+                //noinspection unchecked
                 selectedFileHashMap.put(fileModel.getFileName(), fileModel.getFilePath());
             }
         }
@@ -819,8 +819,10 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
+        //noinspection deprecation
         super.onAttach(activity);
     }
 
@@ -842,6 +844,7 @@ public class InternalStorageFragment extends Fragment implements InternalStorage
         filesModelArrayList.add(position, model);
         internalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {//add the item to selected hash map,display directory menu and enable delete menu button
+            //noinspection unchecked
             selectedFileHashMap.put(selectedFolderName, selectedFilePath);
             menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();

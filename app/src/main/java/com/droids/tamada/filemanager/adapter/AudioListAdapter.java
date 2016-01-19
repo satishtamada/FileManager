@@ -18,6 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by Satish on 29-12-2015.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class AudioListAdapter extends BaseAdapter {
     private final ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private final Activity activity;

@@ -39,11 +39,10 @@ import java.util.List;
  */
 public class FragmentDrawer extends Fragment {
 
+    private static final int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
     private static long totalSize;
     private static long freeSize;
-    private static String TAG = FragmentDrawer.class.getSimpleName();
     private static String[] titles = null;
-    private static final int[] icons = {R.mipmap.ic_internal_storage, R.mipmap.ic_external_storage};
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private View containerView;
@@ -76,8 +75,8 @@ public class FragmentDrawer extends Fragment {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
+            @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+            @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
             return formatSize(availableBlocks * blockSize, "free");
         } else {
             return "0";
@@ -88,8 +87,8 @@ public class FragmentDrawer extends Fragment {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long totalBlocks = stat.getBlockCount();
+            @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+            @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
             return formatSize(totalBlocks * blockSize, "total");
         } else {
             return "0";
@@ -101,7 +100,7 @@ public class FragmentDrawer extends Fragment {
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
+        @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
         return formatSize(availableBlocks * blockSize, "free");
     }
 
@@ -109,7 +108,7 @@ public class FragmentDrawer extends Fragment {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
+        @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
         return formatSize(totalBlocks * blockSize, "total");
     }
 
@@ -228,9 +227,11 @@ public class FragmentDrawer extends Fragment {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //noinspection deprecation
                     lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
                     imgAudios.setImageResource(R.mipmap.ic_audio_blue);
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    //noinspection deprecation
                     lblAudios.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
                     imgAudios.setImageResource(R.mipmap.ic_audio_list);
                 }
@@ -250,9 +251,11 @@ public class FragmentDrawer extends Fragment {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //noinspection deprecation
                     lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
                     imgVideos.setImageResource(R.mipmap.ic_video_blue);
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    //noinspection deprecation
                     lblVideos.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
                     imgVideos.setImageResource(R.mipmap.ic_video_list);
                 }
@@ -271,9 +274,11 @@ public class FragmentDrawer extends Fragment {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //noinspection deprecation
                     lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.colorPrimary));
                     imgImages.setImageResource(R.mipmap.ic_images_blue);
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    //noinspection deprecation
                     lblImages.setTextColor(getActivity().getApplicationContext().getResources().getColor(R.color.lbl_nav_colors));
                     imgImages.setImageResource(R.mipmap.ic_image_list);
                 }
@@ -286,7 +291,7 @@ public class FragmentDrawer extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private String getRamMemorySize() {
-        ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
+        @SuppressWarnings("AccessStaticViaInstance") ActivityManager actManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
         long totalMemory = 0;
@@ -299,7 +304,7 @@ public class FragmentDrawer extends Fragment {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private String getRamUsageSize() {
         ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
+        @SuppressWarnings("AccessStaticViaInstance") ActivityManager activityManager = (ActivityManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().ACTIVITY_SERVICE);
         activityManager.getMemoryInfo(mi);
         long availableMegs = mi.availMem / 1048576L;
         return formatSize(availableMegs, "ramfree");
@@ -340,7 +345,6 @@ public class FragmentDrawer extends Fragment {
 
     public interface ClickListener {
         void onClick(View view, int position);
-
         void onLongClick(View view, int position);
     }
 
@@ -365,6 +369,7 @@ public class FragmentDrawer extends Fragment {
                 public void onLongPress(MotionEvent e) {
                     View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                     if (child != null && clickListener != null) {
+                        //noinspection deprecation
                         clickListener.onLongClick(child, recyclerView.getChildPosition(child));
                     }
                 }
@@ -376,6 +381,7 @@ public class FragmentDrawer extends Fragment {
 
             View child = rv.findChildViewUnder(e.getX(), e.getY());
             if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                //noinspection deprecation
                 clickListener.onClick(child, rv.getChildPosition(child));
             }
             return false;

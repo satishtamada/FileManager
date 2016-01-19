@@ -9,9 +9,6 @@ public class InternalStorageFilesModel {
     private boolean selected;
     private boolean isDir;
 
-    public InternalStorageFilesModel() {
-    }
-
     public InternalStorageFilesModel(String fileName, String filePath, boolean isDir) {
         this.filePath = filePath;
         this.fileName = fileName;

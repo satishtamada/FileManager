@@ -30,13 +30,13 @@ import java.util.ArrayList;
  * Created by Satish on 28-12-2015.
  */
 public class AudiosListActivity extends AppCompatActivity {
+    private final Handler mHandler = new Handler();
     private TextView startTime;
     private TextView endTime;
     private SeekBar seekBar;
     private LinearLayout noMediaLayout;
     private ArrayList<MediaFileListModel> mediaFileListModelsArray;
     private MediaPlayer mediaPlayer;
-    private final Handler mHandler = new Handler();
     private Utilities utilities;
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
@@ -157,7 +157,7 @@ public class AudiosListActivity extends AppCompatActivity {
     }
 
     private void getMusicList() {
-        final Cursor mCursor = managedQuery(
+        @SuppressWarnings("deprecation") final Cursor mCursor = managedQuery(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");

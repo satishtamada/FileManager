@@ -44,7 +44,7 @@ public class VideosListActivity extends AppCompatActivity {
     }
 
     private void getVideoList() {
-        final Cursor mCursor = managedQuery(
+        @SuppressWarnings("deprecation") final Cursor mCursor = managedQuery(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Video.Media.TITLE + ") ASC");
