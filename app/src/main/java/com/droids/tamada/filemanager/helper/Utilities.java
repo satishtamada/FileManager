@@ -11,7 +11,7 @@ public class Utilities {
      */
     public String milliSecondsToTimer(long milliseconds) {
         String finalTimerString = "";
-        String secondsString;
+        String secondsString = "";
 
         // Convert total duration into time
         int hours = (int) (milliseconds / (1000 * 60 * 60));
@@ -61,7 +61,7 @@ public class Utilities {
      * @param totalDuration returns current duration in milliseconds
      */
     public int progressToTimer(int progress, int totalDuration) {
-        int currentDuration;
+        int currentDuration = 0;
         totalDuration = totalDuration / 1000;
         currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
