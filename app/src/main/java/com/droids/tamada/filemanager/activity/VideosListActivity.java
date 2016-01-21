@@ -9,11 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import com.droids.tamada.filemanager.adapter.VideoListAdapter;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
-
 import java.util.ArrayList;
 
 /**
@@ -26,6 +24,7 @@ public class VideosListActivity extends AppCompatActivity {
     /**
      * Called when the activity is first created.
      */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +39,13 @@ public class VideosListActivity extends AppCompatActivity {
         getVideoList();
         VideoListAdapter audioListAdapter = new VideoListAdapter(this, videoListModelsArray);
         listview.setAdapter(audioListAdapter);
-
     }
 
     private void getVideoList() {
-        final Cursor mCursor = managedQuery(
+        @SuppressWarnings("deprecation") final Cursor mCursor = managedQuery(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Video.Media.TITLE + ") ASC");
-        Log.d("length is", "" + mCursor.getCount());
         if (mCursor.getCount() == 0)
             noMediaLayout.setVisibility(View.VISIBLE);
         if (mCursor.moveToFirst()) {

@@ -27,10 +27,10 @@ import java.util.ArrayList;
  * Created by Satish on 26-12-2015.
  */
 public class InternalStorageFilesAdapter extends BaseAdapter {
-    private CustomListener customListener;
-    private LayoutInflater inflater;
     private final Activity activity;
     private final ArrayList<InternalStorageFilesModel> filesModelArrayList;
+    private CustomListener customListener;
+    private LayoutInflater inflater;
 
     public InternalStorageFilesAdapter(ArrayList<InternalStorageFilesModel> filesModelArrayList, FragmentActivity activity) {
         this.activity = activity;

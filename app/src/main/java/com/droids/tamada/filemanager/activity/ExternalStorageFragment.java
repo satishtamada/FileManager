@@ -52,6 +52,8 @@ import java.util.zip.ZipInputStream;
  * Created by Satish on 04-12-2015.
  */
 public class ExternalStorageFragment extends Fragment implements ExternalStorageFilesAdapter.CustomListener, MainActivity.CustomBackPressListener {
+    private final LinkedHashMap selectedFileHashMap = new LinkedHashMap();
+    private final Handler mHandler = new Handler();
     private MediaPlayer mediaPlayer;
     private TextView startTime;
     private TextView endTime;
@@ -67,12 +69,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     private MainActivity mainActivity;
     private int selectedFilePosition;
     private String fileExtension;
-    private final LinkedHashMap selectedFileHashMap = new LinkedHashMap();
-    private final Handler mHandler = new Handler();
     private Utilities utilities;
-    private Toolbar toolbar;
-    private ArrayList<String> listItemClickPaths;
-    private String selectAllLabel = "selectAll";
     private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long totalDuration = mediaPlayer.getDuration();
@@ -89,6 +86,9 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             mHandler.postDelayed(this, 100);
         }
     };
+    private Toolbar toolbar;
+    private ArrayList<String> listItemClickPaths;
+    private String selectAllLabel = "selectAll";
 
     public ExternalStorageFragment() {
 
@@ -141,16 +141,16 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
+        @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
         return formatSize(availableBlocks * blockSize, "free");
     }
 
     private static String getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
+        @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
         return formatSize(totalBlocks * blockSize, "total");
     }
 
@@ -220,7 +220,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                     TextView lbl_file_size = (TextView) propertyDialog.findViewById(R.id.lbl_file_size);
                     Button btnOk = (Button) propertyDialog.findViewById(R.id.btn_cancel);
                     if (selectedFileHashMap.size() == 1) {//if user select single item
-                        String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(selectedFileHashMap.size() - 1);
+                        @SuppressWarnings("unchecked") String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(selectedFileHashMap.size() - 1);
                         lbl_file_name.setText(selectedFileName.substring(selectedFileName.lastIndexOf('/') + 1));
                         if (getTotalFileMemorySize(selectedFileName).equals("0"))
                             lbl_file_size.setText("0KB");
@@ -232,7 +232,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         lbl_file_name.setText("Selected files properties");
                         int total_fileSize = 0;
                         for (int i = 0; i < selectedFileHashMap.size(); i++) {
-                            String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(i);
+                            @SuppressWarnings("unchecked") String selectedFileName = (new ArrayList<String>(selectedFileHashMap.values())).get(i);
                             String size = getTotalFileMemorySize(selectedFileName);
                             total_fileSize += Integer.parseInt(size.substring(0, size.length() - 2));
                         }
@@ -275,7 +275,6 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_exteranl, container, false);
-        // btnDelete = (ImageButton) rootView.findViewById(R.id.btn_delete);
         listView = (ListView) rootView.findViewById(R.id.external_file_list_view);
         listItemClickPaths = new ArrayList<>();
         mainActivity.setCustomBackPressExternalListener(this);
@@ -463,7 +462,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
                         Log.d("delete file", selectedFilePath + "" + Boolean.toString(isDeleteFile));
                         if (isDeleteFile) {
                             ExternalStorageFilesModel model = filesModelArrayList.get(selectedFilePosition);
-                            filesModelArrayList.remove(model);//remove file from listview
+                            filesModelArrayList.remove(model);//remove file from listView
                             externalStorageFilesAdapter.notifyDataSetChanged();//refresh the adapter
                             selectedFileHashMap.remove(selectedFolderName);
                             menu_type = "mainMenu";
@@ -796,7 +795,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
     }
 
     private String getTotalFileMemorySize(String selectedFilePath) {
-        String value = null;
+        String value;
         File file = new File(selectedFilePath);
         if (!file.isDirectory()) {//if selected file is not a directory
             value = formatSize(file.length());
@@ -819,6 +818,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
             if (!isChecked) {
                 selectedFileHashMap.remove(fileModel.getFileName());
             } else if (!selectAllLabel.contains(fileModel.getFileName())) {
+                //noinspection unchecked
                 selectedFileHashMap.put(fileModel.getFileName(), fileModel.getFilePath());
             }
         }
@@ -835,8 +835,10 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
+        //noinspection deprecation
         super.onAttach(activity);
     }
 
@@ -858,6 +860,7 @@ public class ExternalStorageFragment extends Fragment implements ExternalStorage
         filesModelArrayList.add(position, model);
         externalStorageFilesAdapter.notifyDataSetChanged();
         if (isChecked) {//add the item to selected hash map,display directory menu and enable delete menu button
+            //noinspection unchecked
             selectedFileHashMap.put(selectedFolderName, selectedFilePath);
             menu_type = "dirMenu";
             getActivity().invalidateOptionsMenu();

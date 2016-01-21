@@ -8,16 +8,14 @@
         android:id="@+id/internal_files_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"
         android:background="@color/colorWhite"
-        />
+        android:divider="@null" />
 
     <LinearLayout
         android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
 
         <include
             android:id="@+id/toolbarbottom"

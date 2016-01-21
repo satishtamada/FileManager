@@ -24,6 +24,7 @@ import java.io.IOException;
 /**
  * Created by Satish on 16-12-2015.
  */
+@SuppressWarnings("ALL")
 public class TextFileViewActivity extends AppCompatActivity {
     private String filePath;
     private EditText txtTextData;
@@ -35,6 +36,7 @@ public class TextFileViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_textview);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         txtTextData = (EditText) findViewById(R.id.txt_file_data);
         Intent txtIntent = getIntent();
@@ -220,7 +222,7 @@ public class TextFileViewActivity extends AppCompatActivity {
             }
             inputStream.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            //TODO Auto-generated catch block
             e.printStackTrace();
         }
 
