@@ -17,12 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.droids.tamada.filemanager.adapter.AudioListAdapter;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
