@@ -1,4 +1,4 @@
-package com.droids.tamada.filemanager.activity;
+package com.droids.tamada.filemanager.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,6 +32,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.droids.tamada.filemanager.activity.ImageViewActivity;
+import com.droids.tamada.filemanager.activity.MainActivity;
+import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageFilesAdapter;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;

@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.tamada.filemanager.activity.ExternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 

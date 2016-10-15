@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.tamada.filemanager.activity.InternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 

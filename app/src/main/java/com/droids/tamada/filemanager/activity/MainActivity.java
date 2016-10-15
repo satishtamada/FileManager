@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
 import com.example.satish.filemanager.R;
 
 
