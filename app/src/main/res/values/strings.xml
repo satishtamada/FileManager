@@ -91,5 +91,6 @@
     <string name="tools">Tools</string>
     <string name="share">Share</string>
     <string name="settings">Settings</string>
+    <string name="no_media_found">No Media found</string>
 
 </resources>

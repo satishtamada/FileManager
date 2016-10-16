@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
@@ -39,13 +42,14 @@ public class MainActivityDemo extends AppCompatActivity
     private DrawerLayout drawer;
     private String[] activityTitles;
     private Handler mHandler;
-
+    private RelativeLayout footerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_demo);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        footerLayout = (RelativeLayout) findViewById(R.id.id_layout_footer);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -77,12 +81,14 @@ public class MainActivityDemo extends AppCompatActivity
 
 
     private void setActivityTitle() {
-        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
 
     private void loadHomeFragment() {
         setActivityTitle();
         invalidateOptionsMenu();
+        loadFooter();
         if (getSupportFragmentManager().findFragmentByTag(FG_TAG) != null) {
             // getSupportFragmentManager().popBackStack(FG_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             drawer.closeDrawers();
@@ -107,11 +113,26 @@ public class MainActivityDemo extends AppCompatActivity
         }
     }
 
+    private void loadFooter() {
+        if (navItemIndex == 0 || navItemIndex == 1) {
+            if (footerLayout.getVisibility() != View.VISIBLE) {
+                Animation bottomToTop = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.bottom_top);
+                footerLayout.startAnimation(bottomToTop);
+                footerLayout.setVisibility(View.VISIBLE);
+            }
+        } else {
+            Animation topToBottom = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.top_bottom);
+            footerLayout.startAnimation(topToBottom);
+            footerLayout.setVisibility(View.GONE);
+        }
+    }
+
     private Fragment getHomeFragment() {
         switch (navItemIndex) {
             case 0:
                 return new InternalStorageFragment();
-            // home
             case 1:
                 return new ExternalStorageFragment();
             case 2:
@@ -163,6 +184,7 @@ public class MainActivityDemo extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
+
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
