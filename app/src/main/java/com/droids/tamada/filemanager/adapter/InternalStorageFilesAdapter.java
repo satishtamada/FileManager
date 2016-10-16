@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.InternalFragment;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
@@ -37,7 +37,7 @@ public class InternalStorageFilesAdapter extends BaseAdapter {
         this.filesModelArrayList = filesModelArrayList;
     }
 
-    public void setCustomListener(InternalStorageFragment customListener) {
+    public void setCustomListener(InternalFragment customListener) {
         this.customListener = customListener;
     }
 

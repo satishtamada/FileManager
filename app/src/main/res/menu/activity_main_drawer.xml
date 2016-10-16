@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_internal_storage"
+            android:title="@string/internal_storage"
+            android:icon="@drawable/ic_menu_internal_storage"/>
+        <item
+            android:id="@+id/nav_external_storage"
+            android:title="@string/external_storage"
+            android:icon="@drawable/ic_menu_external_storage"/>
+        <item
+            android:id="@+id/nav_images"
+            android:title="@string/images"
+            android:icon="@drawable/ic_menu_photos"/>
+        <item
+            android:id="@+id/nav_audios"
+            android:title="@string/audios"
+            android:icon="@drawable/ic_menu_audios"/>
+        <item
+            android:id="@+id/nav_videos"
+            android:title="@string/videos"
+            android:icon="@drawable/ic_menu_videos"/>
+    </group>
+
+    <item android:title="@string/tools">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:title="@string/share"
+                android:icon="@drawable/ic_menu_share"/>
+            <item
+                android:id="@+id/nav_settings"
+                android:title="@string/settings"
+                android:icon="@drawable/ic_menu_settings"/>
+        </menu>
+    </item>
+
+</menu>

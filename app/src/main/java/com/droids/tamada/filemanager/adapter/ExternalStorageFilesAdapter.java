@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.ExternalFragment;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
@@ -37,7 +37,7 @@ public class ExternalStorageFilesAdapter extends BaseAdapter {
         this.filesModelArrayList = filesModelArrayList;
     }
 
-    public void setCustomListener(ExternalStorageFragment customListener) {
+    public void setCustomListener(ExternalFragment customListener) {
         this.customListener = customListener;
     }
 

@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
-import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.ExternalFragment;
+import com.droids.tamada.filemanager.fragments.InternalFragment;
 import com.example.satish.filemanager.R;
 
 
@@ -19,12 +19,12 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
     private CustomBackPressListener customBackPressListener;
 
-    public void setCustomBackPressInternalListener(InternalStorageFragment customBackPressListener) {
+    public void setCustomBackPressInternalListener(InternalFragment customBackPressListener) {
         this.customBackPressListener = customBackPressListener;
     }
 
-    public void setCustomBackPressExternalListener(ExternalStorageFragment externalStorageFragment) {
-        this.customBackPressListener = externalStorageFragment;
+    public void setCustomBackPressExternalListener(ExternalFragment externalFragment) {
+        this.customBackPressListener = externalFragment;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
-        loadFragment(new ExternalStorageFragment(this), getResources().getString(R.string.title_external));
+        loadFragment(new ExternalFragment(this), getResources().getString(R.string.title_external));
     }
 
     @Override
@@ -52,11 +52,11 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         String title = getString(R.string.app_name);
         switch (position) {
             case 0:
-                fragment = new InternalStorageFragment(this);
+                fragment = new InternalFragment(this);
                 title = getString(R.string.title_internal);
                 break;
             case 1:
-                fragment = new ExternalStorageFragment(this);
+                fragment = new ExternalFragment(this);
                 title = getString(R.string.title_external);
                 break;
             default:

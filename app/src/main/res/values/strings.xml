@@ -2,7 +2,8 @@
     <string name="app_name">FileManager Lite</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_item_home">Internal storage</string>
     <string name="nav_item_friends">External storage</string>
 
@@ -70,5 +71,25 @@
     <string name="msg_prompt_not_renamed">Fail to renamed ..!</string>
     <string name="msg_prompt_renamed">Successfully renamed.</string>
     <string name="msg_prompt_name_already_exits">Name already exits</string>
+
+    <string-array name="nav_item_activity_titles">
+        <item>Internal storage</item>
+        <item>External storage</item>
+        <item>Images</item>
+        <item>Audios</item>
+        <item>Videos</item>
+        <item>Settings</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="external_storage">External Storage</string>
+    <string name="images">Images</string>
+    <string name="audios">Audios</string>
+    <string name="videos">Videos</string>
+    <string name="tools">Tools</string>
+    <string name="share">Share</string>
+    <string name="settings">Settings</string>
 
 </resources>
