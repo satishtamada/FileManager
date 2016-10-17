@@ -57,15 +57,6 @@ public class InternalStorageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InternalStorageFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static InternalStorageFragment newInstance(String param1, String param2) {
         InternalStorageFragment fragment = new InternalStorageFragment();
         Bundle args = new Bundle();
@@ -119,6 +110,13 @@ public class InternalStorageFragment extends Fragment {
     private void getFilesList(String rootPath) {
         File f = new File(rootPath);
         File[] files = f.listFiles();
+        if(files.length==0){
+            noMediaLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
+        }
         if (!rootPath.equals(rootPath) & !rootPath.equals("/sdcard")) {
             InternalStorageFilesModel model = new InternalStorageFilesModel("/", rootPath, true);
             mediaFileListModels.add(model);

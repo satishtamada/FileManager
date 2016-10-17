@@ -37,7 +37,7 @@ public class AudiosListAdapter extends RecyclerView.Adapter<AudiosListAdapter.My
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.media_list_item_view, parent, false);
+                .inflate(R.layout.audio_list_item_view, parent, false);
 
         return new MyViewHolder(itemView);
     }
@@ -47,7 +47,7 @@ public class AudiosListAdapter extends RecyclerView.Adapter<AudiosListAdapter.My
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         MediaFileListModel mediaFileListModel = mediaFileListModels.get(position);
         holder.lblFileName.setText(mediaFileListModel.getFileName());
-        holder.imgItemIcon.setImageResource(R.drawable.ic_audio);
+        holder.imgItemIcon.setImageResource(R.drawable.ic_audio_file);
     }
 
     @Override
