@@ -79,25 +79,26 @@ public class AudiosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_audios_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
-        getMusicList();
+
         audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
+        recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(audiosListAdapter);
+        getMusicList();
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
                 audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
-                audioPlayerDialog.show();
                 footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
                 lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
                 toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
                 MediaFileListModel mediaFileListModel = mediaFileListModels.get(position);
                 lblAudioFileName.setText(mediaFileListModel.getFileName());
-                toggleBtnPlayPause.setSelected(true);
+                audioPlayerDialog.show();
                 footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -7,8 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
+
+import java.util.ArrayList;
 
 
 /**
@@ -28,7 +32,8 @@ public class ImagesListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private ArrayList<MediaFileListModel> imageListModelsArray;
+    private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
 
     public ImagesListFragment() {
