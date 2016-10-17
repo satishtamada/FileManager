@@ -12,6 +12,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_folder"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -24,6 +25,8 @@
             </intent-filter>
         </activity>
         <!--activity for ImageViewer-->
+        <activity
+            android:name="com.droids.tamada.filemanager.activity.ImageViewActivity"
+            android:screenOrientation="portrait" />
     </application>
-
 </manifest>
