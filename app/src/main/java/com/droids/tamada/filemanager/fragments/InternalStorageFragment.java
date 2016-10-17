@@ -1,14 +1,32 @@
 package com.droids.tamada.filemanager.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
+import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
+import com.droids.tamada.filemanager.app.AppController;
+import com.droids.tamada.filemanager.helper.DividerItemDecoration;
+import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
+
+import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -28,8 +46,12 @@ public class InternalStorageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private RecyclerView recyclerView;
+    private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
+    private ArrayList<InternalStorageFilesModel> mediaFileListModels;
+    private InternalStorageListAdapter internalStorageListAdapter;
+    private String rootPath;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -66,7 +88,45 @@ public class InternalStorageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_internal_storage, container, false);
+        View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
+        mediaFileListModels = new ArrayList<>();
+        rootPath = Environment.getExternalStorageDirectory()
+                .getAbsolutePath();
+        internalStorageListAdapter = new InternalStorageListAdapter(mediaFileListModels);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(internalStorageListAdapter);
+        getFilesList(rootPath);
+        recyclerView.addOnItemTouchListener(new AudiosListFragment.RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new AudiosListFragment.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        return view;
+    }
+
+    private void getFilesList(String rootPath) {
+        File f = new File(rootPath);
+        File[] files = f.listFiles();
+        if (!rootPath.equals(rootPath) & !rootPath.equals("/sdcard")) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel("/", rootPath, true);
+            mediaFileListModels.add(model);
+        }
+        for (File file : files) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
+            mediaFileListModels.add(model);
+        }
     }
 
     public void onButtonPressed(Uri uri) {
@@ -91,6 +151,7 @@ public class InternalStorageFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

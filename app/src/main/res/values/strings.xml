@@ -92,5 +92,6 @@
     <string name="share">Share</string>
     <string name="settings">Settings</string>
     <string name="no_media_found">No Media found</string>
+    <string name="lock">Lock</string>
 
 </resources>
