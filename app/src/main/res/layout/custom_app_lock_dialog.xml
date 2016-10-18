@@ -15,7 +15,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:weightSum="4">
 
             <Button
@@ -201,7 +203,9 @@
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="canecl"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:text="cancel"
                 android:textColor="@color/colorWhite" />
 
             <Button
