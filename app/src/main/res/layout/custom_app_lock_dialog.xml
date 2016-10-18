@@ -8,15 +8,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
         android:layout_centerInParent="true"
+        android:layout_margin="40dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4"
-            android:layout_marginBottom="25dp">
+            android:layout_marginBottom="25dp"
+            android:weightSum="4">
 
             <Button
                 android:layout_width="0dp"
@@ -49,7 +49,6 @@
                 android:textColor="@color/colorPrimary" />
 
             <Button
-                android:id="@+id/btnRideCancel"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
@@ -71,142 +70,161 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="1"
-                android:textColor="@color/colorPrimary" />
+                android:text="@string/one"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="2"
-                android:textColor="@color/colorPrimary" />
+                android:text="@string/two"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="3"
-                android:textColor="@color/colorPrimary" />
+                android:text="@string/three"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:layout_marginBottom="1dp">
+            android:layout_marginBottom="1dp"
+            android:weightSum="3">
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="1"
-                android:textColor="@color/colorPrimary" />
+                android:text="4"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="2"
-                android:textColor="@color/colorPrimary" />
+                android:text="5"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="3"
-                android:textColor="@color/colorPrimary" />
+                android:text="6"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:layout_marginBottom="1dp">
+            android:layout_marginBottom="1dp"
+            android:weightSum="3">
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="1"
-                android:textColor="@color/colorPrimary" />
+                android:text="7"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="2"
-                android:textColor="@color/colorPrimary" />
+                android:text="8"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
             <Button
-                android:id="@+id/btnRideCancel"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="3"
-                android:textColor="@color/colorPrimary" />
+                android:text="9"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:layout_marginBottom="1dp">
+            android:layout_marginBottom="1dp"
+            android:weightSum="3">
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="1"
-                android:textColor="@color/colorPrimary" />
+                android:text="canecl"
+                android:textColor="@color/colorWhite" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
+                android:background="@color/colorPrimary"
                 android:clickable="true"
-                android:text="2"
-                android:textColor="@color/colorPrimary" />
+                android:text="0"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite" />
 
-            <Button
+            <ImageView
+                android:layout_gravity="center"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="30dp"
                 android:layout_marginRight="1dp"
                 android:layout_weight="1"
-                android:background="@color/colorWhite"
                 android:clickable="true"
-                android:text="3"
-                android:textColor="@color/colorPrimary" />
+                android:src="@drawable/ic_delete_text"
+                />
         </LinearLayout>
     </LinearLayout>
 
