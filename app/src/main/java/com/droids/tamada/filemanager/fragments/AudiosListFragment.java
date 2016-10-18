@@ -79,7 +79,6 @@ public class AudiosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_audios_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
-
         audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -122,8 +121,13 @@ public class AudiosListFragment extends Fragment {
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
         Log.d("audio list", "" + mCursor.getCount());
-        if (mCursor.getCount() == 0)
+        if (mCursor.getCount() == 0) {
             noMediaLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
+        }
         if (mCursor.moveToFirst()) {
             do {
                 MediaFileListModel mediaFileListModel = new MediaFileListModel();
