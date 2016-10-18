@@ -3,6 +3,7 @@ package com.droids.tamada.filemanager.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,8 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,9 +26,11 @@ import android.widget.ToggleButton;
 import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
+import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -52,6 +54,8 @@ public class AudiosListFragment extends Fragment {
     private RelativeLayout footerAudioPlayer;
     private TextView lblAudioFileName;
     private ToggleButton toggleBtnPlayPause;
+    private MediaPlayer mediaPlayer;
+    private Utilities utilities;
 
     public AudiosListFragment() {
         // Required empty public constructor
@@ -79,6 +83,7 @@ public class AudiosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_audios_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
+        mediaPlayer = new MediaPlayer();
         audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -90,21 +95,8 @@ public class AudiosListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-                audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
-                footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
-                lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
-                toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
                 MediaFileListModel mediaFileListModel = mediaFileListModels.get(position);
-                lblAudioFileName.setText(mediaFileListModel.getFileName());
-                audioPlayerDialog.show();
-                footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        audioPlayerDialog.dismiss();
-                    }
-                });
-
+                showAudioPlayer(mediaFileListModel.getFileName(), mediaFileListModel.getFilePath());
             }
 
             @Override
@@ -113,6 +105,46 @@ public class AudiosListFragment extends Fragment {
             }
         }));
         return view;
+    }
+
+    private void showAudioPlayer(String fileName, String filePath) {
+        final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
+        footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
+        lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
+        toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
+        lblAudioFileName.setText(fileName);
+        audioPlayerDialog.show();
+        utilities = new Utilities();
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediaPlayer.start();
+        footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                audioPlayerDialog.dismiss();
+            }
+        });
+        toggleBtnPlayPause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.start();
+                    }
+                } else {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.pause();
+                    }
+                }
+            }
+        });
     }
 
     private void getMusicList() {
@@ -124,7 +156,7 @@ public class AudiosListFragment extends Fragment {
         if (mCursor.getCount() == 0) {
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
-        }else{
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             noMediaLayout.setVisibility(View.GONE);
         }
@@ -216,7 +248,7 @@ public class AudiosListFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
