@@ -17,6 +17,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.droids.tamada.filemanager.activity.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.droids.tamada.filemanager.activity.ImageViewActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.droids.tamada.filemanager.activity.ScreenLockActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,9 +32,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--activity for ImageViewer-->
-        <activity
-            android:name="com.droids.tamada.filemanager.activity.ImageViewActivity"
-            android:screenOrientation="portrait" />
     </application>
 </manifest>

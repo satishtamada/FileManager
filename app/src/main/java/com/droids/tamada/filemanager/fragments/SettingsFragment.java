@@ -80,19 +80,22 @@ public class SettingsFragment extends Fragment {
         sBtnLock = (SwitchButton) view.findViewById(R.id.id_setting_lock);
         pswArray = new ArrayList<>();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
+        if (preferManager.isPasswordActivated()) {
+            sBtnLock.setChecked(true);
+        } else {
+            sBtnLock.setChecked(false);
+        }
         sBtnLock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (!preferManager.isPasswordActivated()) {
-
-                    } else {
+                    if (preferManager.getPassword().length()==0) {
                         showPasswordDialog();
+                    } else {
+                        preferManager.setPasswordActivated(true);
                     }
-
                 } else {
                     preferManager.setPasswordActivated(false);
-                    //TODO password off in prefe
                 }
             }
         });
@@ -221,8 +224,10 @@ public class SettingsFragment extends Fragment {
             } else {
                 rePassword = tempPassword;
                 if (password.equals(rePassword)) {
-                    //TODO store password in prefer
                     Toast.makeText(AppController.getInstance().getApplicationContext(), "corrcet", Toast.LENGTH_SHORT).show();
+                    preferManager.setPassword(password);
+                    preferManager.setPasswordActivated(true);
+                    appLockDialog.dismiss();
                 } else {
                     Toast.makeText(AppController.getInstance().getApplicationContext(), "miss match", Toast.LENGTH_SHORT).show();
                     rePassword = "";
@@ -230,7 +235,7 @@ public class SettingsFragment extends Fragment {
                     txtPassword.setText("");
                     passwordLength = 0;
                     pswArray.clear();
-                }//compare passwords
+                }
             }
         }
     }

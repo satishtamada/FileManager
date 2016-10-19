@@ -89,6 +89,6 @@ public class PreferManager {
     }
 
     public String getPassword() {
-        return pref.getString(KEY_PASSWORD, null);
+        return pref.getString(KEY_PASSWORD, "");
     }
 }
