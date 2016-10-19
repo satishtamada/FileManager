@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
+    android:background="?android:attr/selectableItemBackground"
     android:descendantFocusability="blocksDescendants"
+    android:focusable="true"
+    android:clickable="true"
     android:padding="5dp">
 
     <ImageView

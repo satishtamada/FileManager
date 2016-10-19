@@ -8,6 +8,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorBlackTransparent">#99000000</color>
     <color name="colorFooterBorderTop">#d9dce0</color>
+    <color name="colorRippleEffect">#d3d3d3</color>
 
     <color name="rounded_container_bg">#222222</color>
     <color name="rounded_container_border">#3b3f44</color>

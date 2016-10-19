@@ -1,6 +1,5 @@
 package com.droids.tamada.filemanager.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,16 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
-import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
-import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
@@ -98,7 +93,7 @@ public class InternalStorageFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                Toast.makeText(AppController.getInstance().getApplicationContext(),"hello",Toast.LENGTH_SHORT).show();
             }
 
             @Override
