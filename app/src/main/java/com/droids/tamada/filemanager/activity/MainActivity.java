@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -211,7 +212,11 @@ public class MainActivity extends AppCompatActivity
                 FG_TAG = TAG_VIDEOS_LIST;
                 break;
             case R.id.nav_share:
-
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "FlyCabs");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Download  here to visit https://play.google.com/store/apps/details?id=com.droids.tamada.filemanager&hl=en ");
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
             case R.id.nav_settings:
                 navItemIndex = 5;

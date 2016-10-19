@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/layout_image_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
@@ -29,6 +30,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:layout_below="@+id/layout_image_title"
         android:layout_centerInParent="true"
         android:id="@+id/imageView"
         android:layout_width="match_parent"

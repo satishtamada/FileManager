@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ripple_effect"
             android:layout_gravity="end|center_horizontal"
             app:kswBackDrawable="@drawable/miui_back_drawable"
             app:kswBackMeasureRatio="2"

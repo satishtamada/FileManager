@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
@@ -17,7 +18,7 @@ import java.util.List;
  */
 
 public class ExternalStorageListAdapter extends RecyclerView.Adapter<ExternalStorageListAdapter.MyViewHolder> {
-    private List<InternalStorageFilesModel> mediaFileListModels;
+    private List<ExternalStorageFilesModel> mediaFileListModels;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView lblFileName;
@@ -30,7 +31,7 @@ public class ExternalStorageListAdapter extends RecyclerView.Adapter<ExternalSto
         }
     }
 
-    public ExternalStorageListAdapter(List<InternalStorageFilesModel> mediaFileListModels) {
+    public ExternalStorageListAdapter(List<ExternalStorageFilesModel> mediaFileListModels) {
         this.mediaFileListModels = mediaFileListModels;
     }
 
@@ -45,7 +46,7 @@ public class ExternalStorageListAdapter extends RecyclerView.Adapter<ExternalSto
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        InternalStorageFilesModel mediaFileListModel = mediaFileListModels.get(position);
+        ExternalStorageFilesModel mediaFileListModel = mediaFileListModels.get(position);
         holder.lblFileName.setText(mediaFileListModel.getFileName());
         holder.imgItemIcon.setImageResource(R.drawable.ic_folder);
     }
