@@ -113,6 +113,7 @@ public class AudiosListFragment extends Fragment {
         footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
         lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
         toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
+        toggleBtnPlayPause.setChecked(true);
         lblAudioFileName.setText(fileName);
         audioPlayerDialog.show();
         utilities = new Utilities();
@@ -127,7 +128,7 @@ public class AudiosListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mediaPlayer.stop();
-                mediaPlayer.release();
+                mediaPlayer.reset();
                 audioPlayerDialog.dismiss();
             }
         });

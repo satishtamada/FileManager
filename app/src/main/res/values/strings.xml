@@ -93,5 +93,8 @@
     <string name="settings">Settings</string>
     <string name="no_media_found">No Media found</string>
     <string name="lock">Lock</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
 
 </resources>
