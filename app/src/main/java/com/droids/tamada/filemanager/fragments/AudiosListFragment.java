@@ -25,7 +25,6 @@ import android.widget.ToggleButton;
 
 import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
-import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
@@ -88,7 +87,6 @@ public class AudiosListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(audiosListAdapter);
         getMusicList();

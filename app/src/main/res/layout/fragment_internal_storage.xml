@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@color/colorWhite"
     android:clickable="true"
     android:focusable="true"
     tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:background="?android:attr/selectableItemBackground"
         android:scrollbars="vertical"
         android:visibility="gone"/>
 
