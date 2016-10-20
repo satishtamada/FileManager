@@ -3,18 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:clickable="true"
-    android:focusable="true"
     tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
+
+    <TextView
+        android:id="@+id/id_file_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorWhite"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:textAllCaps="false"
+        android:textColor="@color/lbl_text_color"
+        android:textSize="13sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/id_file_path"
         android:background="?android:attr/selectableItemBackground"
         android:scrollbars="vertical"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/noMediaLayout"
@@ -50,12 +60,14 @@
         android:background="@drawable/bg_footer_layout"
         android:padding="5dp"
         android:visibility="gone">
+
         <ImageView
             android:id="@+id/id_create_folder"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:background="@drawable/ripple_effect"
             android:padding="5dp"
             android:src="@drawable/ic_new_folder" />
 
@@ -64,6 +76,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
+            android:background="@drawable/ripple_effect"
             android:padding="5dp"
             android:src="@drawable/ic_delete" />
 
@@ -73,6 +86,7 @@
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:background="@drawable/ripple_effect"
             android:padding="5dp"
             android:src="@drawable/ic_menu" />
     </RelativeLayout>

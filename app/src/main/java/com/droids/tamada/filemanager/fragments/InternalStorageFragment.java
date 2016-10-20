@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.droids.tamada.filemanager.activity.ImageViewActivity;
+import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
@@ -49,7 +51,7 @@ import java.util.List;
  * Use the {@link InternalStorageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InternalStorageFragment extends Fragment {
+public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,11 +68,11 @@ public class InternalStorageFragment extends Fragment {
     private String rootPath;
     private String fileExtension;
     private RelativeLayout footerAudioPlayer;
-    private TextView lblAudioFileName;
-    private ToggleButton toggleBtnPlayPause;
     private MediaPlayer mediaPlayer;
     private Utilities utilities;
     private RelativeLayout footerLayout;
+    private TextView lblFilePath;
+    private ArrayList<String> arrayListFilePaths;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -99,10 +101,13 @@ public class InternalStorageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
+        AppController.getInstance().setButtonBackPressed(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
+        lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         internalStorageFilesModelArrayList = new ArrayList<>();
+        arrayListFilePaths = new ArrayList<>();
         mediaPlayer = new MediaPlayer();
         rootPath = Environment.getExternalStorageDirectory()
                 .getAbsolutePath();
@@ -113,6 +118,7 @@ public class InternalStorageFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(internalStorageListAdapter);
+        arrayListFilePaths.add(rootPath);
         getFilesList(rootPath);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
@@ -123,6 +129,7 @@ public class InternalStorageFragment extends Fragment {
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead()) {//if directory is readable
                         internalStorageFilesModelArrayList.clear();
+                        arrayListFilePaths.add(internalStorageFilesModel.getFilePath());
                         getFilesList(internalStorageFilesModel.getFilePath());
                         internalStorageListAdapter.notifyDataSetChanged();
                     } else {//Toast to your not openable type
@@ -182,8 +189,8 @@ public class InternalStorageFragment extends Fragment {
         final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
         footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
-        lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
-        toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
+        TextView lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
+        ToggleButton toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
         toggleBtnPlayPause.setChecked(true);
         lblAudioFileName.setText(fileName);
         audioPlayerDialog.show();
@@ -219,8 +226,10 @@ public class InternalStorageFragment extends Fragment {
         });
     }
 
-    private void getFilesList(String rootPath) {
-        File f = new File(rootPath);
+    private void getFilesList(String filePath) {
+        lblFilePath.setText(filePath);
+        Log.d("length", "" + arrayListFilePaths.size());
+        File f = new File(filePath);
         File[] files = f.listFiles();
         if (files.length == 0) {
             noMediaLayout.setVisibility(View.VISIBLE);
@@ -233,6 +242,23 @@ public class InternalStorageFragment extends Fragment {
             if (file.getName().indexOf('.') != 0) {//	reveal folders only
                 InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
                 internalStorageFilesModelArrayList.add(model);
+            }
+        }
+    }
+
+
+    @Override
+    public void onButtonBackPressed(int navItemIndex) {
+        if(navItemIndex==0){
+            if (arrayListFilePaths.size() == 1) {
+                Toast.makeText(AppController.getInstance().getApplicationContext(), "back pre", Toast.LENGTH_SHORT).show();
+            } else {
+                if (arrayListFilePaths.size() >= 2) {
+                    internalStorageFilesModelArrayList.clear();
+                    getFilesList(arrayListFilePaths.get(arrayListFilePaths.size() - 2));
+                    internalStorageListAdapter.notifyDataSetChanged();
+                    arrayListFilePaths.remove(arrayListFilePaths.size() - 1);
+                }
             }
         }
     }
@@ -311,5 +337,6 @@ public class InternalStorageFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 
 }

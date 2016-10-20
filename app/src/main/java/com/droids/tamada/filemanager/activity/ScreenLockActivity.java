@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.droids.tamada.filemanager.app.AppController;
@@ -26,9 +25,6 @@ public class ScreenLockActivity extends AppCompatActivity {
     private Button btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnZero, btnCancel;
     private ImageView imgDelete;
     private String tempPassword = "";
-    private TextView lblEnterPassword;
-    private String password = "";
-    private String rePassword;
     private EditText txtPassword;
     private ArrayList<String> pswArray;
     private int passwordLength;
@@ -56,7 +52,6 @@ public class ScreenLockActivity extends AppCompatActivity {
             btnCancel = (Button) findViewById(R.id.id_cancel);
             imgDelete = (ImageView) findViewById(R.id.id_delete);
             txtPassword = (EditText) findViewById(R.id.id_password);
-            lblEnterPassword = (TextView) findViewById(R.id.id_lbl_password);
             pswArray = new ArrayList<>();
             btnOne.setOnClickListener(new View.OnClickListener() {
                 @Override

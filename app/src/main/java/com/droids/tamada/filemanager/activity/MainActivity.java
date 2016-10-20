@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private String[] activityTitles;
     private Handler mHandler;
+    boolean doubleBackToExitPressedOnce = false;
+    public static ButtonBackPressListener buttonBackPressListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,8 +219,24 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().getItem(0).setChecked(true);
                 loadHomeFragment();
             } else {
-                super.onBackPressed();
+                /*if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);*/
+                buttonBackPressListener.onButtonBackPressed(navItemIndex);
             }
         }
+    }
+
+    public interface ButtonBackPressListener {
+        void onButtonBackPressed(int navItemIndex);
     }
 }
