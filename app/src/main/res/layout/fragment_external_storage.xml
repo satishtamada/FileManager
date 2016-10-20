@@ -41,4 +41,38 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/id_layout_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_footer_layout"
+        android:padding="5dp"
+        android:visibility="visible">
+        <ImageView
+            android:id="@+id/id_create_folder"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="5dp"
+            android:src="@drawable/ic_new_folder" />
+
+        <ImageView
+            android:id="@+id/id_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:padding="5dp"
+            android:src="@drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/id_menu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:src="@drawable/ic_menu" />
+    </RelativeLayout>
 </RelativeLayout>

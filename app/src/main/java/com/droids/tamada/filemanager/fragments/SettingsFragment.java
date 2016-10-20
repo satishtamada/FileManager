@@ -183,6 +183,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 appLockDialog.dismiss();
+                sBtnLock.setChecked(false);
             }
         });
         imgDelete.setOnClickListener(new View.OnClickListener() {

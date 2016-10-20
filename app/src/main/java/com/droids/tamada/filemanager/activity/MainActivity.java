@@ -14,18 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
 import com.droids.tamada.filemanager.fragments.ImagesListFragment;
 import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
+import com.droids.tamada.filemanager.fragments.SettingsFragment;
 import com.droids.tamada.filemanager.fragments.VideosListFragment;
 import com.example.satish.filemanager.R;
-
-import com.droids.tamada.filemanager.fragments.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity
@@ -42,14 +38,12 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private String[] activityTitles;
     private Handler mHandler;
-    private RelativeLayout footerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        footerLayout = (RelativeLayout) findViewById(R.id.id_layout_footer);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -88,7 +82,6 @@ public class MainActivity extends AppCompatActivity
     private void loadHomeFragment() {
         setActivityTitle();
         invalidateOptionsMenu();
-        loadFooter();
         if (getSupportFragmentManager().findFragmentByTag(FG_TAG) != null) {
             // getSupportFragmentManager().popBackStack(FG_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             drawer.closeDrawers();
@@ -113,23 +106,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loadFooter() {
-        if (navItemIndex == 0 || navItemIndex == 1) {
-            if (footerLayout.getVisibility() != View.VISIBLE) {
-                Animation bottomToTop = AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.bottom_top);
-                footerLayout.startAnimation(bottomToTop);
-                footerLayout.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (footerLayout.getVisibility() != View.GONE) {
-                Animation topToBottom = AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.top_bottom);
-                footerLayout.startAnimation(topToBottom);
-                footerLayout.setVisibility(View.GONE);
-            }
-        }
-    }
 
     private Fragment getHomeFragment() {
         switch (navItemIndex) {

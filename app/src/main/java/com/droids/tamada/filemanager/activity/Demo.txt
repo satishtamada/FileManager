@@ -1,0 +1,17 @@
+private void loadFooter() {
+        if (navItemIndex == 0 || navItemIndex == 1) {
+            if (footerLayout.getVisibility() != View.VISIBLE) {
+                Animation bottomToTop = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.bottom_top);
+                footerLayout.startAnimation(bottomToTop);
+                footerLayout.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (footerLayout.getVisibility() != View.GONE) {
+                Animation topToBottom = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.top_bottom);
+                footerLayout.startAnimation(topToBottom);
+                footerLayout.setVisibility(View.GONE);
+            }
+        }
+    }

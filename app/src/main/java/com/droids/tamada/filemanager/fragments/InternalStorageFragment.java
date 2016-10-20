@@ -1,6 +1,10 @@
 package com.droids.tamada.filemanager.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,17 +17,28 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.droids.tamada.filemanager.activity.ImageViewActivity;
+import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
+import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -50,6 +65,13 @@ public class InternalStorageFragment extends Fragment {
     private InternalStorageListAdapter internalStorageListAdapter;
     private String rootPath;
     private String fileExtension;
+    private RelativeLayout footerAudioPlayer;
+    private TextView lblAudioFileName;
+    private ToggleButton toggleBtnPlayPause;
+    private MediaPlayer mediaPlayer;
+    private Utilities utilities;
+    private RelativeLayout footerLayout;
+
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -79,7 +101,9 @@ public class InternalStorageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
+        footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         internalStorageFilesModelArrayList = new ArrayList<>();
+        mediaPlayer = new MediaPlayer();
         rootPath = Environment.getExternalStorageDirectory()
                 .getAbsolutePath();
         internalStorageListAdapter = new InternalStorageListAdapter(internalStorageFilesModelArrayList);
@@ -93,27 +117,106 @@ public class InternalStorageFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                InternalStorageFilesModel internalStorageFilesModel= internalStorageFilesModelArrayList.get(position);
+                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(position);
                 fileExtension = internalStorageFilesModel.getFileName().substring(internalStorageFilesModel.getFileName().lastIndexOf(".") + 1);//file extension (.mp3,.png,.pdf)
                 File file = new File(internalStorageFilesModel.getFilePath());//get the selected item path
                 if (file.isDirectory()) {//check if selected item is directory
                     if (file.canRead()) {//if directory is readable
-                        getFilesList(rootPath);
+                        internalStorageFilesModelArrayList.clear();
+                        getFilesList(internalStorageFilesModel.getFilePath());
+                        internalStorageListAdapter.notifyDataSetChanged();
                     } else {//Toast to your not openable type
-                        Toast.makeText(AppController.getInstance().getApplicationContext(),"Folder can't be read!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppController.getInstance().getApplicationContext(), "Folder can't be read!", Toast.LENGTH_SHORT).show();
                     }
-                }else{//if file is not directory open a application for file type
-                    //TODO open a application for it type
+                    //if file is not directory open a application for file type
+                } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {
+                    Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
+                    imageIntent.putExtra("imagePath", internalStorageFilesModel.getFilePath());
+                    imageIntent.putExtra("imageName", internalStorageFilesModel.getFileName());
+                    getActivity().startActivity(imageIntent);
+                } else if (fileExtension.equals("mp3")) {
+                    showAudioPlayer(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath());
+                } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {
+                    Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
+                    txtIntent.putExtra("filePath", internalStorageFilesModel.getFilePath());
+                    txtIntent.putExtra("fileName", internalStorageFilesModel.getFileName());
+                    getActivity().startActivity(txtIntent);
+                } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
+                    //TODO handle zip file
+                } else if (fileExtension.equals("pdf")) {
+                    File pdfFile = new File(internalStorageFilesModel.getFilePath());
+                    PackageManager packageManager = getActivity().getPackageManager();
+                    Intent testIntent = new Intent(Intent.ACTION_VIEW);
+                    testIntent.setType("application/pdf");
+                    List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+                    if (list.size() > 0 && pdfFile.isFile()) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        Uri uri = Uri.fromFile(pdfFile);
+                        intent.setDataAndType(uri, "application/pdf");
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+                    Uri fileUri = Uri.fromFile(new File(internalStorageFilesModel.getFileName()));
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setDataAndType(fileUri, "video/mp4");
+                    getActivity().startActivity(intent);
                 }
-
             }
 
             @Override
             public void onLongClick(View view, int position) {
-
+                Animation bottomToTop = AnimationUtils.loadAnimation(AppController.getInstance().getApplicationContext(),
+                        R.anim.bottom_top);
+                footerLayout.startAnimation(bottomToTop);
+                footerLayout.setVisibility(View.VISIBLE);
             }
         }));
         return view;
+    }
+
+    private void showAudioPlayer(String fileName, String filePath) {
+        final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
+        footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
+        lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
+        toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
+        toggleBtnPlayPause.setChecked(true);
+        lblAudioFileName.setText(fileName);
+        audioPlayerDialog.show();
+        utilities = new Utilities();
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediaPlayer.start();
+        footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                audioPlayerDialog.dismiss();
+            }
+        });
+        toggleBtnPlayPause.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.start();
+                    }
+                } else {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.pause();
+                    }
+                }
+            }
+        });
     }
 
     private void getFilesList(String rootPath) {
@@ -127,8 +230,10 @@ public class InternalStorageFragment extends Fragment {
             noMediaLayout.setVisibility(View.GONE);
         }
         for (File file : files) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
-            internalStorageFilesModelArrayList.add(model);
+            if (file.getName().indexOf('.') != 0) {//	reveal folders only
+                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
+                internalStorageFilesModelArrayList.add(model);
+            }
         }
     }
 
