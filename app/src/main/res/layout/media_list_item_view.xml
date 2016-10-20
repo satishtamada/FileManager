@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@drawable/rectangle_ripple_effect"
     android:descendantFocusability="blocksDescendants"
     android:focusable="true"
     android:clickable="true"
-    android:padding="5dp">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -18,13 +18,33 @@
         android:layout_centerVertical="true"/>
 
     <TextView
+        android:layout_toStartOf="@+id/id_check"
+        android:layout_toLeftOf="@+id/id_check"
         android:id="@+id/file_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_centerVertical="true"
         android:maxLines="1"
         android:layout_toEndOf="@+id/icon"
         android:layout_toRightOf="@+id/icon"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginRight="5dp" />
+
+    <ToggleButton
+        android:id="@+id/id_check"
+        android:layout_centerVertical="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/toggle_check"
+        android:focusable="false"
+        android:layout_marginRight="5dp"
+        android:focusableInTouchMode="false"
+        android:padding="5dp"
+        android:textOff=""
+        android:textOn="" />
 </RelativeLayout>
