@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_centerVertical="true"
-        android:maxLines="2"
+        android:maxLines="1"
         android:layout_toEndOf="@+id/icon"
         android:layout_toRightOf="@+id/icon"
         android:textSize="18sp" />

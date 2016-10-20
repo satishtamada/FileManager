@@ -46,10 +46,10 @@ public class InternalStorageFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
-    private ArrayList<InternalStorageFilesModel> mediaFileListModels;
+    private ArrayList<InternalStorageFilesModel> internalStorageFilesModelArrayList;
     private InternalStorageListAdapter internalStorageListAdapter;
     private String rootPath;
-
+    private String fileExtension;
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -79,10 +79,10 @@ public class InternalStorageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
-        mediaFileListModels = new ArrayList<>();
+        internalStorageFilesModelArrayList = new ArrayList<>();
         rootPath = Environment.getExternalStorageDirectory()
                 .getAbsolutePath();
-        internalStorageListAdapter = new InternalStorageListAdapter(mediaFileListModels);
+        internalStorageListAdapter = new InternalStorageListAdapter(internalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -93,7 +93,19 @@ public class InternalStorageFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(AppController.getInstance().getApplicationContext(),"hello",Toast.LENGTH_SHORT).show();
+                InternalStorageFilesModel internalStorageFilesModel= internalStorageFilesModelArrayList.get(position);
+                fileExtension = internalStorageFilesModel.getFileName().substring(internalStorageFilesModel.getFileName().lastIndexOf(".") + 1);//file extension (.mp3,.png,.pdf)
+                File file = new File(internalStorageFilesModel.getFilePath());//get the selected item path
+                if (file.isDirectory()) {//check if selected item is directory
+                    if (file.canRead()) {//if directory is readable
+                        getFilesList(rootPath);
+                    } else {//Toast to your not openable type
+                        Toast.makeText(AppController.getInstance().getApplicationContext(),"Folder can't be read!",Toast.LENGTH_SHORT).show();
+                    }
+                }else{//if file is not directory open a application for file type
+                    //TODO open a application for it type
+                }
+
             }
 
             @Override
@@ -114,13 +126,9 @@ public class InternalStorageFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             noMediaLayout.setVisibility(View.GONE);
         }
-        if (!rootPath.equals(rootPath) & !rootPath.equals("/sdcard")) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel("/", rootPath, true);
-            mediaFileListModels.add(model);
-        }
         for (File file : files) {
             InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
-            mediaFileListModels.add(model);
+            internalStorageFilesModelArrayList.add(model);
         }
     }
 
@@ -198,4 +206,5 @@ public class InternalStorageFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

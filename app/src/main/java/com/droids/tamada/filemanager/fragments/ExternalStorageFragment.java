@@ -3,7 +3,6 @@ package com.droids.tamada.filemanager.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
+import com.droids.tamada.filemanager.adapter.ExternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
-import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
+import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
@@ -46,8 +45,8 @@ public class ExternalStorageFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
-    private ArrayList<InternalStorageFilesModel> mediaFileListModels;
-    private InternalStorageListAdapter internalStorageListAdapter;
+    private ArrayList<ExternalStorageFilesModel> mediaFileListModels;
+    private ExternalStorageListAdapter externalStorageListAdapter;
     private String rootPath="/sdcard";
     public ExternalStorageFragment() {
         // Required empty public constructor
@@ -88,13 +87,13 @@ public class ExternalStorageFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
-        internalStorageListAdapter = new InternalStorageListAdapter(mediaFileListModels);
+        externalStorageListAdapter = new ExternalStorageListAdapter(mediaFileListModels);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(internalStorageListAdapter);
+        recyclerView.setAdapter(externalStorageListAdapter);
         getFilesList(rootPath);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
@@ -120,12 +119,8 @@ public class ExternalStorageFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             noMediaLayout.setVisibility(View.GONE);
         }
-        if (!rootPath.equals(rootPath) & !rootPath.equals("/sdcard")) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel("/", rootPath, true);
-            mediaFileListModels.add(model);
-        }
         for (File file : files) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
+            ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName(), file.getPath(), false);
             mediaFileListModels.add(model);
         }
     }

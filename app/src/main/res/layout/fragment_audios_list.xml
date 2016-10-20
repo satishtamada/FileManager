@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@color/colorWhite"
     tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:background="?android:attr/selectableItemBackground"
         android:scrollbars="vertical"
         android:visibility="gone"/>
 

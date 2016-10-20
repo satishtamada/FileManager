@@ -158,7 +158,7 @@ public class ScreenLockActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(AppController.getInstance().getApplicationContext(), "miss match", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppController.getInstance().getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
                 tempPassword = "";
                 txtPassword.setText("");
                 passwordLength = 0;
