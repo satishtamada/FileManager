@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,9 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,6 +78,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private TextView lblFilePath;
     private ArrayList<String> arrayListFilePaths;
     private ToggleButton toggleButtonCheck;
+
 
     public InternalStorageFragment() {
         // Required empty public constructor
