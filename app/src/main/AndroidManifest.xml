@@ -24,6 +24,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="com.droids.tamada.filemanager.activity.TextFileViewActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity
             android:name="com.droids.tamada.filemanager.activity.ScreenLockActivity"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -78,6 +78,8 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
             holder.imgItemIcon.setImageBitmap(bMap);
 
+        }else if(fileExtension.equals("apk")){
+            holder.imgItemIcon.setImageResource(R.drawable.ic_apk);
         }
     }
 

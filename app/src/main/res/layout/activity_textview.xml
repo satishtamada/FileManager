@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-    <LinearLayout
-        android:id="@+id/toolbarLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/tool_bar" />
-    </LinearLayout>
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/txt_file_data"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/toolbarLayout"
         android:background="@color/colorWhite"
         android:gravity="top|left"
         android:inputType="textMultiLine"

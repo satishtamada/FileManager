@@ -34,7 +34,6 @@ import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
-import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
@@ -111,7 +110,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
-        mediaPlayer = new MediaPlayer();
         rootPath = Environment.getExternalStorageDirectory()
                 .getAbsolutePath();
         internalStorageListAdapter = new InternalStorageListAdapter(internalStorageFilesModelArrayList);
@@ -214,6 +212,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         toggleBtnPlayPause.setChecked(true);
         lblAudioFileName.setText(fileName);
         audioPlayerDialog.show();
+        mediaPlayer = new MediaPlayer();
         utilities = new Utilities();
         try {
             mediaPlayer.setDataSource(filePath);
@@ -377,6 +376,5 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
 
         }
     }
-
 
 }
