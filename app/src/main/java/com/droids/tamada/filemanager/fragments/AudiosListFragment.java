@@ -2,6 +2,7 @@ package com.droids.tamada.filemanager.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -144,6 +146,21 @@ public class AudiosListFragment extends Fragment {
                 }
             }
         });
+        audioPlayerDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode,
+                                 KeyEvent event) {
+                // TODO Auto-generated method stub
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    audioPlayerDialog.dismiss();
+                }
+                return true;
+            }
+        });
+
     }
 
     private void getMusicList() {
