@@ -54,7 +54,6 @@ public class ImagesListAdapter extends RecyclerView.Adapter<ImagesListAdapter.My
         holder.lblFileName.setText(mediaFileListModel.getFileName());
         File imgFile = new File(mediaFileListModel.getFilePath());
         if (imgFile.exists()) {
-            Log.d("action", mediaFileListModel.getFilePath());
             Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile( mediaFileListModel.getFilePath()),
                     THUMB_SIZE, THUMB_SIZE);
             holder.imgItemIcon.setImageBitmap(ThumbImage);

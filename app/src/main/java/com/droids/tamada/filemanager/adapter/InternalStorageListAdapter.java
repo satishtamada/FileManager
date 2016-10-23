@@ -60,26 +60,28 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
         } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if list item any image then
             File imgFile = new File(mediaFileListModel.getFilePath());
             if (imgFile.exists()) {
-                Log.d("action", mediaFileListModel.getFilePath());
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                holder.imgItemIcon.setImageBitmap(myBitmap);
+                int THUMB_SIZE = 64;
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mediaFileListModel.getFilePath()),
+                        THUMB_SIZE, THUMB_SIZE);
+                holder.imgItemIcon.setImageBitmap(ThumbImage);
             }
         } else if (fileExtension.equals("pdf")) {
-            holder.imgItemIcon.setImageResource(R.mipmap.ic_pdf);
+            holder.imgItemIcon.setImageResource(R.drawable.ic_pdf_file);
         } else if (fileExtension.equals("mp3")) {
-            holder.imgItemIcon.setImageResource(R.mipmap.ic_mp3);
+            holder.imgItemIcon.setImageResource(R.drawable.ic_audio_file);
         } else if (fileExtension.equals("txt")) {
-            holder.imgItemIcon.setImageResource(R.mipmap.ic_file);
+            holder.imgItemIcon.setImageResource(R.drawable.ic_text_file);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            holder.imgItemIcon.setImageResource(R.mipmap.ic_zip);
+            holder.imgItemIcon.setImageResource(R.drawable.ic_zip_file);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
-            holder.imgItemIcon.setImageResource(R.mipmap.ic_html_xml);
-        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+            holder.imgItemIcon.setImageResource(R.drawable.ic_html_file);
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv") || fileExtension.equals("avi")) {
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
             holder.imgItemIcon.setImageBitmap(bMap);
-
-        }else if(fileExtension.equals("apk")){
+        } else if (fileExtension.equals("apk")) {
             holder.imgItemIcon.setImageResource(R.drawable.ic_apk);
+        } else{
+            holder.imgItemIcon.setImageResource(R.drawable.ic_un_supported_file);
         }
     }
 

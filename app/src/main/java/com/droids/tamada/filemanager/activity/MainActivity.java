@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
@@ -52,10 +53,7 @@ public class MainActivity extends AppCompatActivity
     private Handler mHandler;
     boolean doubleBackToExitPressedOnce = false;
     public static ButtonBackPressListener buttonBackPressListener;
-    private static final int REQUEST_CODE_READ_STORAGE = 101;
-    private static final int REQUEST_CODE_WRITE_STORAGE = 102;
 
-    private static final String PERMISSION_WRITE_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -88,37 +86,11 @@ public class MainActivity extends AppCompatActivity
             navItemIndex = 0;
             FG_TAG = TAG_INTERNAL_STORAGE;
             navigationView.getMenu().getItem(0).setChecked(true);
-            accessStorage();
+            loadHomeFragment();
         }
     }
 
-    private void accessStorage() {
-        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplicationContext(), PERMISSION_WRITE_STORAGE);
-        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
-            boolean showRequestAgain = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, PERMISSION_WRITE_STORAGE);
-            Log.e(TAG, "showRequestAgain: " + showRequestAgain);
-            if (showRequestAgain) {
-                new AlertDialog.Builder(this).setMessage("Storage permission is required")
-                        .setPositiveButton("ALLOW", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{PERMISSION_WRITE_STORAGE},
-                                        REQUEST_CODE_WRITE_STORAGE);
-                            }
-                        }).setNegativeButton("DENY", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).show();
-                return;
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{PERMISSION_WRITE_STORAGE}, REQUEST_CODE_WRITE_STORAGE);
-                return;
-            }
-        }
-        loadHomeFragment();
-    }
 
     private void setActivityTitle() {
         if (getSupportActionBar() != null)
@@ -179,90 +151,6 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_WRITE_STORAGE:
-                if (grantResults.length > 0) {
-                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        loadHomeFragment();
-                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                        // Permission Denied
-                        Log.e(TAG, "Permission denied");
-                        SharedPreferences pref = getSharedPreferences("fileManager", 0);
-                        if (!pref.getBoolean("is_camera_requested", false)) {
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putBoolean("is_camera_requested", true);
-                            editor.apply();
-                            return;
-                        }
-                        boolean showRequestAgain = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, PERMISSION_WRITE_STORAGE);
-                        if (showRequestAgain) {
-                            //true,
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                            builder.setTitle("Permission Required");
-                            builder.setMessage("Storage Permission is required");
-                            builder.setPositiveButton("DENY", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.setNegativeButton("RE-TRY", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{PERMISSION_WRITE_STORAGE},
-                                            REQUEST_CODE_WRITE_STORAGE);
-                                }
-                            });
-                            builder.show();
-
-                        } else {
-                            promptSettings();
-                        }
-                    } else {
-                        Log.e(TAG, "last else");
-                    }
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private void promptSettings() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Permission Required");
-        builder.setMessage(Html.fromHtml("We require your consent to additional permission in order to proceed. Please enable them in <b>Settings</b>"));
-        builder.setPositiveButton("go to Settings", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                goToSettings();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // finish();
-            }
-        });
-        builder.show();
-    }
-
-    private void goToSettings() {
-        Intent i = new Intent();
-        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        i.addCategory(Intent.CATEGORY_DEFAULT);
-        i.setData(Uri.parse("package:" + getPackageName()));
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        startActivity(i);
     }
 
     @Override
@@ -346,7 +234,7 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().getItem(0).setChecked(true);
                 loadHomeFragment();
             } else {
-                /*if (doubleBackToExitPressedOnce) {
+                if (doubleBackToExitPressedOnce) {
                     super.onBackPressed();
                     return;
                 }
@@ -357,7 +245,7 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
                         doubleBackToExitPressedOnce = false;
                     }
-                }, 2000);*/
+                }, 2000);
                 buttonBackPressListener.onButtonBackPressed(navItemIndex);
             }
         }
