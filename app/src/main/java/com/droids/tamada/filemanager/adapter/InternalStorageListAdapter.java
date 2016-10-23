@@ -72,7 +72,7 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
         } else if (fileExtension.equals("txt")) {
             holder.imgItemIcon.setImageResource(R.drawable.ic_text_file);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            holder.imgItemIcon.setImageResource(R.drawable.ic_zip_file);
+            holder.imgItemIcon.setImageResource(R.drawable.ic_zip_folder);
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             holder.imgItemIcon.setImageResource(R.drawable.ic_html_file);
         } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv") || fileExtension.equals("avi")) {

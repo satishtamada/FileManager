@@ -108,5 +108,7 @@
     <string name="turn_on">Turn on</string>
     <string name="storage_permission_is_required">Storage permission is required</string>
     <string name="cant_s_access_files">Cant\'s access files</string>
+    <string name="new_folder">new folder</string>
+    <string name="lbl_search">search</string>
 
 </resources>

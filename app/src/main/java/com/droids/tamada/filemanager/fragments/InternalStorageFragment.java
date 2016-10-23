@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -294,14 +295,18 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         }
         if (navItemIndex == 0) {
             if (arrayListFilePaths.size() == 1) {
-                Toast.makeText(AppController.getInstance().getApplicationContext(), "back pre", Toast.LENGTH_SHORT).show();
-            } else {
+                Toast.makeText(AppController.getInstance().getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            }
+            if (arrayListFilePaths.size() != 0) {
                 if (arrayListFilePaths.size() >= 2) {
                     internalStorageFilesModelArrayList.clear();
                     getFilesList(arrayListFilePaths.get(arrayListFilePaths.size() - 2));
                     internalStorageListAdapter.notifyDataSetChanged();
-                    arrayListFilePaths.remove(arrayListFilePaths.size() - 1);
                 }
+                arrayListFilePaths.remove(arrayListFilePaths.size() - 1);
+            } else {
+                getActivity().finish();
+                System.exit(0);
             }
         }
     }
@@ -327,6 +332,15 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void createNewFolder() {
+        Toast.makeText(AppController.getInstance().getApplicationContext(),"hello new folder",Toast.LENGTH_SHORT).show();
+    }
+
+    public void searchFile() {
+        Toast.makeText(AppController.getInstance().getApplicationContext(),"hello search file",Toast.LENGTH_SHORT).show();
+
     }
 
     public interface ClickListener {

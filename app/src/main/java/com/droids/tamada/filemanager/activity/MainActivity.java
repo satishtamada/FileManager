@@ -1,32 +1,19 @@
 package com.droids.tamada.filemanager.activity;
 
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
@@ -51,9 +38,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private String[] activityTitles;
     private Handler mHandler;
-    boolean doubleBackToExitPressedOnce = false;
     public static ButtonBackPressListener buttonBackPressListener;
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -108,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
-                // update the main content by replacing fragments
+                // update the main_internal_storage content by replacing fragments
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
@@ -155,9 +140,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         if (navItemIndex == 0) {
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.main_internal_storage, menu);
             return true;
         }
         /*if (navItemIndex == 1) {
@@ -169,11 +153,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (id == R.id.action_new_folder) {
+            InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
+            if (internalStorageFragment != null) {
+                internalStorageFragment.createNewFolder();
+            }
+            return true;
+        }else if(id==R.id.action_file_search){
+            InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
+            if (internalStorageFragment != null) {
+                internalStorageFragment.searchFile();
+            }
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -234,18 +227,6 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().getItem(0).setChecked(true);
                 loadHomeFragment();
             } else {
-                if (doubleBackToExitPressedOnce) {
-                    super.onBackPressed();
-                    return;
-                }
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        doubleBackToExitPressedOnce = false;
-                    }
-                }, 2000);
                 buttonBackPressListener.onButtonBackPressed(navItemIndex);
             }
         }
