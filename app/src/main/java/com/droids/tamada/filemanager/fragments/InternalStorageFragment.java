@@ -85,7 +85,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private ArrayList<String> arrayListFilePaths;
     private ToggleButton toggleButtonCheck;
     private PreferManager preferManager;
-
+    private String selectedFilePath;
+    private String selectedFolderName;
+    private int selectedFilePosition;
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -212,8 +214,13 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 toggleButtonCheck.setChecked(true);
                 InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(position);
                 internalStorageFilesModel.setSelected(true);
+                selectedFilePath = internalStorageFilesModel.getFilePath();
+                selectedFolderName = internalStorageFilesModel.getFileName();
+                selectedFilePosition = position;
             }
+
         }));
+
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,6 +228,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
 
             }
         });
+
         imgMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,6 +236,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 showMenu();
             }
         });
+
         imgFileCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,10 +273,10 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         final Dialog dialogRenameFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         dialogRenameFile.setContentView(R.layout.custom_rename_file_dialog);
         dialogRenameFile.show();
-        final EditText txtNewFile = (EditText) dialogRenameFile.findViewById(R.id.txt_file_name);
+        final EditText txtRenameFile = (EditText) dialogRenameFile.findViewById(R.id.txt_file_name);
         Button btnRename = (Button) dialogRenameFile.findViewById(R.id.btn_rename);
         Button btnCancel = (Button) dialogRenameFile.findViewById(R.id.btn_cancel);
-
+        txtRenameFile.setText(selectedFolderName);
         btnRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,7 +286,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtNewFile.setText("");
+                txtRenameFile.setText("");
                 dialogRenameFile.dismiss();
             }
         });
