@@ -166,6 +166,12 @@ public class MainActivity extends AppCompatActivity
                 internalStorageFragment.searchFile();
             }
             return true;
+        }else if (id==R.id.action_new_file){
+            InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
+            if (internalStorageFragment != null) {
+                internalStorageFragment.createNewFile();
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

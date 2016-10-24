@@ -24,9 +24,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +42,7 @@ import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
+import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
@@ -79,7 +84,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private TextView lblFilePath;
     private ArrayList<String> arrayListFilePaths;
     private ToggleButton toggleButtonCheck;
-
+    private PreferManager preferManager;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -109,10 +114,14 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
         AppController.getInstance().setButtonBackPressed(this);
+        preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
+        ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
+        ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
+        ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
         rootPath = Environment.getExternalStorageDirectory()
@@ -205,8 +214,80 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 internalStorageFilesModel.setSelected(true);
             }
         }));
+        imgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO delete file,folder
+
+            }
+        });
+        imgMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                footerLayout.setVisibility(View.GONE);
+                showMenu();
+            }
+        });
+        imgFileCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO new file
+                Toast.makeText(getActivity().getApplicationContext(), "copy file", Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
+
+    private void showMenu() {
+        final Dialog menuDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        menuDialog.setContentView(R.layout.custom_menu_dialog);
+        TextView lblRenameFile = (TextView) menuDialog.findViewById(R.id.id_rename);
+        TextView lblFileDetails = (TextView) menuDialog.findViewById(R.id.id_file_details);
+        lblRenameFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuDialog.dismiss();
+                renameFile();
+            }
+        });
+        lblFileDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuDialog.dismiss();
+                showFileDetails();
+            }
+        });
+        menuDialog.show();
+    }
+
+    private void renameFile() {
+        final Dialog dialogRenameFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogRenameFile.setContentView(R.layout.custom_rename_file_dialog);
+        dialogRenameFile.show();
+        final EditText txtNewFile = (EditText) dialogRenameFile.findViewById(R.id.txt_file_name);
+        Button btnRename = (Button) dialogRenameFile.findViewById(R.id.btn_rename);
+        Button btnCancel = (Button) dialogRenameFile.findViewById(R.id.btn_cancel);
+
+        btnRename.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO rename file
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtNewFile.setText("");
+                dialogRenameFile.dismiss();
+            }
+        });
+    }
+
+    private void showFileDetails() {
+        final Dialog menuDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        menuDialog.setContentView(R.layout.custom_menu_dialog);
+    }
+
 
     private void showAudioPlayer(String fileName, String filePath) {
         final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
@@ -277,13 +358,17 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             noMediaLayout.setVisibility(View.GONE);
         }
         for (File file : files) {
-            if (file.getName().indexOf('.') != 0) {//	reveal folders only
+            if (preferManager.isHiddenFileVisible()) {//show hidden file
                 InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
                 internalStorageFilesModelArrayList.add(model);
+            } else {
+                if (file.getName().indexOf('.') != 0) {//	disable hidden files
+                    InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
+                    internalStorageFilesModelArrayList.add(model);
+                }
             }
         }
     }
-
 
     @Override
     public void onButtonBackPressed(int navItemIndex) {
@@ -334,12 +419,99 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         mListener = null;
     }
 
+    public void createNewFile() {
+        final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
+        dialogNewFile.show();
+        final EditText txtNewFile = (EditText) dialogNewFile.findViewById(R.id.txt_new_folder);
+        Button btnCreate = (Button) dialogNewFile.findViewById(R.id.btn_create);
+        Button btnCancel = (Button) dialogNewFile.findViewById(R.id.btn_cancel);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fileName = txtNewFile.getText().toString().trim();
+                if (fileName.length() == 0) {//if file name is empty
+                    fileName = "NewFile";
+                }
+                try {
+                    File file = new File(rootPath + "/" + fileName + ".txt");
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean isCreated = file.createNewFile();
+                        if (isCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false);
+                            internalStorageFilesModelArrayList.add(model);
+                            internalStorageListAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialogNewFile.dismiss();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtNewFile.setText("");
+                dialogNewFile.dismiss();
+            }
+        });
+    }
+
     public void createNewFolder() {
-        Toast.makeText(AppController.getInstance().getApplicationContext(),"hello new folder",Toast.LENGTH_SHORT).show();
+        final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
+        dialogNewFolder.show();
+        final EditText txtNewFolder = (EditText) dialogNewFolder.findViewById(R.id.txt_new_folder);
+        Button btnCreate = (Button) dialogNewFolder.findViewById(R.id.btn_create);
+        Button btnCancel = (Button) dialogNewFolder.findViewById(R.id.btn_cancel);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String folderName = txtNewFolder.getText().toString().trim();
+                if (folderName.length() == 0) {//if user not enter text file name
+                    folderName = "NewFolder";
+                }
+                try {
+                    File file = new File(rootPath + "/" + folderName);
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean isFolderCreated = file.mkdir();
+                        if (isFolderCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, rootPath + "/" + folderName, true);
+                            internalStorageFilesModelArrayList.add(model);
+                            internalStorageListAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialogNewFolder.cancel();
+            }
+
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtNewFolder.setText("");
+                dialogNewFolder.dismiss();
+            }
+        });
+
     }
 
     public void searchFile() {
-        Toast.makeText(AppController.getInstance().getApplicationContext(),"hello search file",Toast.LENGTH_SHORT).show();
+        //TODO search file
+        Toast.makeText(AppController.getInstance().getApplicationContext(), "hello search file", Toast.LENGTH_SHORT).show();
 
     }
 

@@ -26,6 +26,7 @@ public class PreferManager {
     private static final String IS_NOTIFICATIONS_ON = "IsNotificationON";
     private static final String IS_PASSWORD_ON = "IsPasswordOn";
     private static final String KEY_PASSWORD = "password";
+    private static final String IS_HIDDEN_FILE_SHOW ="isHiddenFileShow";
 
     public PreferManager(Context context) {
         this._context = context;
@@ -82,6 +83,16 @@ public class PreferManager {
     public boolean isPasswordActivated() {
         return pref.getBoolean(IS_PASSWORD_ON, false);
     }
+
+    public void setHiddenFileVisible(boolean isHiddenFilEVisible) {
+        editor.putBoolean(IS_HIDDEN_FILE_SHOW, isHiddenFilEVisible);
+        editor.commit();
+    }
+
+    public boolean isHiddenFileVisible() {
+        return pref.getBoolean(IS_HIDDEN_FILE_SHOW, false);
+    }
+
 
     public void setPassword(String strPassword) {
         editor.putString(KEY_PASSWORD, strPassword);

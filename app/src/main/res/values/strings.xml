@@ -110,5 +110,14 @@
     <string name="cant_s_access_files">Cant\'s access files</string>
     <string name="new_folder">new folder</string>
     <string name="lbl_search">search</string>
+    <string name="show_hidden_file">Show hidden file</string>
+    <string name="create_folder">Create Folder</string>
+    <string name="hint_lbl_new_folder">New Folder</string>
+    <string name="create_file">Create File</string>
+    <string name="hint_lbl_new_file">New File</string>
+    <string name="lbl_rename">Rename</string>
+    <string name="file_details">File details</string>
+    <string name="move">Move</string>
+    <string name="rename">Rename</string>
 
 </resources>

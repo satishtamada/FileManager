@@ -34,7 +34,7 @@ public class SettingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private SwitchButton sBtnLock;
+    private SwitchButton sBtnLock, sBtnShowHiddenFile;
     private Button btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnZero, btnCancel;
     private ImageView imgDelete;
     private String tempPassword = "";
@@ -78,6 +78,7 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         sBtnLock = (SwitchButton) view.findViewById(R.id.id_setting_lock);
+        sBtnShowHiddenFile = (SwitchButton) view.findViewById(R.id.id_setting_hide_file);
         pswArray = new ArrayList<>();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         if (preferManager.isPasswordActivated()) {
@@ -85,17 +86,32 @@ public class SettingsFragment extends Fragment {
         } else {
             sBtnLock.setChecked(false);
         }
+        if (preferManager.isHiddenFileVisible()) {
+            sBtnShowHiddenFile.setChecked(true);
+        } else {
+            sBtnShowHiddenFile.setChecked(false);
+        }
         sBtnLock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (preferManager.getPassword().length()==0) {
+                    if (preferManager.getPassword().length() == 0) {
                         showPasswordDialog();
                     } else {
                         preferManager.setPasswordActivated(true);
                     }
                 } else {
                     preferManager.setPasswordActivated(false);
+                }
+            }
+        });
+        sBtnShowHiddenFile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    preferManager.setHiddenFileVisible(true);
+                } else {
+                    preferManager.setHiddenFileVisible(false);
                 }
             }
         });
