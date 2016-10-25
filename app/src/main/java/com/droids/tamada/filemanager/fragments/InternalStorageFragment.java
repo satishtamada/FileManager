@@ -88,6 +88,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private String selectedFilePath;
     private String selectedFolderName;
     private int selectedFilePosition;
+
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -280,7 +281,35 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         btnRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO rename file
+                if (txtRenameFile.getText().toString().trim().length() == 0) {
+                    Toast.makeText(AppController.getInstance().getApplicationContext(), "Please enter file name", Toast.LENGTH_SHORT).show();
+                } else {
+                    File renamedFile = new File(selectedFilePath.substring(0, selectedFilePath.lastIndexOf('/') + 1) + txtRenameFile.getText().toString());
+                    if (renamedFile.exists()) {
+                        Toast.makeText(AppController.getInstance().getApplicationContext(), "File already exits,choose another name", Toast.LENGTH_SHORT).show();
+                    } else {
+                        final File oldFile = new File(selectedFilePath);//create file with old name
+                        boolean isRenamed = oldFile.renameTo(renamedFile);
+                        if (isRenamed) {
+                            InternalStorageFilesModel model = internalStorageFilesModelArrayList.get(selectedFilePosition);
+                            model.setFileName(txtRenameFile.getText().toString());
+                            model.setFilePath(renamedFile.getPath());
+                            if (renamedFile.isDirectory()) {
+                                model.setIsDir(true);
+                            } else {
+                                model.setIsDir(false);
+                            }
+                            model.setSelected(false);
+                            internalStorageFilesModelArrayList.remove(selectedFilePosition);
+                            internalStorageFilesModelArrayList.add(selectedFilePosition, model);
+                            internalStorageListAdapter.notifyDataSetChanged();
+                            dialogRenameFile.dismiss();
+                        } else {
+                            Toast.makeText(AppController.getInstance().getApplicationContext(), AppController.getInstance().getApplicationContext().getString(R.string.msg_prompt_not_renamed), Toast.LENGTH_SHORT).show();
+                            dialogRenameFile.dismiss();
+                        }
+                    }
+                }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
