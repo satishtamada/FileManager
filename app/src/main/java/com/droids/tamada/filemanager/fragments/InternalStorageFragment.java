@@ -406,6 +406,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 }
             }
         }
+        Log.d("size is",""+internalStorageFilesModelArrayList.size());
     }
 
     @Override

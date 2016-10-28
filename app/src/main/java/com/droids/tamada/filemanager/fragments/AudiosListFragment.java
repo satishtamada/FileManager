@@ -124,6 +124,7 @@ public class AudiosListFragment extends Fragment {
             e.printStackTrace();
         }
         mediaPlayer.start();
+        if(mediaPlayer.isPlaying())
         footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +152,6 @@ public class AudiosListFragment extends Fragment {
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode,
                                  KeyEvent event) {
-                // TODO Auto-generated method stub
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     mediaPlayer.stop();
                     mediaPlayer.reset();

@@ -119,5 +119,8 @@
     <string name="file_details">File details</string>
     <string name="move">Move</string>
     <string name="rename">Rename</string>
+    <string name="ram">RAM</string>
+    <string name="free_space">Free space</string>
+    <string name="free">Free</string>
 
 </resources>
