@@ -5,7 +5,9 @@
     android:layout_height="@dimen/nav_header_height"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="20dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
@@ -13,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:gravity="center"
         android:orientation="vertical">
@@ -21,13 +24,13 @@
             android:id="@+id/progress_storage"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:arc_bottom_text="STORAGE"
             android:layout_marginBottom="5dp"
+            app:arc_bottom_text="STORAGE"
+            app:arc_bottom_text_size="8sp"
             app:arc_finished_color="@color/colorWhite"
-            app:arc_text_color="@color/colorWhite"
             app:arc_progress="10"
             app:arc_suffix_text_size="15dp"
-            app:arc_bottom_text_size="8sp"
+            app:arc_text_color="@color/colorWhite"
             app:arc_text_size="35sp"
             app:arc_unfinished_color="@color/colorPrimaryDark" />
 
@@ -57,8 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:gravity="center"
         android:layout_margin="10dp"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -67,11 +70,11 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:arc_bottom_text="RAM"
+            app:arc_bottom_text_size="10sp"
             app:arc_finished_color="@color/colorWhite"
             app:arc_progress="50"
-            app:arc_text_color="@color/colorWhite"
             app:arc_suffix_text_size="9dp"
-            app:arc_bottom_text_size="10sp"
+            app:arc_text_color="@color/colorWhite"
             app:arc_text_size="18sp"
             app:arc_unfinished_color="@color/colorPrimaryDark" />
 

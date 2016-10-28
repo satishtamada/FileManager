@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
             FG_TAG = TAG_INTERNAL_STORAGE;
             navigationView.getMenu().getItem(0).setChecked(true);
             loadHomeFragment();
-            setRamStorageDetails(navItemIndex);
+           // setRamStorageDetails(navItemIndex);
         }
     }
 
@@ -210,12 +210,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_internal_storage:
                 navItemIndex = 0;
                 FG_TAG = TAG_INTERNAL_STORAGE;
-                setRamStorageDetails(navItemIndex);
+                //setRamStorageDetails(navItemIndex);
                 break;
             case R.id.nav_external_storage:
                 navItemIndex = 1;
                 FG_TAG = TAG_EXTERNAL_STORAGE;
-                setRamStorageDetails(navItemIndex);
+               // setRamStorageDetails(navItemIndex);
                 break;
             case R.id.nav_images:
                 navItemIndex = 2;
