@@ -5,10 +5,10 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,11 +28,13 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView lblFileName;
         public ImageView imgItemIcon;
+        public CheckBox checkBox;
 
         public MyViewHolder(View view) {
             super(view);
             lblFileName = (TextView) view.findViewById(R.id.file_name);
             imgItemIcon = (ImageView) view.findViewById(R.id.icon);
+            checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         }
     }
 
@@ -51,17 +53,17 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        InternalStorageFilesModel mediaFileListModel = internalStorageFilesModels.get(position);
-        holder.lblFileName.setText(mediaFileListModel.getFileName());
-        String fileExtension = mediaFileListModel.getFileName().substring(mediaFileListModel.getFileName().lastIndexOf(".") + 1);
-        File file = new File(mediaFileListModel.getFilePath());
+        InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModels.get(position);
+        holder.lblFileName.setText(internalStorageFilesModel.getFileName());
+        String fileExtension = internalStorageFilesModel.getFileName().substring(internalStorageFilesModel.getFileName().lastIndexOf(".") + 1);
+        File file = new File(internalStorageFilesModel.getFilePath());
         if (file.isDirectory()) {//if list item folder the set icon
             holder.imgItemIcon.setImageResource(R.drawable.ic_folder);
         } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {//if list item any image then
-            File imgFile = new File(mediaFileListModel.getFilePath());
+            File imgFile = new File(internalStorageFilesModel.getFilePath());
             if (imgFile.exists()) {
                 int THUMB_SIZE = 64;
-                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(mediaFileListModel.getFilePath()),
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(internalStorageFilesModel.getFilePath()),
                         THUMB_SIZE, THUMB_SIZE);
                 holder.imgItemIcon.setImageBitmap(ThumbImage);
             }
@@ -76,12 +78,17 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
         } else if (fileExtension.equals("html") || fileExtension.equals("xml")) {
             holder.imgItemIcon.setImageResource(R.drawable.ic_html_file);
         } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv") || fileExtension.equals("avi")) {
-            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(internalStorageFilesModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
             holder.imgItemIcon.setImageBitmap(bMap);
         } else if (fileExtension.equals("apk")) {
             holder.imgItemIcon.setImageResource(R.drawable.ic_apk);
-        } else{
+        } else {
             holder.imgItemIcon.setImageResource(R.drawable.ic_un_supported_file);
+        }
+        if(internalStorageFilesModel.isCheckboxVisible()){
+            holder.checkBox.setVisibility(View.VISIBLE);
+        }else{
+            holder.checkBox.setVisibility(View.GONE);
         }
     }
 

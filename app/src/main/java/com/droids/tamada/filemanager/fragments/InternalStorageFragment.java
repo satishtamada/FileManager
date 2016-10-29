@@ -197,15 +197,15 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                         getActivity().startActivity(intent);
                     }
                 } else {
-                    toggleButtonCheck = (ToggleButton) view.findViewById(R.id.id_check);
+                  /*  toggleButtonCheck = (ToggleButton) view.findViewById(R.id.id_check);
                     toggleButtonCheck.setChecked(false);
-                    internalStorageFilesModel.setSelected(false);
+                    internalStorageFilesModel.setSelected(false);*/
                 }
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                if (footerLayout.getVisibility() != View.VISIBLE) {
+               /* if (footerLayout.getVisibility() != View.VISIBLE) {
                     Animation bottomToTop = AnimationUtils.loadAnimation(AppController.getInstance().getApplicationContext(),
                             R.anim.bottom_top);
                     footerLayout.startAnimation(bottomToTop);
@@ -217,7 +217,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 internalStorageFilesModel.setSelected(true);
                 selectedFilePath = internalStorageFilesModel.getFilePath();
                 selectedFolderName = internalStorageFilesModel.getFileName();
-                selectedFilePosition = position;
+                selectedFilePosition = position;*/
+
             }
 
         }));
@@ -246,6 +247,179 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             }
         });
         return view;
+    }
+
+
+    private void getFilesList(String filePath) {
+        lblFilePath.setText(filePath);
+        Log.d("length", "" + arrayListFilePaths.size());
+        File f = new File(filePath);
+        File[] files = f.listFiles();
+        if (files.length == 0) {
+            noMediaLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
+        }
+        for (File file : files) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel();
+            model.setFileName(file.getName());
+            model.setFilePath(file.getPath());
+            model.setCheckboxVisible(false);
+            model.setSelected(false);
+            if (file.isDirectory()) {
+                model.setDir(true);
+            } else {
+                model.setDir(false);
+            }
+            internalStorageFilesModelArrayList.add(model);
+        }
+    }
+
+    @Override
+    public void onButtonBackPressed(int navItemIndex) {
+        if (footerLayout.getVisibility() != View.GONE) {
+            Animation topToBottom = AnimationUtils.loadAnimation(AppController.getInstance().getApplicationContext(),
+                    R.anim.top_bottom);
+            footerLayout.startAnimation(topToBottom);
+            footerLayout.setVisibility(View.GONE);
+        }
+        if (navItemIndex == 0) {
+            if (arrayListFilePaths.size() == 1) {
+                Toast.makeText(AppController.getInstance().getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            }
+            if (arrayListFilePaths.size() != 0) {
+                if (arrayListFilePaths.size() >= 2) {
+                    internalStorageFilesModelArrayList.clear();
+                    getFilesList(arrayListFilePaths.get(arrayListFilePaths.size() - 2));
+                    internalStorageListAdapter.notifyDataSetChanged();
+                }
+                arrayListFilePaths.remove(arrayListFilePaths.size() - 1);
+            } else {
+                getActivity().finish();
+                System.exit(0);
+            }
+        }
+    }
+
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        /*if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }*/
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public void createNewFile() {
+        final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
+        dialogNewFile.show();
+        final EditText txtNewFile = (EditText) dialogNewFile.findViewById(R.id.txt_new_folder);
+        Button btnCreate = (Button) dialogNewFile.findViewById(R.id.btn_create);
+        Button btnCancel = (Button) dialogNewFile.findViewById(R.id.btn_cancel);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fileName = txtNewFile.getText().toString().trim();
+                if (fileName.length() == 0) {//if file name is empty
+                    fileName = "NewFile";
+                }
+                try {
+                    File file = new File(rootPath + "/" + fileName + ".txt");
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean isCreated = file.createNewFile();
+                        if (isCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false, false);
+                            internalStorageFilesModelArrayList.add(model);
+                            internalStorageListAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialogNewFile.dismiss();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtNewFile.setText("");
+                dialogNewFile.dismiss();
+            }
+        });
+    }
+
+    public void createNewFolder() {
+        final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
+        dialogNewFolder.show();
+        final EditText txtNewFolder = (EditText) dialogNewFolder.findViewById(R.id.txt_new_folder);
+        Button btnCreate = (Button) dialogNewFolder.findViewById(R.id.btn_create);
+        Button btnCancel = (Button) dialogNewFolder.findViewById(R.id.btn_cancel);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String folderName = txtNewFolder.getText().toString().trim();
+                if (folderName.length() == 0) {//if user not enter text file name
+                    folderName = "NewFolder";
+                }
+                try {
+                    File file = new File(rootPath + "/" + folderName);
+                    if (file.exists()) {
+                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean isFolderCreated = file.mkdir();
+                        if (isFolderCreated) {
+                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, rootPath + "/" + folderName, true, false, false);
+                            internalStorageFilesModelArrayList.add(model);
+                            internalStorageListAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialogNewFolder.cancel();
+            }
+
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtNewFolder.setText("");
+                dialogNewFolder.dismiss();
+            }
+        });
+
+    }
+
+    public void searchFile() {
+        //TODO search file
+        Toast.makeText(AppController.getInstance().getApplicationContext(), "hello search file", Toast.LENGTH_SHORT).show();
+
     }
 
     private void showMenu() {
@@ -381,177 +555,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 return true;
             }
         });
-    }
-
-    private void getFilesList(String filePath) {
-        lblFilePath.setText(filePath);
-        Log.d("length", "" + arrayListFilePaths.size());
-        File f = new File(filePath);
-        File[] files = f.listFiles();
-        if (files.length == 0) {
-            noMediaLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noMediaLayout.setVisibility(View.GONE);
-        }
-        for (File file : files) {
-            if (preferManager.isHiddenFileVisible()) {//show hidden file
-                InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
-                internalStorageFilesModelArrayList.add(model);
-            } else {
-                if (file.getName().indexOf('.') != 0) {//	disable hidden files
-                    InternalStorageFilesModel model = new InternalStorageFilesModel(file.getName(), file.getPath(), false);
-                    internalStorageFilesModelArrayList.add(model);
-                }
-            }
-        }
-        Log.d("size is",""+internalStorageFilesModelArrayList.size());
-    }
-
-    @Override
-    public void onButtonBackPressed(int navItemIndex) {
-        if (footerLayout.getVisibility() != View.GONE) {
-            Animation topToBottom = AnimationUtils.loadAnimation(AppController.getInstance().getApplicationContext(),
-                    R.anim.top_bottom);
-            footerLayout.startAnimation(topToBottom);
-            footerLayout.setVisibility(View.GONE);
-        }
-        if (navItemIndex == 0) {
-            if (arrayListFilePaths.size() == 1) {
-                Toast.makeText(AppController.getInstance().getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-            }
-            if (arrayListFilePaths.size() != 0) {
-                if (arrayListFilePaths.size() >= 2) {
-                    internalStorageFilesModelArrayList.clear();
-                    getFilesList(arrayListFilePaths.get(arrayListFilePaths.size() - 2));
-                    internalStorageListAdapter.notifyDataSetChanged();
-                }
-                arrayListFilePaths.remove(arrayListFilePaths.size() - 1);
-            } else {
-                getActivity().finish();
-                System.exit(0);
-            }
-        }
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public void createNewFile() {
-        final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-        dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
-        dialogNewFile.show();
-        final EditText txtNewFile = (EditText) dialogNewFile.findViewById(R.id.txt_new_folder);
-        Button btnCreate = (Button) dialogNewFile.findViewById(R.id.btn_create);
-        Button btnCancel = (Button) dialogNewFile.findViewById(R.id.btn_cancel);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String fileName = txtNewFile.getText().toString().trim();
-                if (fileName.length() == 0) {//if file name is empty
-                    fileName = "NewFile";
-                }
-                try {
-                    File file = new File(rootPath + "/" + fileName + ".txt");
-                    if (file.exists()) {
-                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
-                    } else {
-                        boolean isCreated = file.createNewFile();
-                        if (isCreated) {
-                            InternalStorageFilesModel model = new InternalStorageFilesModel(fileName + ".txt", file.getPath(), false);
-                            internalStorageFilesModelArrayList.add(model);
-                            internalStorageListAdapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dialogNewFile.dismiss();
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                txtNewFile.setText("");
-                dialogNewFile.dismiss();
-            }
-        });
-    }
-
-    public void createNewFolder() {
-        final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-        dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
-        dialogNewFolder.show();
-        final EditText txtNewFolder = (EditText) dialogNewFolder.findViewById(R.id.txt_new_folder);
-        Button btnCreate = (Button) dialogNewFolder.findViewById(R.id.btn_create);
-        Button btnCancel = (Button) dialogNewFolder.findViewById(R.id.btn_cancel);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String folderName = txtNewFolder.getText().toString().trim();
-                if (folderName.length() == 0) {//if user not enter text file name
-                    folderName = "NewFolder";
-                }
-                try {
-                    File file = new File(rootPath + "/" + folderName);
-                    if (file.exists()) {
-                        Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
-                    } else {
-                        boolean isFolderCreated = file.mkdir();
-                        if (isFolderCreated) {
-                            InternalStorageFilesModel model = new InternalStorageFilesModel(folderName, rootPath + "/" + folderName, true);
-                            internalStorageFilesModelArrayList.add(model);
-                            internalStorageListAdapter.notifyDataSetChanged();
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dialogNewFolder.cancel();
-            }
-
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                txtNewFolder.setText("");
-                dialogNewFolder.dismiss();
-            }
-        });
-
-    }
-
-    public void searchFile() {
-        //TODO search file
-        Toast.makeText(AppController.getInstance().getApplicationContext(), "hello search file", Toast.LENGTH_SHORT).show();
-
     }
 
     public interface ClickListener {

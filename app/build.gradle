@@ -29,5 +29,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.kyleduo.switchbutton:library:1.4.0'
     compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
+
     testCompile 'junit:junit:4.12'
 }
