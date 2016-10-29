@@ -35,28 +35,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AudiosListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AudiosListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AudiosListFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
-    private AudiosListAdapter audiosListAdapter;
     private ArrayList<MediaFileListModel> mediaFileListModels;
     private LinearLayout noMediaLayout;
-    private RelativeLayout footerAudioPlayer;
-    private TextView lblAudioFileName;
-    private ToggleButton toggleBtnPlayPause;
     private MediaPlayer mediaPlayer;
-    private Utilities utilities;
 
     public AudiosListFragment() {
         // Required empty public constructor
@@ -85,7 +72,7 @@ public class AudiosListFragment extends Fragment {
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
         mediaPlayer = new MediaPlayer();
-        audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
+        AudiosListAdapter audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -110,21 +97,21 @@ public class AudiosListFragment extends Fragment {
     private void showAudioPlayer(String fileName, String filePath) {
         final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
-        footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
-        lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
-        toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
+        RelativeLayout footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
+        TextView lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
+        ToggleButton toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
         toggleBtnPlayPause.setChecked(true);
         lblAudioFileName.setText(fileName);
         audioPlayerDialog.show();
-        utilities = new Utilities();
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
-        } catch (IOException e) {
+            mediaPlayer.start();
+        }  catch (IllegalArgumentException | IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        mediaPlayer.start();
-        if(mediaPlayer.isPlaying())
+
         footerAudioPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,23 +155,27 @@ public class AudiosListFragment extends Fragment {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-        Log.d("audio list", "" + mCursor.getCount());
-        if (mCursor.getCount() == 0) {
+        if(mCursor!=null) {
+            if (mCursor.getCount() == 0) {
+                noMediaLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                noMediaLayout.setVisibility(View.GONE);
+            }
+            if (mCursor.moveToFirst()) {
+                do {
+                    MediaFileListModel mediaFileListModel = new MediaFileListModel();
+                    mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
+                    mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+                    mediaFileListModels.add(mediaFileListModel);
+                } while (mCursor.moveToNext());
+            }
+            mCursor.close();
+        }else{
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noMediaLayout.setVisibility(View.GONE);
         }
-        if (mCursor.moveToFirst()) {
-            do {
-                MediaFileListModel mediaFileListModel = new MediaFileListModel();
-                mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
-                mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-                mediaFileListModels.add(mediaFileListModel);
-            } while (mCursor.moveToNext());
-        }
-        mCursor.close();
     }
 
 
@@ -259,18 +250,7 @@ public class AudiosListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
