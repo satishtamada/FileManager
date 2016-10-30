@@ -197,12 +197,12 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
 
             @Override
             public void onLongClick(View view, int position) {
-               /* if (footerLayout.getVisibility() != View.VISIBLE) {
+               if (footerLayout.getVisibility() != View.VISIBLE) {
                     Animation bottomToTop = AnimationUtils.loadAnimation(AppController.getInstance().getApplicationContext(),
                             R.anim.bottom_top);
                     footerLayout.startAnimation(bottomToTop);
                     footerLayout.setVisibility(View.VISIBLE);
-                }
+                }/*
                 toggleButtonCheck = (ToggleButton) view.findViewById(R.id.id_check);
                 toggleButtonCheck.setChecked(true);
                 InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(position);
@@ -299,12 +299,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 getActivity().finish();
                 System.exit(0);
             }
-        }
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -412,12 +406,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 dialogNewFolder.dismiss();
             }
         });
-
-    }
-
-    public void searchFile() {
-        //TODO search file
-        Toast.makeText(AppController.getInstance().getApplicationContext(), "hello search file", Toast.LENGTH_SHORT).show();
 
     }
 

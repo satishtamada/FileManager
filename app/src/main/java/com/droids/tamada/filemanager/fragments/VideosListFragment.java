@@ -1,6 +1,7 @@
 package com.droids.tamada.filemanager.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class VideosListFragment extends Fragment {
@@ -75,6 +77,12 @@ public class VideosListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                MediaFileListModel mediaFileListModel=mediaFileListModelArrayList.get(position);
+                Uri fileUri = Uri.fromFile(new File(mediaFileListModel.getFileName()));
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setDataAndType(fileUri, "video/mp4");
+                getActivity().startActivity(intent);
             }
 
             @Override

@@ -185,13 +185,13 @@ public class MainActivity extends AppCompatActivity
                 internalStorageFragment.createNewFolder();
             }
             return true;
-        } else if (id == R.id.action_file_search) {
+        } /*else if (id == R.id.action_file_search) {
             InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
             if (internalStorageFragment != null) {
                 internalStorageFragment.searchFile();
             }
             return true;
-        } else if (id == R.id.action_new_file) {
+        }*/ else if (id == R.id.action_new_file) {
             InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
             if (internalStorageFragment != null) {
                 internalStorageFragment.createNewFile();
