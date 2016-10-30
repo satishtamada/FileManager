@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private static long totalSize;
     private static long freeSize;
-    private ArcProgress progressStorage;
+    private ArcProgress progressStorage, progressRam;
     private TextView lblRamUsage, lblFreeStorage;
 
     @Override
@@ -89,14 +89,15 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         progressStorage = (ArcProgress) headerLayout.findViewById(R.id.progress_storage);
         lblFreeStorage = (TextView) headerLayout.findViewById(R.id.id_free_space);
-        lblRamUsage = (TextView) headerLayout.findViewById(R.id.id_ram_usage);
+        // lblRamUsage = (TextView) headerLayout.findViewById(R.id.id_ram_usage);
+        // progressRam= (ArcProgress) headerLayout.findViewById(R.id.progress_ram);
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             navItemIndex = 0;
             FG_TAG = TAG_INTERNAL_STORAGE;
             navigationView.getMenu().getItem(0).setChecked(true);
             loadHomeFragment();
-           // setRamStorageDetails(navItemIndex);
+            setRamStorageDetails(navItemIndex);
         }
     }
 
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_external_storage:
                 navItemIndex = 1;
                 FG_TAG = TAG_EXTERNAL_STORAGE;
-               // setRamStorageDetails(navItemIndex);
+                // setRamStorageDetails(navItemIndex);
                 break;
             case R.id.nav_images:
                 navItemIndex = 2;
@@ -247,13 +248,32 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private String getRamUsageSize() {
+        long freeSize = 0L;
+        long totalSize = 0L;
+        long usedSize = -1L;
+        try {
+            Runtime info = Runtime.getRuntime();
+            freeSize = info.freeMemory();
+            totalSize = info.totalMemory();
+            usedSize = totalSize - freeSize;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(usedSize);
+
+    }
+
     private void setRamStorageDetails(int navItemIndex) {
-        lblRamUsage.setText(getTotalRAM());
-        //progressStorage.setProgress(getFreeMemoryPercentage());
+        //lblRamUsage.setText(getRamUsageSize());
+        //progressRam.setProgress();
         if (navItemIndex == 0) {
-            lblFreeStorage.setText(getAvailableInternalMemorySize());
+            //  progressStorage.setProgress(getFreeMemoryPercentage());
+            //   lblFreeStorage.setText(getAvailableInternalMemorySize());
         } else if (navItemIndex == 1) {
-            lblFreeStorage.setText(getAvailableExternalMemorySize());
+            // lblFreeStorage.setText(getAvailableExternalMemorySize());
+            // progressStorage.setProgress(getFreeMemoryPercentage());
         }
     }
 
@@ -270,7 +290,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     private static String getTotalExternalMemorySize() {
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
@@ -284,52 +303,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
-    public String getTotalRAM() {
-        RandomAccessFile reader = null;
-        String load = null;
-        DecimalFormat twoDecimalForm = new DecimalFormat("#.##");
-        double totRam = 0;
-        String lastValue = "";
-        try {
-            reader = new RandomAccessFile("/proc/meminfo", "r");
-            load = reader.readLine();
-
-            // Get the Number value from the string
-            Pattern p = Pattern.compile("(\\d+)");
-            Matcher m = p.matcher(load);
-            String value = "";
-            while (m.find()) {
-                value = m.group(1);
-                // System.out.println("Ram : " + value);
-            }
-            reader.close();
-            totRam = Double.parseDouble(value);
-            // totRam = totRam / 1024;
-            double mb = totRam / 1024.0;
-            double gb = totRam / 1048576.0;
-            double tb = totRam / 1073741824.0;
-            if (tb > 1) {
-                lastValue = twoDecimalForm.format(tb).concat(" TB");
-            } else if (gb > 1) {
-                lastValue = twoDecimalForm.format(gb).concat(" GB");
-            } else if (mb > 1) {
-                lastValue = twoDecimalForm.format(mb).concat(" MB");
-            } else {
-                lastValue = twoDecimalForm.format(totRam).concat(" KB");
-            }
-
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            // Streams.close(reader);
-        }
-
-        return lastValue;
-    }
-
     private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         Log.d("getPath", path.getPath());
@@ -337,23 +310,6 @@ public class MainActivity extends AppCompatActivity
         long blockSize = stat.getBlockSize();
         @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
         return formatSize(availableBlocks * blockSize, "free");
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private String getRamUsageSize() {
-        long freeSize = 0L;
-        long totalSize = 0L;
-        long usedSize = -1L;
-        try {
-            Runtime info = Runtime.getRuntime();
-            freeSize = info.freeMemory();
-            totalSize = info.totalMemory();
-            usedSize = totalSize - freeSize;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return String.valueOf(usedSize);
-
     }
 
     private static String formatSize(long size, String tag) {

@@ -90,6 +90,11 @@ public class InternalStorageListAdapter extends RecyclerView.Adapter<InternalSto
         }else{
             holder.checkBox.setVisibility(View.GONE);
         }
+        if(internalStorageFilesModel.isSelected()){
+            holder.checkBox.setChecked(true);
+        }else{
+            holder.checkBox.setChecked(false);
+        }
     }
 
     @Override

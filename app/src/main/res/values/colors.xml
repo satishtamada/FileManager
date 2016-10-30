@@ -3,7 +3,7 @@
     <!--material colors-->
     <color name="colorPrimary">#457699</color>
     <color name="colorPrimaryDark">#184a6e</color>
-    <color name="colorAccent">#40BCD8</color>
+    <color name="colorAccent">#457699</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBlackTransparent">#99000000</color>

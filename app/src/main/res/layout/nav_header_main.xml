@@ -28,10 +28,10 @@
             app:arc_bottom_text="STORAGE"
             app:arc_bottom_text_size="8sp"
             app:arc_finished_color="@color/colorWhite"
-            app:arc_progress="10"
             app:arc_suffix_text_size="15dp"
             app:arc_text_color="@color/colorWhite"
             app:arc_text_size="35sp"
+            app:arc_progress="10"
             app:arc_unfinished_color="@color/colorPrimaryDark" />
 
         <LinearLayout
@@ -50,52 +50,8 @@
                 android:id="@+id/id_free_space"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12 GB"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <com.droids.tamada.filemanager.helper.ArcProgress
-            android:id="@+id/progress_ram"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:arc_bottom_text="RAM"
-            app:arc_bottom_text_size="10sp"
-            app:arc_finished_color="@color/colorWhite"
-            app:arc_progress="50"
-            app:arc_suffix_text_size="9dp"
-            app:arc_text_color="@color/colorWhite"
-            app:arc_text_size="18sp"
-            app:arc_unfinished_color="@color/colorPrimaryDark" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:text="@string/free"
-                android:textColor="@color/colorWhite" />
-
-            <TextView
-                android:id="@+id/id_ram_usage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="30%"
-                android:textColor="@color/colorWhite" />
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>

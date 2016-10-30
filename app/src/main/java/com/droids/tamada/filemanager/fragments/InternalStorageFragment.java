@@ -53,14 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link InternalStorageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link InternalStorageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -218,7 +210,14 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 selectedFilePath = internalStorageFilesModel.getFilePath();
                 selectedFolderName = internalStorageFilesModel.getFileName();
                 selectedFilePosition = position;*/
-
+                for(int i=0;i<internalStorageFilesModelArrayList.size();i++){
+                    InternalStorageFilesModel internalStorageFilesModel=internalStorageFilesModelArrayList.get(i);
+                    internalStorageFilesModel.setCheckboxVisible(true);
+                    if(position==i){
+                        internalStorageFilesModel.setSelected(true);
+                    }
+                }
+                internalStorageListAdapter.notifyDataSetChanged();
             }
 
         }));
