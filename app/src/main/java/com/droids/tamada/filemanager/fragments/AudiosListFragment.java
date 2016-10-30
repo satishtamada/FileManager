@@ -31,8 +31,10 @@ import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class AudiosListFragment extends Fragment {
@@ -108,7 +110,7 @@ public class AudiosListFragment extends Fragment {
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
             mediaPlayer.start();
-        }  catch (IllegalArgumentException | IllegalStateException | IOException e) {
+        } catch (IllegalArgumentException | IllegalStateException | IOException e) {
             e.printStackTrace();
         }
 
@@ -155,7 +157,7 @@ public class AudiosListFragment extends Fragment {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-        if(mCursor!=null) {
+        if (mCursor != null) {
             if (mCursor.getCount() == 0) {
                 noMediaLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
@@ -168,11 +170,22 @@ public class AudiosListFragment extends Fragment {
                     MediaFileListModel mediaFileListModel = new MediaFileListModel();
                     mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)));
                     mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+
+                    try {
+                        File file = new File(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
+                        long length = file.length();
+                        length = length / (1024*1024);
+                        Date lastModDate = new Date(file.lastModified());
+                        mediaFileListModel.setFileSize(length + " MB");
+                        mediaFileListModel.setFileCreatedTime(lastModDate.toString());
+                    } catch (Exception e) {
+                        mediaFileListModel.setFileSize("unknown");
+                    }
                     mediaFileListModels.add(mediaFileListModel);
                 } while (mCursor.moveToNext());
             }
             mCursor.close();
-        }else{
+        } else {
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }

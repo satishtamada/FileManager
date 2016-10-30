@@ -24,7 +24,9 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class ImagesListFragment extends Fragment {
@@ -113,11 +115,21 @@ public class ImagesListFragment extends Fragment {
                     MediaFileListModel mediaFileListModel = new MediaFileListModel();
                     mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)));
                     mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
+                    try {
+                        File file = new File(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
+                        long length = file.length();
+                        length = length / 1024;
+                        Date lastModDate = new Date(file.lastModified());
+                        mediaFileListModel.setFileSize(length + " KB");
+                        mediaFileListModel.setFileCreatedTime(lastModDate.toString());
+                    } catch (Exception e) {
+                        mediaFileListModel.setFileSize("unknown");
+                    }
                     imageListModelsArray.add(mediaFileListModel);
                 } while (mCursor.moveToNext());
             }
             mCursor.close();
-        }else{
+        } else {
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         }
@@ -125,12 +137,14 @@ public class ImagesListFragment extends Fragment {
 
     public interface ClickListener {
         void onClick(View view, int position);
+
         void onLongClick(View view, int position);
     }
 
     public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
         private GestureDetector gestureDetector;
         private ClickListener clickListener;
+
         public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
             this.clickListener = clickListener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
