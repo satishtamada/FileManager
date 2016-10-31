@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,8 +46,11 @@ import com.example.satish.filemanager.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 
 public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
@@ -192,8 +196,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
-                deleteFile(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath(), selectedFilePosition);
+                deleteFile();
             }
         });
 
@@ -214,122 +217,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         return view;
     }
 
-    private void deleteFile(String fileName, final String filePath, final int selectedFilePosition) {
-        final Dialog dialogDeleteFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-        dialogDeleteFile.setContentView(R.layout.custom_delete_file_dialog);
-        dialogDeleteFile.show();
-        Button btnOkay = (Button) dialogDeleteFile.findViewById(R.id.btn_okay);
-        Button btnCancel = (Button) dialogDeleteFile.findViewById(R.id.btn_cancel);
-        TextView lblDeleteFile = (TextView) dialogDeleteFile.findViewById(R.id.id_lbl_delete_files);
-        if (selectedFileHashMap.size() == 0) {
-            lblDeleteFile.setText("Are you sure to delete this file?");
-        } else {
-            lblDeleteFile.setText("Are you sure you want to delete the selected files?");
-        }
-        btnOkay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    /*for (int i = 0; i < selectedFileHashMap.size(); i++) {
-                        File deleteFile = new File(filePath);//create file for selected file
-                        boolean isDeleteFile = deleteFile.delete();//delete the file from memory
-                        if (isDeleteFile) {
-                            InternalStorageFilesModel model = internalStorageFilesModelArrayList.get(selectedFilePosition);
-                            internalStorageFilesModelArrayList.remove(model);//remove file from listview
-                            internalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
-                            selectedFileHashMap.remove(selectedFilePosition);
-                        }
-                    }
-                    dialogDeleteFile.dismiss();
-                    footerLayout.setVisibility(View.GONE);*/
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogDeleteFile.dismiss();
-            }
-        });
-    }
-
-    private void openFile(File file, InternalStorageFilesModel internalStorageFilesModel) {
-        if (file.isDirectory()) {//check if selected item is directory
-            if (file.canRead()) {//if directory is readable
-                internalStorageFilesModelArrayList.clear();
-                arrayListFilePaths.add(internalStorageFilesModel.getFilePath());
-                getFilesList(internalStorageFilesModel.getFilePath());
-                internalStorageListAdapter.notifyDataSetChanged();
-            } else {//Toast to your not openable type
-                Toast.makeText(AppController.getInstance().getApplicationContext(), "Folder can't be read!", Toast.LENGTH_SHORT).show();
-            }
-            //if file is not directory open a application for file type
-        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {
-            Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
-            imageIntent.putExtra("imagePath", internalStorageFilesModel.getFilePath());
-            imageIntent.putExtra("imageName", internalStorageFilesModel.getFileName());
-            getActivity().startActivity(imageIntent);
-        } else if (fileExtension.equals("mp3")) {
-            showAudioPlayer(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath());
-        } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {
-            Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
-            txtIntent.putExtra("filePath", internalStorageFilesModel.getFilePath());
-            txtIntent.putExtra("fileName", internalStorageFilesModel.getFileName());
-            getActivity().startActivity(txtIntent);
-        } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            //TODO handle zip file
-        } else if (fileExtension.equals("pdf")) {
-            File pdfFile = new File(internalStorageFilesModel.getFilePath());
-            PackageManager packageManager = getActivity().getPackageManager();
-            Intent testIntent = new Intent(Intent.ACTION_VIEW);
-            testIntent.setType("application/pdf");
-            List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
-            if (list.size() > 0 && pdfFile.isFile()) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                Uri uri = Uri.fromFile(pdfFile);
-                intent.setDataAndType(uri, "application/pdf");
-                startActivity(intent);
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
-            }
-        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
-            Uri fileUri = Uri.fromFile(new File(internalStorageFilesModel.getFileName()));
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(fileUri, "video/mp4");
-            getActivity().startActivity(intent);
-        }
-    }
-
-    private void getFilesList(String filePath) {
-        rootPath = filePath;
-        lblFilePath.setText(filePath);
-        File f = new File(filePath);
-        File[] files = f.listFiles();
-        if (files.length == 0) {
-            noMediaLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noMediaLayout.setVisibility(View.GONE);
-        }
-        for (File file : files) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel();
-            model.setFileName(file.getName());
-            model.setFilePath(file.getPath());
-            model.setCheckboxVisible(false);
-            model.setSelected(false);
-            if (file.isDirectory()) {
-                model.setDir(true);
-            } else {
-                model.setDir(false);
-            }
-            internalStorageFilesModelArrayList.add(model);
-        }
-    }
 
     @Override
     public void onButtonBackPressed(int navItemIndex) {
@@ -479,6 +366,127 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
 
     }
 
+    private void deleteFile() {
+        final Dialog dialogDeleteFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogDeleteFile.setContentView(R.layout.custom_delete_file_dialog);
+        dialogDeleteFile.show();
+        Button btnOkay = (Button) dialogDeleteFile.findViewById(R.id.btn_okay);
+        Button btnCancel = (Button) dialogDeleteFile.findViewById(R.id.btn_cancel);
+        TextView lblDeleteFile = (TextView) dialogDeleteFile.findViewById(R.id.id_lbl_delete_files);
+        if (selectedFileHashMap.size() == 1) {
+            lblDeleteFile.setText("Are you sure to delete this file?");
+        } else {
+            lblDeleteFile.setText("Are you sure you want to delete the selected files?");
+        }
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Set set = selectedFileHashMap.keySet();
+                    Iterator itr = set.iterator();
+                    while (itr.hasNext()) {
+                        int i = Integer.parseInt(itr.next().toString());
+                        File deleteFile = new File((String) selectedFileHashMap.get(i));//create file for selected file
+                        boolean isDeleteFile = deleteFile.delete();//delete the file from memory
+                        if (isDeleteFile) {
+                            selectedFileHashMap.remove(i);
+                            InternalStorageFilesModel model = internalStorageFilesModelArrayList.get(i);
+                            internalStorageFilesModelArrayList.remove(model);//remove file from listview
+                            internalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
+                            selectedFileHashMap.remove(selectedFilePosition);
+                        }
+                    }
+                    dialogDeleteFile.dismiss();
+                    footerLayout.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDeleteFile.dismiss();
+            }
+        });
+    }
+
+    private void openFile(File file, InternalStorageFilesModel internalStorageFilesModel) {
+        if (file.isDirectory()) {//check if selected item is directory
+            if (file.canRead()) {//if directory is readable
+                internalStorageFilesModelArrayList.clear();
+                arrayListFilePaths.add(internalStorageFilesModel.getFilePath());
+                getFilesList(internalStorageFilesModel.getFilePath());
+                internalStorageListAdapter.notifyDataSetChanged();
+            } else {//Toast to your not openable type
+                Toast.makeText(AppController.getInstance().getApplicationContext(), "Folder can't be read!", Toast.LENGTH_SHORT).show();
+            }
+            //if file is not directory open a application for file type
+        } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {
+            Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
+            imageIntent.putExtra("imagePath", internalStorageFilesModel.getFilePath());
+            imageIntent.putExtra("imageName", internalStorageFilesModel.getFileName());
+            getActivity().startActivity(imageIntent);
+        } else if (fileExtension.equals("mp3")) {
+            showAudioPlayer(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath());
+        } else if (fileExtension.equals("txt") || fileExtension.equals("html") || fileExtension.equals("xml")) {
+            Intent txtIntent = new Intent(getActivity().getApplicationContext(), TextFileViewActivity.class);
+            txtIntent.putExtra("filePath", internalStorageFilesModel.getFilePath());
+            txtIntent.putExtra("fileName", internalStorageFilesModel.getFileName());
+            getActivity().startActivity(txtIntent);
+        } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
+            //TODO handle zip file
+        } else if (fileExtension.equals("pdf")) {
+            File pdfFile = new File(internalStorageFilesModel.getFilePath());
+            PackageManager packageManager = getActivity().getPackageManager();
+            Intent testIntent = new Intent(Intent.ACTION_VIEW);
+            testIntent.setType("application/pdf");
+            List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            if (list.size() > 0 && pdfFile.isFile()) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                Uri uri = Uri.fromFile(pdfFile);
+                intent.setDataAndType(uri, "application/pdf");
+                startActivity(intent);
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
+            }
+        } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
+            Uri fileUri = Uri.fromFile(new File(internalStorageFilesModel.getFileName()));
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(fileUri, "video/mp4");
+            getActivity().startActivity(intent);
+        }
+    }
+
+    private void getFilesList(String filePath) {
+        rootPath = filePath;
+        lblFilePath.setText(filePath);
+        File f = new File(filePath);
+        File[] files = f.listFiles();
+        if (files.length == 0) {
+            noMediaLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
+        }
+        for (File file : files) {
+            InternalStorageFilesModel model = new InternalStorageFilesModel();
+            model.setFileName(file.getName());
+            model.setFilePath(file.getPath());
+            model.setCheckboxVisible(false);
+            model.setSelected(false);
+            if (file.isDirectory()) {
+                model.setDir(true);
+            } else {
+                model.setDir(false);
+            }
+            internalStorageFilesModelArrayList.add(model);
+        }
+    }
+
     private void showMenu() {
         final Dialog menuDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         menuDialog.setContentView(R.layout.custom_menu_dialog);
@@ -490,13 +498,19 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             lblRenameFile.setFocusable(true);
             lblFileMove.setClickable(true);
             lblFileMove.setFocusable(true);
+            lblFileDetails.setFocusable(true);
+            lblFileDetails.setClickable(true);
             lblRenameFile.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_selected));
             lblFileMove.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_selected));
+            lblFileDetails.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_selected));
         } else {
             lblRenameFile.setClickable(false);
             lblRenameFile.setFocusable(false);
             lblFileMove.setClickable(false);
             lblFileMove.setFocusable(false);
+            lblFileDetails.setFocusable(false);
+            lblFileDetails.setClickable(false);
+            lblFileDetails.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_unselected));
             lblRenameFile.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_unselected));
             lblFileMove.setTextColor(ContextCompat.getColor(AppController.getInstance().getApplicationContext(), R.color.color_text_unselected));
         }
@@ -517,8 +531,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFileDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                menuDialog.dismiss();
                 InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
-                showFileDetails(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath(), selectedFilePosition);
+                showFileDetails(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath());
             }
         });
         menuDialog.show();
@@ -582,9 +597,38 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         });
     }
 
-    private void showFileDetails(String fileName, String filePath, int selectedFilePosition) {
-        final Dialog menuDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-        menuDialog.setContentView(R.layout.custom_menu_dialog);
+    private void showFileDetails(String fileName, String filePath) {
+        final Dialog fileDetailsDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        fileDetailsDialog.setContentView(R.layout.custom_file_details_dialog);
+        final TextView lblFileName = (TextView) fileDetailsDialog.findViewById(R.id.id_name);
+        final TextView lblFilePath = (TextView) fileDetailsDialog.findViewById(R.id.id_path);
+        final TextView lblSize = (TextView) fileDetailsDialog.findViewById(R.id.id_size);
+        final TextView lblCreateAt = (TextView) fileDetailsDialog.findViewById(R.id.id_create_at);
+        lblFileName.setText("Name :" + fileName);
+        lblFilePath.setText("Path :" + filePath);
+        File file = new File(filePath);
+        long length = file.length();
+        length = length / 1024;
+        if (length >= 1024) {
+            length = length / 1024;
+            lblSize.setText("Size :" + length + " MB");
+        } else {
+            lblSize.setText("Size :" + length + " KB");
+        }
+        Date lastModDate = new Date(file.lastModified());
+        lblCreateAt.setText("Created on :" + lastModDate.toString());
+        Button btnOkay = (Button) fileDetailsDialog.findViewById(R.id.btn_okay);
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lblFileName.setText("");
+                lblFilePath.setText("");
+                lblSize.setText("");
+                lblCreateAt.setText("");
+                fileDetailsDialog.dismiss();
+            }
+        });
+        fileDetailsDialog.show();
     }
 
     private void showAudioPlayer(String fileName, String filePath) {
