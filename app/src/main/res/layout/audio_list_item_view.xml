@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:padding="5dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:textSize="18sp" />
 
         <RelativeLayout

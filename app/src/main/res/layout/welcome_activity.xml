@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:text="@string/storage_permission_is_required" />
 
         <Button

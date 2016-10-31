@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ import android.widget.ToggleButton;
 
 import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
-import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
@@ -174,9 +172,14 @@ public class AudiosListFragment extends Fragment {
                     try {
                         File file = new File(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
                         long length = file.length();
-                        length = length / (1024*1024);
+                        length = length / 1024;
+                        if (length >= 1024) {
+                            length = length / 1024;
+                            mediaFileListModel.setFileSize(length + " MB");
+                        } else {
+                            mediaFileListModel.setFileSize(length + " KB");
+                        }
                         Date lastModDate = new Date(file.lastModified());
-                        mediaFileListModel.setFileSize(length + " MB");
                         mediaFileListModel.setFileCreatedTime(lastModDate.toString());
                     } catch (Exception e) {
                         mediaFileListModel.setFileSize("unknown");

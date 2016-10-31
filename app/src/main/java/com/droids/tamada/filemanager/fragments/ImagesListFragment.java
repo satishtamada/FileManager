@@ -119,8 +119,14 @@ public class ImagesListFragment extends Fragment {
                         File file = new File(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
                         long length = file.length();
                         length = length / 1024;
+                        if (length >= 1024) {
+                            length = length / 1024;
+                            mediaFileListModel.setFileSize(length + " MB");
+                        } else {
+                            mediaFileListModel.setFileSize(length + " KB");
+                        }
                         Date lastModDate = new Date(file.lastModified());
-                        mediaFileListModel.setFileSize(length + " KB");
+
                         mediaFileListModel.setFileCreatedTime(lastModDate.toString());
                     } catch (Exception e) {
                         mediaFileListModel.setFileSize("unknown");
