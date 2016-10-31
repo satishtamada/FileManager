@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Name : "
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:textSize="20dp" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_marginTop="15dp"
             android:layout_weight="0.09"
             android:text="5000 mb"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:textSize="20dp" />
     </LinearLayout>
 
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Size    : "
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:textSize="20dp" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="5000 mb"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:textSize="20dp" />
     </LinearLayout>
 

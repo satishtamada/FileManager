@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_ripple_effect"
             android:padding="15dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:text="@string/move"
             android:textSize="15sp" />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_ripple_effect"
             android:padding="15dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:text="@string/lbl_rename"
             android:textSize="15sp" />
 
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_ripple_effect"
             android:padding="15dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:text="@string/file_details"
             android:textSize="15sp" />
 

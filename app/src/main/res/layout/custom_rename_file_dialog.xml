@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
-            android:textColor="@color/lbl_text_color"
+            android:textColor="@color/color_text_selected"
             android:background="@drawable/bg_btn_confirm"
             android:padding="10dp"
             android:maxLines="1">
