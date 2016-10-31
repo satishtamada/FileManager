@@ -13,9 +13,12 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        javaMaxHeapSize "4g" //specify the heap size for the dex process
     }
 }
 
@@ -25,6 +28,8 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.kyleduo.switchbutton:library:1.4.0'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
 
     testCompile 'junit:junit:4.12'
 }

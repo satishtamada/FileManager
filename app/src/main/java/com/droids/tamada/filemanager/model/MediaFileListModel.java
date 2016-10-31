@@ -4,33 +4,40 @@ package com.droids.tamada.filemanager.model;
  * Created by Satish on 29-12-2015.
  */
 public class MediaFileListModel {
-    private String file_name, file_path;
+    private String fileName, filePath,fileSize,fileCreatedTime;
 
     public MediaFileListModel() {
     }
 
-    public MediaFileListModel(String audio_name) {
-        this.file_name = audio_name;
+    public String getFileCreatedTime() {
+        return fileCreatedTime;
     }
 
-    public MediaFileListModel(String audio_name, String audio_file_path) {
-        this.file_name = audio_name;
-        this.file_path = audio_file_path;
+    public void setFileCreatedTime(String fileCreatedTime) {
+        this.fileCreatedTime = fileCreatedTime;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 
     public String getFileName() {
-        return file_name;
+        return fileName;
     }
 
-    public void setFileName(String audio_name) {
-        this.file_name = audio_name;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getFilePath() {
-        return file_path;
+        return filePath;
     }
 
-    public void setFilePath(String audio_file_path) {
-        this.file_path = audio_file_path;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

@@ -48,7 +48,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_footer_layout"
         android:padding="5dp"
-        android:visibility="visible">
+        android:visibility="gone">
         <ImageView
             android:id="@+id/id_create_folder"
             android:layout_width="40dp"

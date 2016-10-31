@@ -91,7 +91,7 @@
     <string name="tools">Tools</string>
     <string name="share">Share</string>
     <string name="settings">Settings</string>
-    <string name="no_media_found">No Media found</string>
+    <string name="no_media_found">No files</string>
     <string name="lock">Lock</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -119,5 +119,8 @@
     <string name="file_details">File details</string>
     <string name="move">Move</string>
     <string name="rename">Rename</string>
+    <string name="ram">RAM</string>
+    <string name="free_space">Free space</string>
+    <string name="free">Free</string>
 
 </resources>

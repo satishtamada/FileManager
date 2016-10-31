@@ -1,6 +1,7 @@
 package com.droids.tamada.filemanager.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,19 +23,15 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class VideosListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-    private VideosListAdapter videosListAdapter;
     private ArrayList<MediaFileListModel> mediaFileListModelArrayList;
     private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
@@ -43,15 +40,6 @@ public class VideosListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VideosListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static VideosListFragment newInstance(String param1, String param2) {
         VideosListFragment fragment = new VideosListFragment();
         Bundle args = new Bundle();
@@ -78,7 +66,7 @@ public class VideosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_videos_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModelArrayList = new ArrayList<>();
-        videosListAdapter = new VideosListAdapter(mediaFileListModelArrayList);
+        VideosListAdapter videosListAdapter = new VideosListAdapter(mediaFileListModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -89,6 +77,12 @@ public class VideosListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                MediaFileListModel mediaFileListModel=mediaFileListModelArrayList.get(position);
+                Uri fileUri = Uri.fromFile(new File(mediaFileListModel.getFileName()));
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setDataAndType(fileUri, "video/mp4");
+                getActivity().startActivity(intent);
             }
 
             @Override
@@ -104,17 +98,27 @@ public class VideosListFragment extends Fragment {
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Video.Media.TITLE + ") ASC");
-        if (mCursor.getCount() == 0)
-            noMediaLayout.setVisibility(View.VISIBLE);
-        if (mCursor.moveToFirst()) {
-            do {
-                MediaFileListModel mediaFileListModel = new MediaFileListModel();
-                mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)));
-                mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
-                mediaFileListModelArrayList.add(mediaFileListModel);
-            } while (mCursor.moveToNext());
-        }
-        mCursor.close();
+       if(mCursor!=null) {
+           if (mCursor.getCount() == 0) {
+               noMediaLayout.setVisibility(View.VISIBLE);
+               recyclerView.setVisibility(View.GONE);
+           } else {
+               recyclerView.setVisibility(View.VISIBLE);
+               noMediaLayout.setVisibility(View.GONE);
+           }
+           if (mCursor.moveToFirst()) {
+               do {
+                   MediaFileListModel mediaFileListModel = new MediaFileListModel();
+                   mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)));
+                   mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
+                   mediaFileListModelArrayList.add(mediaFileListModel);
+               } while (mCursor.moveToNext());
+           }
+           mCursor.close();
+       }else{
+           noMediaLayout.setVisibility(View.VISIBLE);
+           recyclerView.setVisibility(View.GONE);
+       }
     }
 
 
@@ -164,7 +168,7 @@ public class VideosListFragment extends Fragment {
 
         }
     }
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -183,7 +187,6 @@ public class VideosListFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

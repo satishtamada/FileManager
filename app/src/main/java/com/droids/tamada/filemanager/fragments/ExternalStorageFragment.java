@@ -3,6 +3,7 @@ package com.droids.tamada.filemanager.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +48,7 @@ public class ExternalStorageFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ArrayList<ExternalStorageFilesModel> mediaFileListModels;
     private ExternalStorageListAdapter externalStorageListAdapter;
-    private String rootPath="/sdcard";
+    private File rootFile;
     public ExternalStorageFragment() {
         // Required empty public constructor
     }
@@ -87,6 +88,8 @@ public class ExternalStorageFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mediaFileListModels = new ArrayList<>();
+        rootFile=new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath());
         externalStorageListAdapter = new ExternalStorageListAdapter(mediaFileListModels);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -94,7 +97,7 @@ public class ExternalStorageFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(externalStorageListAdapter);
-        getFilesList(rootPath);
+        getFilesList(rootFile);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -109,17 +112,16 @@ public class ExternalStorageFragment extends Fragment {
         return view;
     }
 
-    private void getFilesList(String rootPath) {
-        File f = new File(rootPath);
-        File[] files = f.listFiles();
-        if (files.length == 0) {
+    private void getFilesList(File rootPath) {
+        File listFile[] = rootPath.listFiles();;
+        if (listFile.length == 0) {
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noMediaLayout.setVisibility(View.GONE);
         }
-        for (File file : files) {
+        for (File file : listFile) {
             ExternalStorageFilesModel model = new ExternalStorageFilesModel(file.getName(), file.getPath(), false);
             mediaFileListModels.add(model);
         }

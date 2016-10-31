@@ -24,24 +24,14 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ImagesListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ImagesListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ImagesListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private ArrayList<MediaFileListModel> imageListModelsArray;
@@ -54,15 +44,6 @@ public class ImagesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ImagesListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ImagesListFragment newInstance(String param1, String param2) {
         ImagesListFragment fragment = new ImagesListFragment();
         Bundle args = new Bundle();
@@ -84,9 +65,8 @@ public class ImagesListFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_images_list, container, false);
-        recyclerView= (RecyclerView) view.findViewById(R.id.recycler_view_images_list);
+        View view = inflater.inflate(R.layout.fragment_images_list, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_images_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         imageListModelsArray = new ArrayList<>();
         imagesListAdapter = new ImagesListAdapter(imageListModelsArray);
@@ -101,10 +81,10 @@ public class ImagesListFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 MediaFileListModel model = imageListModelsArray.get(position);
-                Intent intent =new Intent(AppController.getInstance().getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("imageName",model.getFileName());
-                intent.putExtra("imagePath",model.getFilePath());
-                intent.putExtra("imagePosition",1+position+"/"+imageListModelsArray.size());
+                Intent intent = new Intent(AppController.getInstance().getApplicationContext(), ImageViewActivity.class);
+                intent.putExtra("imageName", model.getFileName());
+                intent.putExtra("imagePath", model.getFilePath());
+                intent.putExtra("imagePosition", 1 + position + "/" + imageListModelsArray.size());
                 startActivity(intent);
             }
 
@@ -117,22 +97,44 @@ public class ImagesListFragment extends Fragment {
     }
 
     private void getImagesList() {
-        @SuppressWarnings("deprecation") final Cursor mCursor = AppController.getInstance().getApplicationContext().getContentResolver().query(
+        @SuppressWarnings("deprecation")
+        final Cursor mCursor = AppController.getInstance().getApplicationContext().getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA}, null, null,
                 "LOWER(" + MediaStore.Images.Media.TITLE + ") ASC");
-        if (mCursor.getCount() == 0)
+        if (mCursor != null) {
+            if (mCursor.getCount() == 0) {
+                noMediaLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                noMediaLayout.setVisibility(View.GONE);
+            }
+            if (mCursor.moveToFirst()) {
+                do {
+                    MediaFileListModel mediaFileListModel = new MediaFileListModel();
+                    mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)));
+                    mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
+                    try {
+                        File file = new File(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
+                        long length = file.length();
+                        length = length / 1024;
+                        Date lastModDate = new Date(file.lastModified());
+                        mediaFileListModel.setFileSize(length + " KB");
+                        mediaFileListModel.setFileCreatedTime(lastModDate.toString());
+                    } catch (Exception e) {
+                        mediaFileListModel.setFileSize("unknown");
+                    }
+                    imageListModelsArray.add(mediaFileListModel);
+                } while (mCursor.moveToNext());
+            }
+            mCursor.close();
+        } else {
             noMediaLayout.setVisibility(View.VISIBLE);
-        if (mCursor.moveToFirst()) {
-            do {
-                MediaFileListModel mediaFileListModel = new MediaFileListModel();
-                mediaFileListModel.setFileName(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)));
-                mediaFileListModel.setFilePath(mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
-                imageListModelsArray.add(mediaFileListModel);
-            } while (mCursor.moveToNext());
+            recyclerView.setVisibility(View.GONE);
         }
-        mCursor.close();
     }
+
     public interface ClickListener {
         void onClick(View view, int position);
 
@@ -180,7 +182,6 @@ public class ImagesListFragment extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -204,18 +205,8 @@ public class ImagesListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
