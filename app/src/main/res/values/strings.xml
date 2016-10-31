@@ -122,5 +122,7 @@
     <string name="ram">RAM</string>
     <string name="free_space">Free space</string>
     <string name="free">Free</string>
+    <string name="are_you_sure_to_delete_this_file">Are you sure to delete this file?</string>
+    <string name="delete">Delete</string>
 
 </resources>

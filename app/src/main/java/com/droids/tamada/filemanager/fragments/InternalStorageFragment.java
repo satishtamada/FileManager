@@ -77,7 +77,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private String selectedFolderName;
     private int selectedFilePosition;
     private final HashMap selectedFileHashMap = new HashMap();
-    private boolean isCheckboxVisible=false;
+    private boolean isCheckboxVisible = false;
+
     public InternalStorageFragment() {
         // Required empty public constructor
     }
@@ -177,7 +178,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 for (int i = 0; i < internalStorageFilesModelArrayList.size(); i++) {
                     InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(i);
                     internalStorageFilesModel.setCheckboxVisible(true);
-                    isCheckboxVisible=true;
+                    isCheckboxVisible = true;
                     if (position == i) {
                         internalStorageFilesModel.setSelected(true);
                         selectedFileHashMap.put(position, internalStorageFilesModel.getFilePath());
@@ -213,8 +214,45 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         return view;
     }
 
-    private void deleteFile(String fileName, String filePath, int selectedFilePosition) {
-
+    private void deleteFile(String fileName, final String filePath, final int selectedFilePosition) {
+        final Dialog dialogDeleteFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        dialogDeleteFile.setContentView(R.layout.custom_delete_file_dialog);
+        dialogDeleteFile.show();
+        Button btnOkay = (Button) dialogDeleteFile.findViewById(R.id.btn_okay);
+        Button btnCancel = (Button) dialogDeleteFile.findViewById(R.id.btn_cancel);
+        TextView lblDeleteFile = (TextView) dialogDeleteFile.findViewById(R.id.id_lbl_delete_files);
+        if (selectedFileHashMap.size() == 0) {
+            lblDeleteFile.setText("Are you sure to delete this file?");
+        } else {
+            lblDeleteFile.setText("Are you sure you want to delete the selected files?");
+        }
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    /*for (int i = 0; i < selectedFileHashMap.size(); i++) {
+                        File deleteFile = new File(filePath);//create file for selected file
+                        boolean isDeleteFile = deleteFile.delete();//delete the file from memory
+                        if (isDeleteFile) {
+                            InternalStorageFilesModel model = internalStorageFilesModelArrayList.get(selectedFilePosition);
+                            internalStorageFilesModelArrayList.remove(model);//remove file from listview
+                            internalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
+                            selectedFileHashMap.remove(selectedFilePosition);
+                        }
+                    }
+                    dialogDeleteFile.dismiss();
+                    footerLayout.setVisibility(View.GONE);*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDeleteFile.dismiss();
+            }
+        });
     }
 
     private void openFile(File file, InternalStorageFilesModel internalStorageFilesModel) {
@@ -267,6 +305,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     private void getFilesList(String filePath) {
+        rootPath = filePath;
         lblFilePath.setText(filePath);
         File f = new File(filePath);
         File[] files = f.listFiles();
@@ -307,7 +346,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                         internalStorageFilesModel.setCheckboxVisible(false);
                     }
                     internalStorageListAdapter.notifyDataSetChanged();
-                    isCheckboxVisible=false;
+                    isCheckboxVisible = false;
                 } else {
                     if (navItemIndex == 0) {
                         if (arrayListFilePaths.size() == 1) {
@@ -347,7 +386,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     public void createNewFile() {
-        if(!isCheckboxVisible) {
+        if (!isCheckboxVisible) {
             final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
             dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
             dialogNewFile.show();
@@ -393,7 +432,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     public void createNewFolder() {
-        if(!isCheckboxVisible) {
+        if (!isCheckboxVisible) {
             final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
             dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
             dialogNewFolder.show();
