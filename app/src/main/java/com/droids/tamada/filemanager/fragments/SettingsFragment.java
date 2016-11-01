@@ -2,6 +2,7 @@ package com.droids.tamada.filemanager.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.droids.tamada.filemanager.activity.AboutActivity;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.SwitchButton;
@@ -120,7 +122,8 @@ public class SettingsFragment extends Fragment {
         lblAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(AppController.getInstance().getApplicationContext(), AboutActivity.class);
+                startActivity(intent);
             }
         });
         return view;

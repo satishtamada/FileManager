@@ -126,5 +126,6 @@
     <string name="lbl_delete_multiple_files">"Are you sure you want to delete the selected files?"</string>
     <string name="delete">Delete</string>
     <string name="about">About</string>
+    <string name="version">Version 2.1</string>
 
 </resources>
