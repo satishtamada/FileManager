@@ -1,9 +1,7 @@
 package com.droids.tamada.filemanager.activity;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.content.Intent;
-import android.icu.text.DecimalFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
 import com.droids.tamada.filemanager.fragments.ImagesListFragment;
@@ -34,10 +31,6 @@ import com.droids.tamada.filemanager.helper.ArcProgress;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity
@@ -211,12 +204,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_internal_storage:
                 navItemIndex = 0;
                 FG_TAG = TAG_INTERNAL_STORAGE;
-                //setRamStorageDetails(navItemIndex);
+                setRamStorageDetails(navItemIndex);
                 break;
             case R.id.nav_external_storage:
                 navItemIndex = 1;
                 FG_TAG = TAG_EXTERNAL_STORAGE;
-                // setRamStorageDetails(navItemIndex);
+                setRamStorageDetails(navItemIndex);
                 break;
             case R.id.nav_images:
                 navItemIndex = 2;
@@ -266,14 +259,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setRamStorageDetails(int navItemIndex) {
-        //lblRamUsage.setText(getRamUsageSize());
-        //progressRam.setProgress();
         if (navItemIndex == 0) {
-            //  progressStorage.setProgress(getFreeMemoryPercentage());
-            //   lblFreeStorage.setText(getAvailableInternalMemorySize());
+              lblFreeStorage.setText(getAvailableInternalMemorySize());
         } else if (navItemIndex == 1) {
-            // lblFreeStorage.setText(getAvailableExternalMemorySize());
-            // progressStorage.setProgress(getFreeMemoryPercentage());
+              lblFreeStorage.setText(getAvailableExternalMemorySize());
+
         }
     }
 
@@ -320,10 +310,10 @@ public class MainActivity extends AppCompatActivity
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if (tag.equals("total"))//set progress bar
-                    totalSize = size;
-                if (tag.equals("free"))
-                    freeSize = size;
+                if(size>=1024){
+                    suffix="GB";
+                    size/=1024;
+                }
             }
         }
         StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
