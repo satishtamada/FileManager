@@ -27,7 +27,6 @@
             android:paddingBottom="15dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@string/are_you_sure_to_delete_this_file"
             android:textColor="@color/color_text_selected"
             android:textSize="16sp" />
 

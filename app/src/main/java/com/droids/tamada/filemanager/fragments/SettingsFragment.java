@@ -46,6 +46,7 @@ public class SettingsFragment extends Fragment {
     private ArrayList<String> pswArray;
     private int passwordLength;
     private PreferManager preferManager;
+    private TextView lblAbout;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +80,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         sBtnLock = (SwitchButton) view.findViewById(R.id.id_setting_lock);
         sBtnShowHiddenFile = (SwitchButton) view.findViewById(R.id.id_setting_hide_file);
+        lblAbout= (TextView) view.findViewById(R.id.id_about);
         pswArray = new ArrayList<>();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         if (preferManager.isPasswordActivated()) {
@@ -113,6 +115,12 @@ public class SettingsFragment extends Fragment {
                 } else {
                     preferManager.setHiddenFileVisible(false);
                 }
+            }
+        });
+        lblAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
         return view;

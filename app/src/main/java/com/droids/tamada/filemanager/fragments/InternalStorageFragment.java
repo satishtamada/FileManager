@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -117,7 +117,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
-        ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
+        final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
@@ -131,6 +131,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         recyclerView.setAdapter(internalStorageListAdapter);
         arrayListFilePaths.add(rootPath);
         getFilesList(rootPath);
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -210,13 +211,12 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         imgFileCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO new file
-                Toast.makeText(getActivity().getApplicationContext(), "copy file", Toast.LENGTH_SHORT).show();
+            copyFile();
             }
         });
+
         return view;
     }
-
 
     @Override
     public void onButtonBackPressed(int navItemIndex) {
@@ -374,9 +374,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         Button btnCancel = (Button) dialogDeleteFile.findViewById(R.id.btn_cancel);
         TextView lblDeleteFile = (TextView) dialogDeleteFile.findViewById(R.id.id_lbl_delete_files);
         if (selectedFileHashMap.size() == 1) {
-            lblDeleteFile.setText("Are you sure to delete this file?");
+            lblDeleteFile.setText(AppController.getInstance().getApplicationContext().getResources().getString(R.string.lbl_delete_single_file));
         } else {
-            lblDeleteFile.setText("Are you sure you want to delete the selected files?");
+            lblDeleteFile.setText(AppController.getInstance().getApplicationContext().getResources().getString(R.string.lbl_delete_multiple_files));
         }
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -483,7 +483,14 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             } else {
                 model.setDir(false);
             }
-            internalStorageFilesModelArrayList.add(model);
+
+            if(!preferManager.isHiddenFileVisible()){
+                if(file.getName().indexOf('.')!=0){
+                    internalStorageFilesModelArrayList.add(model);
+                }
+            }else{ //display hidden files
+                internalStorageFilesModelArrayList.add(model);
+            }
         }
     }
 
@@ -542,6 +549,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private void moveFile() {
     }
 
+    private void copyFile() {
+    }
+
     private void renameFile(final Dialog menuDialog, String fileName, final String filePath, final int selectedFilePosition) {
         final Dialog dialogRenameFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         dialogRenameFile.setContentView(R.layout.custom_rename_file_dialog);
@@ -597,6 +607,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void showFileDetails(String fileName, String filePath) {
         final Dialog fileDetailsDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         fileDetailsDialog.setContentView(R.layout.custom_file_details_dialog);
