@@ -127,9 +127,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         externalStorageFilesModelArrayList = new ArrayList<>();
-
-        rootPath = Environment.getExternalStorageDirectory()
-                .getAbsolutePath();
+        rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
