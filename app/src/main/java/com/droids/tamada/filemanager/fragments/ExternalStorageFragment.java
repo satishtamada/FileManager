@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -127,7 +126,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         externalStorageFilesModelArrayList = new ArrayList<>();
-        rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        rootPath = System.getenv("SECONDARY_STORAGE");
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -232,32 +231,37 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFilePath.setText(filePath);
         File f = new File(filePath);
         File[] files = f.listFiles();
-        if (files.length == 0) {
-            noMediaLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noMediaLayout.setVisibility(View.GONE);
-        }
-        for (File file : files) {
-            ExternalStorageFilesModel model = new ExternalStorageFilesModel();
-            model.setFileName(file.getName());
-            model.setFilePath(file.getPath());
-            model.setCheckboxVisible(false);
-            model.setSelected(false);
-            if (file.isDirectory()) {
-                model.setDir(true);
+        if(files!=null) {
+            if (files.length == 0) {
+                noMediaLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             } else {
-                model.setDir(false);
+                recyclerView.setVisibility(View.VISIBLE);
+                noMediaLayout.setVisibility(View.GONE);
             }
+            for (File file : files) {
+                ExternalStorageFilesModel model = new ExternalStorageFilesModel();
+                model.setFileName(file.getName());
+                model.setFilePath(file.getPath());
+                model.setCheckboxVisible(false);
+                model.setSelected(false);
+                if (file.isDirectory()) {
+                    model.setDir(true);
+                } else {
+                    model.setDir(false);
+                }
 
-            if (!preferManager.isHiddenFileVisible()) {
-                if (file.getName().indexOf('.') != 0) {
+                if (!preferManager.isHiddenFileVisible()) {
+                    if (file.getName().indexOf('.') != 0) {
+                        externalStorageFilesModelArrayList.add(model);
+                    }
+                } else { //display hidden files
                     externalStorageFilesModelArrayList.add(model);
                 }
-            } else { //display hidden files
-                externalStorageFilesModelArrayList.add(model);
             }
+        }else{
+            noMediaLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 

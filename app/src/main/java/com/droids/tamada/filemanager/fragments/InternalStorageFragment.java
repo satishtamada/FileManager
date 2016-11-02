@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -117,7 +118,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
-        rootPath =System.getenv("SECONDARY_STORAGE");
+        rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         internalStorageListAdapter = new InternalStorageListAdapter(internalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
