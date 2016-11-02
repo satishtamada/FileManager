@@ -127,5 +127,6 @@
     <string name="delete">Delete</string>
     <string name="about">About</string>
     <string name="version">Version 2.1</string>
+    <string name="insert_sd_card">Insert SD Card</string>
 
 </resources>

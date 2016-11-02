@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import com.droids.tamada.filemanager.adapter.ExternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.PreferManager;
+import com.droids.tamada.filemanager.helper.StorageHelper;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
@@ -69,7 +71,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private String mParam2;
 
     private RecyclerView recyclerView;
-    private LinearLayout noMediaLayout;
+    private LinearLayout noMediaLayout,noMemoryCard;
     private OnFragmentInteractionListener mListener;
     private ArrayList<ExternalStorageFilesModel> externalStorageFilesModelArrayList;
     private ExternalStorageListAdapter externalStorageListAdapter;
@@ -120,13 +122,13 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
+        noMemoryCard= (LinearLayout) view.findViewById(R.id.noMemoryCard);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         externalStorageFilesModelArrayList = new ArrayList<>();
-        rootPath = System.getenv("SECONDARY_STORAGE");
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -134,9 +136,15 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         recyclerView.addItemDecoration(new DividerItemDecoration(AppController.getInstance().getApplicationContext(), LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(externalStorageListAdapter);
-        if (android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED)) {
-            getFilesList(rootPath);
+        if (StorageHelper.isExternalStorageReadable()) {
+            rootPath = System.getenv("SECONDARY_STORAGE");
+            if(rootPath!=null) {
+                getFilesList(rootPath);
+            }else{
+                recyclerView.setVisibility(View.GONE);
+                noMediaLayout.setVisibility(View.GONE);
+                noMemoryCard.setVisibility(View.VISIBLE);
+            }
         } else {
             recyclerView.setVisibility(View.GONE);
             noMediaLayout.setVisibility(View.VISIBLE);
@@ -229,9 +237,9 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private void getFilesList(String filePath) {
         rootPath = filePath;
         lblFilePath.setText(filePath);
-        File f = new File(filePath);
-        File[] files = f.listFiles();
-        if(files!=null) {
+        try {
+            File f = new File(filePath);
+            File[] files = f.listFiles();
             if (files.length == 0) {
                 noMediaLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
@@ -259,102 +267,107 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     externalStorageFilesModelArrayList.add(model);
                 }
             }
-        }else{
-            noMediaLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            recyclerView.setVisibility(View.VISIBLE);
+            noMediaLayout.setVisibility(View.GONE);
         }
     }
 
     public void createNewFile() {
-        if (!isCheckboxVisible) {
-            final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-            dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
-            dialogNewFile.show();
-            final EditText txtNewFile = (EditText) dialogNewFile.findViewById(R.id.txt_new_folder);
-            Button btnCreate = (Button) dialogNewFile.findViewById(R.id.btn_create);
-            Button btnCancel = (Button) dialogNewFile.findViewById(R.id.btn_cancel);
-            btnCreate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String fileName = txtNewFile.getText().toString().trim();
-                    if (fileName.length() == 0) {//if file name is empty
-                        fileName = "NewFile";
-                    }
-                    try {
-                        File file = new File(rootPath + "/" + fileName + ".txt");
-                        if (file.exists()) {
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
-                        } else {
-                            boolean isCreated = file.createNewFile();
-                            if (isCreated) {
-                                ExternalStorageFilesModel model = new ExternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false, false);
-                                externalStorageFilesModelArrayList.add(model);
-                                externalStorageListAdapter.notifyDataSetChanged();
-                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
-                            }
+        if(noMemoryCard.getVisibility()!=View.VISIBLE) {
+            if (!isCheckboxVisible) {
+                final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+                dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
+                dialogNewFile.show();
+                final EditText txtNewFile = (EditText) dialogNewFile.findViewById(R.id.txt_new_folder);
+                Button btnCreate = (Button) dialogNewFile.findViewById(R.id.btn_create);
+                Button btnCancel = (Button) dialogNewFile.findViewById(R.id.btn_cancel);
+                btnCreate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String fileName = txtNewFile.getText().toString().trim();
+                        if (fileName.length() == 0) {//if file name is empty
+                            fileName = "NewFile";
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        try {
+                            File file = new File(rootPath + "/" + fileName + ".txt");
+                            if (file.exists()) {
+                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_already_exits), Toast.LENGTH_SHORT).show();
+                            } else {
+                                boolean isCreated = file.createNewFile();
+                                if (isCreated) {
+                                    ExternalStorageFilesModel model = new ExternalStorageFilesModel(fileName + ".txt", file.getPath(), false, false, false);
+                                    externalStorageFilesModelArrayList.add(model);
+                                    externalStorageListAdapter.notifyDataSetChanged();
+                                    Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_created), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_file_not_created), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dialogNewFile.dismiss();
                     }
-                    dialogNewFile.dismiss();
-                }
-            });
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    txtNewFile.setText("");
-                    dialogNewFile.dismiss();
-                }
-            });
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        txtNewFile.setText("");
+                        dialogNewFile.dismiss();
+                    }
+                });
+            }
         }
     }
 
     public void createNewFolder() {
-        if (!isCheckboxVisible) {
-            final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-            dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
-            dialogNewFolder.show();
-            final EditText txtNewFolder = (EditText) dialogNewFolder.findViewById(R.id.txt_new_folder);
-            Button btnCreate = (Button) dialogNewFolder.findViewById(R.id.btn_create);
-            Button btnCancel = (Button) dialogNewFolder.findViewById(R.id.btn_cancel);
-            btnCreate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String folderName = txtNewFolder.getText().toString().trim();
-                    if (folderName.length() == 0) {//if user not enter text file name
-                        folderName = "NewFolder";
-                    }
-                    try {
-                        File file = new File(rootPath + "/" + folderName);
-                        if (file.exists()) {
-                            Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
-                        } else {
-                            boolean isFolderCreated = file.mkdir();
-                            if (isFolderCreated) {
-                                ExternalStorageFilesModel model = new ExternalStorageFilesModel(folderName, rootPath + "/" + folderName, true, false, false);
-                                externalStorageFilesModelArrayList.add(model);
-                                externalStorageListAdapter.notifyDataSetChanged();
-                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
-                            }
+        if(noMemoryCard.getVisibility()!=View.VISIBLE) {
+            if (!isCheckboxVisible) {
+                final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+                dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
+                dialogNewFolder.show();
+                final EditText txtNewFolder = (EditText) dialogNewFolder.findViewById(R.id.txt_new_folder);
+                Button btnCreate = (Button) dialogNewFolder.findViewById(R.id.btn_create);
+                Button btnCancel = (Button) dialogNewFolder.findViewById(R.id.btn_cancel);
+                btnCreate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String folderName = txtNewFolder.getText().toString().trim();
+                        if (folderName.length() == 0) {//if user not enter text file name
+                            folderName = "NewFolder";
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        try {
+                            File file = new File(rootPath + "/" + folderName);
+                            if (file.exists()) {
+                                Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_already_exits), Toast.LENGTH_SHORT).show();
+                            } else {
+                                boolean isFolderCreated = file.mkdir();
+                                if (isFolderCreated) {
+                                    ExternalStorageFilesModel model = new ExternalStorageFilesModel(folderName, rootPath + "/" + folderName, true, false, false);
+                                    externalStorageFilesModelArrayList.add(model);
+                                    externalStorageListAdapter.notifyDataSetChanged();
+                                    Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_created), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), getActivity().getApplicationContext().getString(R.string.msg_prompt_folder_not_created), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        dialogNewFolder.cancel();
                     }
-                    dialogNewFolder.cancel();
-                }
 
-            });
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    txtNewFolder.setText("");
-                    dialogNewFolder.dismiss();
-                }
-            });
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        txtNewFolder.setText("");
+                        dialogNewFolder.dismiss();
+                    }
+                });
+            }
         }
 
     }
