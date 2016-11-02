@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
+import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
 import com.example.satish.filemanager.R;
 
 
@@ -17,7 +17,7 @@ import com.example.satish.filemanager.R;
  * Created by satish on 14/10/16.
  */
 public class AboutActivity extends AppCompatActivity {
-    private ProgressBar progressBar;
+    private AVLoadingIndicatorView progressBar;
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class AboutActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("About us");
         }
         WebView webView = (WebView) findViewById(R.id.webView);
-        progressBar= (ProgressBar)findViewById(R.id.progressBar);
+        progressBar= (AVLoadingIndicatorView)findViewById(R.id.progressBar);
         webView.getSettings().setBuiltInZoomControls(false);
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -36,7 +36,7 @@ public class AboutActivity extends AppCompatActivity {
         webView.getSettings().setDomStorageEnabled(true);
         webView.canGoBack();
         webView.goBack();
-        webView.loadUrl("http://droid5.com/");
+        webView.loadUrl("http://www.androidhive.info/");
         progressBar.setVisibility(View.VISIBLE);
         webView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {

@@ -33,9 +33,6 @@ public class InternalStorageFilesModel {
         isDir = dir;
     }
 
-    public boolean isDir() {
-        return isDir;
-    }
 
     public void setIsDir(boolean isDir) {
         this.isDir = isDir;

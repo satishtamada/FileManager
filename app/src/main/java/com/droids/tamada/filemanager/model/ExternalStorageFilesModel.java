@@ -8,24 +8,37 @@ public class ExternalStorageFilesModel {
     private String filePath;
     private boolean selected;
     private boolean isDir;
+    private boolean isCheckboxVisible;
 
     public ExternalStorageFilesModel() {
     }
 
-    public ExternalStorageFilesModel(String fileName, String filePath, boolean isDir) {
+    public ExternalStorageFilesModel(String fileName, String filePath, boolean isDir, boolean isSelected, boolean isCheckboxVisible) {
         this.filePath = filePath;
         this.fileName = fileName;
-        this.selected = false;
+        this.selected = isSelected;
+        this.isCheckboxVisible = isCheckboxVisible;
         this.isDir = isDir;
     }
 
+    public boolean isCheckboxVisible() {
+        return isCheckboxVisible;
+    }
+
+    public void setCheckboxVisible(boolean checkboxVisible) {
+        isCheckboxVisible = checkboxVisible;
+    }
+
+    public void setDir(boolean dir) {
+        isDir = dir;
+    }
+    public void setIsDir(boolean isDir) {
+        this.isDir = isDir;
+    }
     public boolean isDir() {
         return isDir;
     }
 
-    public void setIsDir(boolean isDir) {
-        this.isDir = isDir;
-    }
 
     public String getFilePath() {
         return filePath;

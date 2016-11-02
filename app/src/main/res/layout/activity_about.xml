@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,15 +9,14 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <ProgressBar
+
+    <com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView
         android:id="@+id/progressBar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/bg_progress_bar"
-        android:indeterminate="false"
-        android:indeterminateTint="@color/colorPrimary"
-        android:indeterminateTintMode="src_atop"
-        android:padding="10dp"
-        android:visibility="gone" />
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:indicator="LineSpinFadeLoader"
+        app:indicator_color="@color/colorPrimaryDark" />
 </RelativeLayout>

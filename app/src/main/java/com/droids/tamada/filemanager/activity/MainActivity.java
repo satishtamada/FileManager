@@ -1,12 +1,11 @@
 package com.droids.tamada.filemanager.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -49,10 +48,8 @@ public class MainActivity extends AppCompatActivity
     private Handler mHandler;
     public static ButtonBackPressListener buttonBackPressListener;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static long totalSize;
-    private static long freeSize;
-    private ArcProgress progressStorage, progressRam;
-    private TextView lblRamUsage, lblFreeStorage;
+    private ArcProgress progressStorage;
+    private TextView lblFreeStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +73,12 @@ public class MainActivity extends AppCompatActivity
                 loadHomeFragment();
             }
         };
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerLayout = navigationView.getHeaderView(0);
         progressStorage = (ArcProgress) headerLayout.findViewById(R.id.progress_storage);
         lblFreeStorage = (TextView) headerLayout.findViewById(R.id.id_free_space);
-        // lblRamUsage = (TextView) headerLayout.findViewById(R.id.id_ram_usage);
-        // progressRam= (ArcProgress) headerLayout.findViewById(R.id.progress_ram);
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             navItemIndex = 0;
@@ -162,10 +157,10 @@ public class MainActivity extends AppCompatActivity
             getMenuInflater().inflate(R.menu.main_internal_storage, menu);
             return true;
         }
-        /*if (navItemIndex == 1) {
-            getMenuInflater().inflate(R.menu.camera, menu);
+        if (navItemIndex == 1) {
+            getMenuInflater().inflate(R.menu.main_external_storage, menu);
             return true;
-        }*/
+        }
         return true;
     }
 
@@ -178,16 +173,22 @@ public class MainActivity extends AppCompatActivity
                 internalStorageFragment.createNewFolder();
             }
             return true;
-        } /*else if (id == R.id.action_file_search) {
-            InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
-            if (internalStorageFragment != null) {
-                internalStorageFragment.searchFile();
-            }
-            return true;
-        }*/ else if (id == R.id.action_new_file) {
+        } else if (id == R.id.action_new_file) {
             InternalStorageFragment internalStorageFragment = (InternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
             if (internalStorageFragment != null) {
                 internalStorageFragment.createNewFile();
+            }
+            return true;
+        } else if (id == R.id.action_new_folder_external) {
+            ExternalStorageFragment externalStorageFragment = (ExternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
+            if (externalStorageFragment != null) {
+                externalStorageFragment.createNewFolder();
+            }
+            return true;
+        } else if (id == R.id.action_new_file_external) {
+            ExternalStorageFragment externalStorageFragment = (ExternalStorageFragment) getSupportFragmentManager().findFragmentByTag(FG_TAG);
+            if (externalStorageFragment != null) {
+                externalStorageFragment.createNewFile();
             }
             return true;
         }
@@ -196,8 +197,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
@@ -241,30 +241,42 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private String getRamUsageSize() {
-        long freeSize = 0L;
-        long totalSize = 0L;
-        long usedSize = -1L;
-        try {
-            Runtime info = Runtime.getRuntime();
-            freeSize = info.freeMemory();
-            totalSize = info.totalMemory();
-            usedSize = totalSize - freeSize;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return String.valueOf(usedSize);
-
-    }
-
     private void setRamStorageDetails(int navItemIndex) {
         if (navItemIndex == 0) {
-              lblFreeStorage.setText(getAvailableInternalMemorySize());
+            lblFreeStorage.setText(getAvailableInternalMemorySize());
+            progressStorage.setProgress(getAvailableInternalStoragePercentage());
         } else if (navItemIndex == 1) {
-              lblFreeStorage.setText(getAvailableExternalMemorySize());
+            lblFreeStorage.setText(getAvailableExternalMemorySize());
+            progressStorage.setProgress(getAvailableExternalStoragePercentage());
 
         }
+    }
+
+    private int getAvailableExternalStoragePercentage() {
+        if (android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED)) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
+            long totalSize = totalBlocks * blockSize;
+            @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
+            long availableSize = availableBlocks * blockSize;
+            Log.d("here is", "" + ((availableSize * 100) / totalSize));
+            int size = (int) ((availableSize * 100) / totalSize);
+            return 100 - size;
+        } else {
+            return 0;
+        }
+    }
+
+    private static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        Log.d("getPath", path.getPath());
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize, "free");
     }
 
     private static String getAvailableExternalMemorySize() {
@@ -280,26 +292,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private static String getTotalExternalMemorySize() {
-        if (android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED)) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            @SuppressWarnings("deprecation") long blockSize = stat.getBlockSize();
-            @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
-            return formatSize(totalBlocks * blockSize, "total");
-        } else {
-            return "0";
-        }
-    }
-
-    private static String getAvailableInternalMemorySize() {
+    private int getAvailableInternalStoragePercentage() {
         File path = Environment.getDataDirectory();
-        Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
+        @SuppressWarnings("deprecation") long totalBlocks = stat.getBlockCount();
+        long totalSize = totalBlocks * blockSize;
         @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
-        return formatSize(availableBlocks * blockSize, "free");
+        long availableSize = availableBlocks * blockSize;
+        Log.d("here is", "" + ((availableSize * 100) / totalSize));
+        int size = (int) ((availableSize * 100) / totalSize);
+        return 100 - size;
     }
 
     private static String formatSize(long size, String tag) {
@@ -310,9 +313,9 @@ public class MainActivity extends AppCompatActivity
             if (size >= 1024) {
                 suffix = "MB";
                 size /= 1024;
-                if(size>=1024){
-                    suffix="GB";
-                    size/=1024;
+                if (size >= 1024) {
+                    suffix = "GB";
+                    size /= 1024;
                 }
             }
         }

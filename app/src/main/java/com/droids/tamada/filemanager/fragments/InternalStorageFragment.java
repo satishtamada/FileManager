@@ -39,7 +39,6 @@ import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
-import com.droids.tamada.filemanager.helper.Utilities;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
@@ -71,11 +70,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private String fileExtension;
     private RelativeLayout footerAudioPlayer;
     private MediaPlayer mediaPlayer;
-    private Utilities utilities;
     private RelativeLayout footerLayout;
     private TextView lblFilePath;
     private ArrayList<String> arrayListFilePaths;
-    private ToggleButton toggleButtonCheck;
     private PreferManager preferManager;
     private String selectedFilePath;
     private String selectedFolderName;
@@ -121,8 +118,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
-        rootPath = Environment.getExternalStorageDirectory()
-                .getAbsolutePath();
+        rootPath = Environment.getRootDirectory().getPath();
         internalStorageListAdapter = new InternalStorageListAdapter(internalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AppController.getInstance().getApplicationContext());
@@ -131,7 +127,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         recyclerView.setAdapter(internalStorageListAdapter);
         arrayListFilePaths.add(rootPath);
         getFilesList(rootPath);
-
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -211,7 +206,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         imgFileCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            copyFile();
+                copyFile();
             }
         });
 
@@ -465,31 +460,33 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFilePath.setText(filePath);
         File f = new File(filePath);
         File[] files = f.listFiles();
-        if (files.length == 0) {
-            noMediaLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noMediaLayout.setVisibility(View.GONE);
-        }
-        for (File file : files) {
-            InternalStorageFilesModel model = new InternalStorageFilesModel();
-            model.setFileName(file.getName());
-            model.setFilePath(file.getPath());
-            model.setCheckboxVisible(false);
-            model.setSelected(false);
-            if (file.isDirectory()) {
-                model.setDir(true);
+        if(files!=null) {
+            if (files.length == 0) {
+                noMediaLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             } else {
-                model.setDir(false);
+                recyclerView.setVisibility(View.VISIBLE);
+                noMediaLayout.setVisibility(View.GONE);
             }
+            for (File file : files) {
+                InternalStorageFilesModel model = new InternalStorageFilesModel();
+                model.setFileName(file.getName());
+                model.setFilePath(file.getPath());
+                model.setCheckboxVisible(false);
+                model.setSelected(false);
+                if (file.isDirectory()) {
+                    model.setDir(true);
+                } else {
+                    model.setDir(false);
+                }
 
-            if(!preferManager.isHiddenFileVisible()){
-                if(file.getName().indexOf('.')!=0){
+                if (!preferManager.isHiddenFileVisible()) {
+                    if (file.getName().indexOf('.') != 0) {
+                        internalStorageFilesModelArrayList.add(model);
+                    }
+                } else { //display hidden files
                     internalStorageFilesModelArrayList.add(model);
                 }
-            }else{ //display hidden files
-                internalStorageFilesModelArrayList.add(model);
             }
         }
     }
@@ -618,13 +615,18 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFileName.setText("Name :" + fileName);
         lblFilePath.setText("Path :" + filePath);
         File file = new File(filePath);
-        long length = file.length();
-        length = length / 1024;
-        if (length >= 1024) {
-            length = length / 1024;
-            lblSize.setText("Size :" + length + " MB");
+        if (file.isDirectory()) {
+            int subFolders = file.list().length;
+            lblSize.setText("items :" + subFolders);
         } else {
-            lblSize.setText("Size :" + length + " KB");
+            long length = file.length();
+            length = length / 1024;
+            if (length >= 1024) {
+                length = length / 1024;
+                lblSize.setText("Size :" + length + " MB");
+            } else {
+                lblSize.setText("Size :" + length + " KB");
+            }
         }
         Date lastModDate = new Date(file.lastModified());
         lblCreateAt.setText("Created on :" + lastModDate.toString());
@@ -652,7 +654,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblAudioFileName.setText(fileName);
         audioPlayerDialog.show();
         mediaPlayer = new MediaPlayer();
-        utilities = new Utilities();
         try {
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();

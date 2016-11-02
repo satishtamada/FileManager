@@ -1,9 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
+    android:background="@color/colorWhite">
 
     <TextView
         android:id="@+id/id_file_path"
@@ -89,5 +87,4 @@
             android:padding="5dp"
             android:src="@drawable/ic_menu" />
     </RelativeLayout>
-
 </RelativeLayout>
