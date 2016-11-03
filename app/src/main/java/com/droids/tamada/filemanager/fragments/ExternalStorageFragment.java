@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -117,7 +116,6 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_external_storage, container, false);
-
         AppController.getInstance().setButtonBackPressed(this);
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -128,6 +126,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
+        arrayListFilePaths = new ArrayList<>();
         externalStorageFilesModelArrayList = new ArrayList<>();
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
         recyclerView.setHasFixedSize(true);
