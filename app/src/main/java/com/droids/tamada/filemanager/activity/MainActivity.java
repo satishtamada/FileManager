@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (navItemIndex > 0) {
+            if (navItemIndex > 1) {
                 navItemIndex = 0;
                 FG_TAG = TAG_INTERNAL_STORAGE;
                 navigationView.getMenu().getItem(0).setChecked(true);

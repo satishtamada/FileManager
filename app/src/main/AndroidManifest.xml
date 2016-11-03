@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.droids.tamada.filemanager.app.AppController"
@@ -18,22 +18,15 @@
         <activity
             android:name="com.droids.tamada.filemanager.activity.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.droids.tamada.filemanager.activity.ImageViewActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.droids.tamada.filemanager.activity.TextFileViewActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity android:name="com.droids.tamada.filemanager.activity.AboutActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.droids.tamada.filemanager.activity.AboutActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.droids.tamada.filemanager.activity.WelcomeScreen"
             android:screenOrientation="portrait">
@@ -43,12 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.droids.tamada.filemanager.activity.ScreenLockActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
     </application>
+
 </manifest>

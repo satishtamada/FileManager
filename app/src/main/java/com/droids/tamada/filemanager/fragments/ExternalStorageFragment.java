@@ -138,6 +138,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         if (StorageHelper.isExternalStorageReadable()) {
             rootPath = System.getenv("SECONDARY_STORAGE");
             if(rootPath!=null) {
+                arrayListFilePaths.add(rootPath);
                 getFilesList(rootPath);
             }else{
                 recyclerView.setVisibility(View.GONE);
@@ -162,6 +163,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     } else {
                         selectedFileHashMap.put(position, externalStorageFilesModel.getFilePath());
                         externalStorageFilesModel.setSelected(true);
+                        selectedFilePosition=position;
                         externalStorageFilesModelArrayList.remove(position);
                         externalStorageFilesModelArrayList.add(position, externalStorageFilesModel);
                         externalStorageListAdapter.notifyDataSetChanged();
@@ -465,7 +467,6 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         }
     }
 
-
     private void showMenu() {
         final Dialog menuDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         menuDialog.setContentView(R.layout.custom_menu_dialog);
@@ -692,7 +693,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     externalStorageListAdapter.notifyDataSetChanged();
                     isCheckboxVisible = false;
                 } else {
-                    if (navItemIndex == 0) {
+                    if (navItemIndex == 1) {
                         if (arrayListFilePaths.size() == 1) {
                             Toast.makeText(AppController.getInstance().getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
                         }

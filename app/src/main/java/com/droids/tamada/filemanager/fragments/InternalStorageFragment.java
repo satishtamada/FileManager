@@ -74,8 +74,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private TextView lblFilePath;
     private ArrayList<String> arrayListFilePaths;
     private PreferManager preferManager;
-    private String selectedFilePath;
-    private String selectedFolderName;
     private int selectedFilePosition;
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
@@ -141,6 +139,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                     } else {
                         selectedFileHashMap.put(position, internalStorageFilesModel.getFilePath());
                         internalStorageFilesModel.setSelected(true);
+                        selectedFilePosition=position;
                         internalStorageFilesModelArrayList.remove(position);
                         internalStorageFilesModelArrayList.add(position, internalStorageFilesModel);
                         internalStorageListAdapter.notifyDataSetChanged();
