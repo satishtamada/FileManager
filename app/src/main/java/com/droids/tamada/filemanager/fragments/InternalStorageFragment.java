@@ -129,6 +129,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         recyclerView.setAdapter(internalStorageListAdapter);
         arrayListFilePaths.add(rootPath);
         getFilesList(rootPath);
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -507,6 +508,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 }
             }
         });
+
+        extractZipDialog.show();
 
     }
 
