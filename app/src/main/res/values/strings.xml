@@ -24,7 +24,7 @@
     <string name="action_add_file">new file</string>
     <string name="action_change_text_size">Font size</string>
     <string name="action_change_text_color">Text color</string>
-    <string name="action_change_background_color">Background</string>
+    <string name="action_change_background_color">Theme</string>
 
     <string name="lbl_property">Property</string>
     <string name="lbl_refresh">Refresh</string>

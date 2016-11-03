@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -37,10 +38,12 @@ public class TextFileViewActivity extends AppCompatActivity {
         Intent txtIntent = getIntent();
         String fileName = txtIntent.getStringExtra("fileName");
         filePath = txtIntent.getStringExtra("filePath");
-        /*if (getSupportActionBar() != null) {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(fileName);
-        }*/
+        }
         try {
             txtTextData.setText(readTxt(filePath));
         } catch (FileNotFoundException e) {
