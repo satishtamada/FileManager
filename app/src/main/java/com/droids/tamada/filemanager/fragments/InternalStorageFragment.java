@@ -43,6 +43,8 @@ import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +52,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
@@ -429,7 +433,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             txtIntent.putExtra("fileName", internalStorageFilesModel.getFileName());
             getActivity().startActivity(txtIntent);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            //TODO handle zip file
+            extractZip(internalStorageFilesModel.getFileName(),internalStorageFilesModel.getFilePath());
         } else if (fileExtension.equals("pdf")) {
             File pdfFile = new File(internalStorageFilesModel.getFilePath());
             PackageManager packageManager = getActivity().getPackageManager();
@@ -449,9 +453,61 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             Uri fileUri = Uri.fromFile(new File(internalStorageFilesModel.getFileName()));
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(fileUri, "video/mp4");
+            intent.setDataAndType(fileUri, "video/*");
             getActivity().startActivity(intent);
         }
+    }
+
+    private void extractZip(String fileName, final String filePath) {
+        final Dialog extractZipDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        extractZipDialog.setContentView(R.layout.custom_extract_zip_dialog);
+        Button btnOkay = (Button) extractZipDialog.findViewById(R.id.btn_okay);
+        Button btnCancel = (Button) extractZipDialog.findViewById(R.id.btn_cancel);
+        final TextView lblFileName = (TextView) extractZipDialog.findViewById(R.id.id_file_name);
+        lblFileName.setText("Are you sure you want to extract "+fileName);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                extractZipDialog.dismiss();
+                lblFileName.setText("");
+            }
+        });
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byte[] buffer = new byte[1024];
+                try {
+                    File folder = new File(rootPath);//create output directory is not exists
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+                    ZipInputStream zis =
+                            new ZipInputStream(new FileInputStream(filePath));//get the zip file content
+                    ZipEntry ze = zis.getNextEntry(); //get the zipped file list entry
+                    while (ze != null) {
+                        String unzipFileName = ze.getName();
+                        File newFile = new File(rootPath + File.separator + unzipFileName);
+                        //create all non exists folders
+                        //else you will hit FileNotFoundException for compressed folder
+                        new File(newFile.getParent()).mkdirs();
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        ze = zis.getNextEntry();
+                    }
+                    zis.closeEntry();
+                    zis.close();
+                    extractZipDialog.dismiss();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    extractZipDialog.dismiss();
+                }
+            }
+        });
+
     }
 
     private void getFilesList(String filePath) {

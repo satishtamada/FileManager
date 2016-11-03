@@ -462,7 +462,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             Uri fileUri = Uri.fromFile(new File(externalStorageFilesModel.getFileName()));
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(fileUri, "video/mp4");
+            intent.setDataAndType(fileUri, "video/*");
             getActivity().startActivity(intent);
         }
     }
