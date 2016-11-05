@@ -128,5 +128,14 @@
     <string name="version">Version 2.1</string>
     <string name="insert_sd_card">Insert SD Card</string>
     <string name="extract">Extract</string>
+    <string name="navigation">Navigation</string>
+    <string name="create_file_folder">Create file/folder</string>
+    <string name="explore_options_and_settings">Explore options and settings</string>
+    <string name="long_press">Long press</string>
+    <string name="select_folder_or_file">Select folder or file</string>
+    <string name="copy_delete_folder_or_file">Copy/Delete folder or file</string>
+    <string name="choose_menu_options">Choose menu options</string>
+    <string name="menu">Menu</string>
+    <string name="copy">Copy</string>
 
 </resources>

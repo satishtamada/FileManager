@@ -1,5 +1,6 @@
 package com.droids.tamada.filemanager.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,8 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.fragments.AudiosListFragment;
 import com.droids.tamada.filemanager.fragments.ExternalStorageFragment;
 import com.droids.tamada.filemanager.fragments.ImagesListFragment;
@@ -27,6 +30,7 @@ import com.droids.tamada.filemanager.fragments.InternalStorageFragment;
 import com.droids.tamada.filemanager.fragments.SettingsFragment;
 import com.droids.tamada.filemanager.fragments.VideosListFragment;
 import com.droids.tamada.filemanager.helper.ArcProgress;
+import com.droids.tamada.filemanager.helper.PreferManager;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     private ArcProgress progressStorage;
     private TextView lblFreeStorage;
+    private PreferManager preferManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mHandler = new Handler();
+        preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -86,6 +92,19 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(0).setChecked(true);
             loadHomeFragment();
             setRamStorageDetails(navItemIndex);
+          if (preferManager.isFirstTimeLaunch()) {
+                final Dialog homeGuideDialog = new Dialog(MainActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
+                homeGuideDialog.setContentView(R.layout.custom_guide_dialog);
+                homeGuideDialog.show();
+                RelativeLayout layout = (RelativeLayout) homeGuideDialog.findViewById(R.id.guide_layout);
+                layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        preferManager.setFirstTimeLaunch(false);
+                        homeGuideDialog.dismiss();
+                    }
+                });
+            }
         }
     }
 

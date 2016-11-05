@@ -6,7 +6,7 @@
     <color name="colorAccent">#457699</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorBlackTransparent">#99000000</color>
+    <color name="colorBlackTransparent">#aa000000</color>
     <color name="colorFooterBorderTop">#d9dce0</color>
     <color name="colorRippleEffect">#bfc4c9</color>
 
