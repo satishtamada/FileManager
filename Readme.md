@@ -10,7 +10,9 @@ This article will take a comprehensive look at working with files and folders.It
  * edit your txt file 
  * play your audio,video files
  * open image files
- 
+
+![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/a.jpg)
+![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/0.jpg)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/1.jpg)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/2.jpg)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/3.jpg)
