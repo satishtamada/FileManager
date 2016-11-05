@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
 import com.droids.tamada.filemanager.activity.ImageViewActivity;
 import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
@@ -57,12 +58,10 @@ import java.util.zip.ZipInputStream;
 
 
 public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
@@ -81,6 +80,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private int selectedFilePosition;
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
+    private AVLoadingIndicatorView progressBar;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -111,6 +111,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         View view = inflater.inflate(R.layout.fragment_internal_storage, container, false);
         AppController.getInstance().setButtonBackPressed(this);
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
+        progressBar = (AVLoadingIndicatorView) view.findViewById(R.id.progressBar);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
@@ -144,7 +145,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                     } else {
                         selectedFileHashMap.put(position, internalStorageFilesModel.getFilePath());
                         internalStorageFilesModel.setSelected(true);
-                        selectedFilePosition=position;
+                        selectedFilePosition = position;
                         internalStorageFilesModelArrayList.remove(position);
                         internalStorageFilesModelArrayList.add(position, internalStorageFilesModel);
                         internalStorageListAdapter.notifyDataSetChanged();
@@ -434,7 +435,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             txtIntent.putExtra("fileName", internalStorageFilesModel.getFileName());
             getActivity().startActivity(txtIntent);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            extractZip(internalStorageFilesModel.getFileName(),internalStorageFilesModel.getFilePath());
+            extractZip(internalStorageFilesModel.getFileName(), internalStorageFilesModel.getFilePath());
         } else if (fileExtension.equals("pdf")) {
             File pdfFile = new File(internalStorageFilesModel.getFilePath());
             PackageManager packageManager = getActivity().getPackageManager();
@@ -465,7 +466,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         Button btnOkay = (Button) extractZipDialog.findViewById(R.id.btn_okay);
         Button btnCancel = (Button) extractZipDialog.findViewById(R.id.btn_cancel);
         final TextView lblFileName = (TextView) extractZipDialog.findViewById(R.id.id_file_name);
-        lblFileName.setText("Are you sure you want to extract "+fileName);
+        lblFileName.setText("Are you sure you want to extract " + fileName);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -476,6 +477,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                extractZipDialog.dismiss();
+                progressBar.setVisibility(View.VISIBLE);
                 byte[] buffer = new byte[1024];
                 try {
                     File folder = new File(rootPath);//create output directory is not exists
@@ -501,8 +504,9 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                     }
                     zis.closeEntry();
                     zis.close();
-                    extractZipDialog.dismiss();
+                    progressBar.setVisibility(View.GONE);
                 } catch (IOException ex) {
+                    progressBar.setVisibility(View.GONE);
                     ex.printStackTrace();
                     extractZipDialog.dismiss();
                 }
@@ -518,7 +522,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFilePath.setText(filePath);
         File f = new File(filePath);
         File[] files = f.listFiles();
-        if(files!=null) {
+        if (files != null) {
             if (files.length == 0) {
                 noMediaLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);

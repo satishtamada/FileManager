@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
 import com.droids.tamada.filemanager.activity.ImageViewActivity;
 import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
@@ -44,6 +45,8 @@ import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,26 +54,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ExternalStorageFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ExternalStorageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ExternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private RecyclerView recyclerView;
-    private LinearLayout noMediaLayout,noMemoryCard;
+    private LinearLayout noMediaLayout, noMemoryCard;
     private OnFragmentInteractionListener mListener;
     private ArrayList<ExternalStorageFilesModel> externalStorageFilesModelArrayList;
     private ExternalStorageListAdapter externalStorageListAdapter;
@@ -82,11 +77,10 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private TextView lblFilePath;
     private ArrayList<String> arrayListFilePaths;
     private PreferManager preferManager;
-    private String selectedFilePath;
-    private String selectedFolderName;
     private int selectedFilePosition;
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
+    private AVLoadingIndicatorView progressBar;
 
     public ExternalStorageFragment() {
         // Required empty public constructor
@@ -117,10 +111,11 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_external_storage, container, false);
         AppController.getInstance().setButtonBackPressed(this);
+        progressBar = (AVLoadingIndicatorView) view.findViewById(R.id.progressBar);
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
-        noMemoryCard= (LinearLayout) view.findViewById(R.id.noMemoryCard);
+        noMemoryCard = (LinearLayout) view.findViewById(R.id.noMemoryCard);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
@@ -137,10 +132,10 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         recyclerView.setAdapter(externalStorageListAdapter);
         if (StorageHelper.isExternalStorageReadable()) {
             rootPath = System.getenv("SECONDARY_STORAGE");
-            if(rootPath!=null) {
+            if (rootPath != null) {
                 arrayListFilePaths.add(rootPath);
                 getFilesList(rootPath);
-            }else{
+            } else {
                 recyclerView.setVisibility(View.GONE);
                 noMediaLayout.setVisibility(View.GONE);
                 noMemoryCard.setVisibility(View.VISIBLE);
@@ -163,7 +158,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     } else {
                         selectedFileHashMap.put(position, externalStorageFilesModel.getFilePath());
                         externalStorageFilesModel.setSelected(true);
-                        selectedFilePosition=position;
+                        selectedFilePosition = position;
                         externalStorageFilesModelArrayList.remove(position);
                         externalStorageFilesModelArrayList.add(position, externalStorageFilesModel);
                         externalStorageListAdapter.notifyDataSetChanged();
@@ -276,7 +271,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     public void createNewFile() {
-        if(noMemoryCard.getVisibility()!=View.VISIBLE) {
+        if (noMemoryCard.getVisibility() != View.VISIBLE) {
             if (!isCheckboxVisible) {
                 final Dialog dialogNewFile = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
                 dialogNewFile.setContentView(R.layout.custom_new_file_dialog);
@@ -324,7 +319,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     public void createNewFolder() {
-        if(noMemoryCard.getVisibility()!=View.VISIBLE) {
+        if (noMemoryCard.getVisibility() != View.VISIBLE) {
             if (!isCheckboxVisible) {
                 final Dialog dialogNewFolder = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
                 dialogNewFolder.setContentView(R.layout.custom_new_folder_dialog);
@@ -442,7 +437,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             txtIntent.putExtra("fileName", externalStorageFilesModel.getFileName());
             getActivity().startActivity(txtIntent);
         } else if (fileExtension.equals("zip") || fileExtension.equals("rar")) {
-            //TODO handle zip file
+            extractZip(externalStorageFilesModel.getFileName(), externalStorageFilesModel.getFilePath());
         } else if (fileExtension.equals("pdf")) {
             File pdfFile = new File(externalStorageFilesModel.getFilePath());
             PackageManager packageManager = getActivity().getPackageManager();
@@ -523,6 +518,63 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     private void copyFile() {
+    }
+
+    private void extractZip(String fileName, final String filePath) {
+        final Dialog extractZipDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+        extractZipDialog.setContentView(R.layout.custom_extract_zip_dialog);
+        Button btnOkay = (Button) extractZipDialog.findViewById(R.id.btn_okay);
+        Button btnCancel = (Button) extractZipDialog.findViewById(R.id.btn_cancel);
+        final TextView lblFileName = (TextView) extractZipDialog.findViewById(R.id.id_file_name);
+        lblFileName.setText("Are you sure you want to extract " + fileName);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                extractZipDialog.dismiss();
+                lblFileName.setText("");
+            }
+        });
+        btnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                extractZipDialog.dismiss();
+                progressBar.setVisibility(View.VISIBLE);
+                byte[] buffer = new byte[1024];
+                try {
+                    File folder = new File(rootPath);//create output directory is not exists
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+                    ZipInputStream zis =
+                            new ZipInputStream(new FileInputStream(filePath));//get the zip file content
+                    ZipEntry ze = zis.getNextEntry(); //get the zipped file list entry
+                    while (ze != null) {
+                        String unzipFileName = ze.getName();
+                        File newFile = new File(rootPath + File.separator + unzipFileName);
+                        //create all non exists folders
+                        //else you will hit FileNotFoundException for compressed folder
+                        new File(newFile.getParent()).mkdirs();
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        ze = zis.getNextEntry();
+                    }
+                    zis.closeEntry();
+                    zis.close();
+                    progressBar.setVisibility(View.GONE);
+                } catch (IOException ex) {
+                    progressBar.setVisibility(View.GONE);
+                    ex.printStackTrace();
+                    extractZipDialog.dismiss();
+                }
+            }
+        });
+
+        extractZipDialog.show();
+
     }
 
     private void renameFile(final Dialog menuDialog, String fileName, final String filePath, final int selectedFilePosition) {

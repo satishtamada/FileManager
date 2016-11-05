@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
 
@@ -16,7 +17,15 @@
         android:textAllCaps="false"
         android:textColor="@color/color_text_selected"
         android:textSize="13sp" />
-
+    <com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:indicator="LineSpinFadeLoader"
+        app:indicator_color="@color/colorPrimaryDark" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_above="@+id/id_layout_footer"
