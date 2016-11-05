@@ -11,7 +11,7 @@ This article will take a comprehensive look at working with files and folders.It
  * play your audio,video files
  * open image files
  
-
+![alt tag](https://github.com/satishtamada/FileManager/blob/master/ScreenShots/1.jpg)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/1-min.png)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/2-min.png)
 ![alt tag](https://github.com/satishtamada/FileManager/blob/screenshots/app/src/main/java/screenshots/3-min.png)
