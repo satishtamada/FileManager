@@ -23,10 +23,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.droids.tamada.filemanager.activity.TextFileViewActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.droids.tamada.filemanager.activity.AboutActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.droids.tamada.filemanager.activity.WelcomeScreen"
             android:screenOrientation="portrait">
@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:name="com.droids.tamada.filemanager.activity.ScreenLockActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
