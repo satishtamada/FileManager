@@ -9,22 +9,22 @@
         android:id="@+id/layout_image_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:padding="10dp">
-
+        android:padding="10dp"
+        android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/id_back_arrow"
             android:layout_width="30dp"
             android:layout_height="35dp"
             android:padding="5dp"
-            android:src="@drawable/back_arrow" />
+            android:src="@drawable/back_arrow"/>
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <ImageView
         android:layout_below="@+id/layout_image_title"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
 
 </RelativeLayout>

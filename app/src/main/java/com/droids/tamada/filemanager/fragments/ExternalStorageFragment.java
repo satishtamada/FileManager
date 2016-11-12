@@ -33,6 +33,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
+import com.droids.tamada.filemanager.activity.FullImageViewActivity;
 import com.droids.tamada.filemanager.activity.ImageViewActivity;
 import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
@@ -425,9 +426,8 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             }
             //if file is not directory open a application for file type
         } else if (fileExtension.equals("png") || fileExtension.equals("jpeg") || fileExtension.equals("jpg")) {
-            Intent imageIntent = new Intent(getActivity().getApplicationContext(), ImageViewActivity.class);
+            Intent imageIntent = new Intent(getActivity().getApplicationContext(), FullImageViewActivity.class);
             imageIntent.putExtra("imagePath", externalStorageFilesModel.getFilePath());
-            imageIntent.putExtra("imageName", externalStorageFilesModel.getFileName());
             getActivity().startActivity(imageIntent);
         } else if (fileExtension.equals("mp3")) {
             showAudioPlayer(externalStorageFilesModel.getFileName(), externalStorageFilesModel.getFilePath());
@@ -454,7 +454,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                 Toast.makeText(getActivity().getApplicationContext(), "There is no app to handle this type of file", Toast.LENGTH_SHORT).show();
             }
         } else if (fileExtension.equals("mp4") || fileExtension.equals("3gp") || fileExtension.equals("wmv")) {
-            Uri fileUri = Uri.fromFile(new File(externalStorageFilesModel.getFileName()));
+            Uri fileUri = Uri.fromFile(new File(externalStorageFilesModel.getFilePath()));
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(fileUri, "video/*");

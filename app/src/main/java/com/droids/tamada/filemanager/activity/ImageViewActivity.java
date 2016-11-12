@@ -5,45 +5,46 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.adapter.FullScreenImageAdapter;
+import com.droids.tamada.filemanager.app.AppController;
+import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by inventbird on 17/10/16.
  */
 public class ImageViewActivity extends AppCompatActivity {
-    private ImageView imageView,imgBackArrow;
-    private TextView lblImageName;
-    String imageName, imagePath,imagePosition;
+    private ImageView imgBackArrow;
+    int imagePosition;
+    private FullScreenImageAdapter adapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imageview);
-        imageView = (ImageView) findViewById(R.id.imageView);
-        lblImageName= (TextView) findViewById(R.id.idImageName);
         imgBackArrow= (ImageView) findViewById(R.id.id_back_arrow);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        adapter = new FullScreenImageAdapter(ImageViewActivity.this, AppController.getInstance().getMediaFileListModeLArray());
         Intent intent = getIntent();
-        imageName = intent.getStringExtra("imageName");
-        imagePath = intent.getStringExtra("imagePath");
-        imagePosition=intent.getStringExtra("imagePosition");
-        lblImageName.setText(imagePosition);
+        imagePosition=intent.getIntExtra("imagePosition",0);
+        viewPager.setAdapter(adapter);
+        // displaying selected image first
+        viewPager.setCurrentItem(imagePosition);
         imgBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        File imgFile = new File(imagePath);
-        if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            imageView.setImageBitmap(myBitmap);
-        }
     }
 }

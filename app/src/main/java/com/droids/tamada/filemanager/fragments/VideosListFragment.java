@@ -78,7 +78,7 @@ public class VideosListFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 MediaFileListModel mediaFileListModel=mediaFileListModelArrayList.get(position);
-                Uri fileUri = Uri.fromFile(new File(mediaFileListModel.getFileName()));
+                Uri fileUri = Uri.fromFile(new File(mediaFileListModel.getFilePath()));
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setDataAndType(fileUri, "video/mp4");

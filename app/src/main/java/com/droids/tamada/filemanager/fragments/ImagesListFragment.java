@@ -80,11 +80,9 @@ public class ImagesListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                MediaFileListModel model = imageListModelsArray.get(position);
+                AppController.getInstance().setMediaFileListArrayList(imageListModelsArray);
                 Intent intent = new Intent(AppController.getInstance().getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("imageName", model.getFileName());
-                intent.putExtra("imagePath", model.getFilePath());
-                intent.putExtra("imagePosition", 1 + position + "/" + imageListModelsArray.size());
+                intent.putExtra("imagePosition",  position);
                 startActivity(intent);
             }
 

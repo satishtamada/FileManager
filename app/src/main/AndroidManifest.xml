@@ -27,12 +27,15 @@
         <activity
             android:name="com.droids.tamada.filemanager.activity.AboutActivity"
             android:screenOrientation="portrait"/>
+
+        <activity android:name="com.droids.tamada.filemanager.activity.FullImageViewActivity">
+
+        </activity>
         <activity
             android:name="com.droids.tamada.filemanager.activity.WelcomeScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
