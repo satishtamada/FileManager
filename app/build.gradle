@@ -8,8 +8,8 @@ android {
         applicationId "com.droids.tamada.filemanager"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 5
-        versionName "2.0"
+        versionCode 6
+        versionName "2.1"
     }
     buildTypes {
         release {
@@ -30,6 +30,5 @@ dependencies {
     compile 'com.kyleduo.switchbutton:library:1.4.0'
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.sothree.slidinguppanel:library:3.0.0'
-
     testCompile 'junit:junit:4.12'
 }
