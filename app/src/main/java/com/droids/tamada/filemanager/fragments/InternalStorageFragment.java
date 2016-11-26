@@ -73,6 +73,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private String rootPath;
     private String fileExtension;
     private RelativeLayout footerAudioPlayer;
+    private LinearLayout fileCopyLayout,fileMoveLayout;
     private MediaPlayer mediaPlayer;
     private RelativeLayout footerLayout;
     private TextView lblFilePath;
@@ -82,6 +83,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
+    private TextView lblCopyFile, lblCopyCancel,lblMoveFile,lblMoveCancel;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -119,7 +121,13 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
+        fileCopyLayout = (LinearLayout) view.findViewById(R.id.fileCopyLayout);
+        fileMoveLayout= (LinearLayout) view.findViewById(R.id.fileMoveLayout);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
+        lblMoveFile= (TextView) view.findViewById(R.id.id_move);
+        lblMoveCancel= (TextView) view.findViewById(R.id.id_move_cancel);
+        lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
+        lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
         rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -209,10 +217,45 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             }
         });
 
-        imgFileCopy.setOnClickListener(new View.OnClickListener() {
+        lblMoveCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fileMoveLayout.setVisibility(View.GONE);
+            }
+        });
+
+        lblMoveFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveFile();
+            }
+        });
+        lblCopyCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fileCopyLayout.setVisibility(View.GONE);
+            }
+        });
+
+        lblCopyFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 copyFile();
+            }
+        });
+        imgFileCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                footerLayout.setVisibility(View.GONE);
+                fileCopyLayout.setVisibility(View.VISIBLE);
+                for (int i = 0; i < internalStorageFilesModelArrayList.size(); i++) {
+                    InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(i);
+                    internalStorageFilesModel.setCheckboxVisible(false);
+                }
+                internalStorageListAdapter.notifyDataSetChanged();
+                isCheckboxVisible = false;
+                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
+                Toast.makeText(AppController.getInstance().getApplicationContext(), internalStorageFilesModel.getFileName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -465,6 +508,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void extractZip(String fileName, final String filePath) {
         final Dialog extractZipDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         extractZipDialog.setContentView(R.layout.custom_extract_zip_dialog);
@@ -564,6 +608,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         TextView lblRenameFile = (TextView) menuDialog.findViewById(R.id.id_rename);
         TextView lblFileDetails = (TextView) menuDialog.findViewById(R.id.id_file_details);
         TextView lblFileMove = (TextView) menuDialog.findViewById(R.id.id_move);
+
         if (selectedFileHashMap.size() == 1) {
             lblRenameFile.setClickable(true);
             lblRenameFile.setFocusable(true);
@@ -589,7 +634,17 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFileMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveFile();
+                footerLayout.setVisibility(View.GONE);
+                fileCopyLayout.setVisibility(View.VISIBLE);
+                for (int i = 0; i < internalStorageFilesModelArrayList.size(); i++) {
+                    InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(i);
+                    internalStorageFilesModel.setCheckboxVisible(false);
+                }
+                internalStorageListAdapter.notifyDataSetChanged();
+                isCheckboxVisible = false;
+                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
+                Toast.makeText(AppController.getInstance().getApplicationContext(), internalStorageFilesModel.getFileName(), Toast.LENGTH_SHORT).show();
+
             }
         });
         lblRenameFile.setOnClickListener(new View.OnClickListener() {
@@ -614,6 +669,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     }
 
     private void copyFile() {
+
+
     }
 
     private void renameFile(final Dialog menuDialog, String fileName, final String filePath, final int selectedFilePosition) {

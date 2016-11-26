@@ -832,4 +832,10 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppController.getInstance().trackScreenView("External storage fragment");
+    }
 }

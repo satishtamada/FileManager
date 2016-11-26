@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.frame)).commit();
             } catch (Exception e) {
+                AppController.getInstance().trackException(e);
                 e.printStackTrace();
             }
         }

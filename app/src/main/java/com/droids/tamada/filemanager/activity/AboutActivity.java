@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
+import com.droids.tamada.filemanager.app.AppController;
 import com.example.satish.filemanager.R;
 
 
@@ -43,6 +44,12 @@ public class AboutActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().trackScreenView("About Screen");
     }
 
     @Override

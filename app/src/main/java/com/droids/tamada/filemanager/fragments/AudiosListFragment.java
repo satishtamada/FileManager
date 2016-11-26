@@ -82,6 +82,7 @@ public class AudiosListFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(AppController.getInstance().getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                AppController.getInstance().trackEvent("Play Audio","Play Audios","File manager lite");
                 MediaFileListModel mediaFileListModel = mediaFileListModels.get(position);
                 showAudioPlayer(mediaFileListModel.getFileName(), mediaFileListModel.getFilePath());
             }
@@ -109,6 +110,7 @@ public class AudiosListFragment extends Fragment {
             mediaPlayer.prepare();
             mediaPlayer.start();
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
+            AppController.getInstance().trackException(e);
             e.printStackTrace();
         }
 
@@ -182,6 +184,7 @@ public class AudiosListFragment extends Fragment {
                         Date lastModDate = new Date(file.lastModified());
                         mediaFileListModel.setFileCreatedTime(lastModDate.toString());
                     } catch (Exception e) {
+                        AppController.getInstance().trackException(e);
                         mediaFileListModel.setFileSize("unknown");
                     }
                     mediaFileListModels.add(mediaFileListModel);
@@ -268,5 +271,11 @@ public class AudiosListFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppController.getInstance().trackScreenView("Audios List Fragment");
     }
 }

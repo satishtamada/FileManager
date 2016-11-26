@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 
+import com.droids.tamada.filemanager.app.AppController;
 import com.example.satish.filemanager.R;
 
 /**
@@ -48,6 +49,7 @@ public class WelcomeScreen extends AppCompatActivity {
         btnTurnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AppController.getInstance().trackEvent("Button turn on","Permissions allow button","FileManger lite");
                 accessStorage();
             }
         });
@@ -169,4 +171,9 @@ public class WelcomeScreen extends AppCompatActivity {
         startActivity(i);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().trackScreenView("Welcome screen");
+    }
 }

@@ -161,4 +161,10 @@ public class ScreenLockActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppController.getInstance().trackScreenView("ScreenLock screen");
+    }
 }
