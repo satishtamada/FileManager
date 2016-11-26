@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,8 +47,11 @@ import com.example.satish.filemanager.R;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -233,6 +237,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblCopyCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedFileHashMap.clear();
+                isCheckboxVisible = false;
                 fileCopyLayout.setVisibility(View.GONE);
             }
         });
@@ -240,7 +246,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblCopyFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                copyFile();
+                copyFile(lblFilePath.getText().toString());
             }
         });
         imgFileCopy.setOnClickListener(new View.OnClickListener() {
@@ -254,8 +260,6 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                 }
                 internalStorageListAdapter.notifyDataSetChanged();
                 isCheckboxVisible = false;
-                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
-                Toast.makeText(AppController.getInstance().getApplicationContext(), internalStorageFilesModel.getFileName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -668,8 +672,41 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private void moveFile() {
     }
 
-    private void copyFile() {
+    private void copyFile(String outputPath) {
+        try {
+            Set set = selectedFileHashMap.keySet();
+            Iterator itr = set.iterator();
+            while (itr.hasNext()) {
+                int i = Integer.parseInt(itr.next().toString());
+                File copyFile = new File((String) selectedFileHashMap.get(i));//create file for selected file
 
+                Log.d("file name is",(String) selectedFileHashMap.get(i));
+                /*InputStream is = null;
+                OutputStream os = null;
+                try {
+                    is = new FileInputStream((String) selectedFileHashMap.get(i));
+                    os = new FileOutputStream(outputPath+copyFile.getName());
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = is.read(buffer)) > 0) {
+                        os.write(buffer, 0, length);
+                    }
+                    is.close();
+                    is= null;
+
+                    // write the output file (You have now copied the file)
+                    os.flush();
+                    os.close();
+                    os = null;
+                } catch (Exception e){
+                    e.printStackTrace();
+                }*/
+            }
+            selectedFileHashMap.clear();
+            fileCopyLayout.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
