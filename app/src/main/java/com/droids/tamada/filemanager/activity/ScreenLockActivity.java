@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,7 @@ public class ScreenLockActivity extends AppCompatActivity {
     private EditText txtPassword;
     private ArrayList<String> pswArray;
     private int passwordLength;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +56,19 @@ public class ScreenLockActivity extends AppCompatActivity {
             btnCancel = (Button) findViewById(R.id.id_cancel);
             imgDelete = (ImageView) findViewById(R.id.id_delete);
             txtPassword = (EditText) findViewById(R.id.id_password);
+            // set the ad unit ID
+            mInterstitialAd = new InterstitialAd(AppController.getInstance().getApplicationContext());
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest);
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
             pswArray = new ArrayList<>();
             btnOne.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -127,7 +144,11 @@ public class ScreenLockActivity extends AppCompatActivity {
             });
         }
     }
-
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
     private void removePassword() {
         passwordLength = pswArray.size();
         Log.d("psw length", "" + passwordLength);

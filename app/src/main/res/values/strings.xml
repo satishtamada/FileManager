@@ -138,5 +138,8 @@
     <string name="menu">Menu</string>
     <string name="copy">Copy</string>
     <string name="lbl_move">move</string>
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_home_footer">ca-app-pub-5081856790359576/9410706049</string>
+    <string name="interstitial_full_screen">ca-app-pub-5081856790359576/2461018845</string>
 
 </resources>

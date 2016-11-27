@@ -32,6 +32,8 @@ import com.droids.tamada.filemanager.fragments.VideosListFragment;
 import com.droids.tamada.filemanager.helper.ArcProgress;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 
@@ -55,13 +57,20 @@ public class MainActivity extends AppCompatActivity
     private ArcProgress progressStorage;
     private TextView lblFreeStorage;
     private PreferManager preferManager;
-
+    private AdView mAdView;
+    private Handler handler;
+    private Runnable runnable;
+    private int i = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         mHandler = new Handler();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -92,7 +101,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(0).setChecked(true);
             loadHomeFragment();
             setRamStorageDetails(navItemIndex);
-          if (preferManager.isFirstTimeLaunch()) {
+            if (preferManager.isFirstTimeLaunch()) {
                 final Dialog homeGuideDialog = new Dialog(MainActivity.this, android.R.style.Theme_Translucent_NoTitleBar);
                 homeGuideDialog.setContentView(R.layout.custom_guide_dialog);
                 homeGuideDialog.show();
@@ -106,6 +115,19 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         }
+        handler = new Handler();
+        runnable = new Runnable() {
+            public void run() {
+                handler.postDelayed(this, 1000);
+                if (i > -1) {
+                    i--;
+                } else {
+                    mAdView.setVisibility(View.GONE);
+                    handler.removeCallbacks(runnable);
+                }
+            }
+        };
+        runnable.run();
     }
 
 
@@ -369,5 +391,29 @@ public class MainActivity extends AppCompatActivity
 
     public interface ButtonBackPressListener {
         void onButtonBackPressed(int navItemIndex);
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

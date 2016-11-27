@@ -22,6 +22,9 @@ import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.SwitchButton;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.ArrayList;
 
@@ -49,6 +52,7 @@ public class SettingsFragment extends Fragment {
     private int passwordLength;
     private PreferManager preferManager;
     private TextView lblAbout;
+    private InterstitialAd mInterstitialAd;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,6 +88,21 @@ public class SettingsFragment extends Fragment {
         sBtnShowHiddenFile = (SwitchButton) view.findViewById(R.id.id_setting_hide_file);
         lblAbout= (TextView) view.findViewById(R.id.id_about);
         pswArray = new ArrayList<>();
+        mInterstitialAd = new InterstitialAd(AppController.getInstance().getApplicationContext());
+
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         if (preferManager.isPasswordActivated()) {
             sBtnLock.setChecked(true);
@@ -127,6 +146,12 @@ public class SettingsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
     private void showPasswordDialog() {
