@@ -137,5 +137,6 @@
     <string name="choose_menu_options">Choose menu options</string>
     <string name="menu">Menu</string>
     <string name="copy">Copy</string>
+    <string name="lbl_move">move</string>
 
 </resources>

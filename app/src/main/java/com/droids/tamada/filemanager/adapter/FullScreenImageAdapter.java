@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.droids.tamada.filemanager.helper.TouchImageView;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 import java.io.File;
@@ -46,7 +47,7 @@ public class FullScreenImageAdapter extends PagerAdapter {
         LayoutInflater inflater = (LayoutInflater) _activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.layout_fullscreen_image, container,false);
-        ImageView imgDisplay = (ImageView) viewLayout.findViewById(R.id.imgDisplay);
+        TouchImageView imgDisplay = (TouchImageView) viewLayout.findViewById(R.id.imgDisplay);
         MediaFileListModel mediaFileListModel=mediaFileListModelArrayList.get(position);
         File imgFile = new File(mediaFileListModel.getFilePath());
         if (imgFile.exists()) {

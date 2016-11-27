@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -43,12 +44,15 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.StorageHelper;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
+import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,6 +69,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private String mParam1;
     private String mParam2;
 
+    private LinearLayout fileCopyLayout, fileMoveLayout;
     private RecyclerView recyclerView;
     private LinearLayout noMediaLayout, noMemoryCard;
     private OnFragmentInteractionListener mListener;
@@ -82,6 +87,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
+    private TextView lblCopyFile, lblCopyCancel, lblMoveFile, lblMoveCancel;
 
     public ExternalStorageFragment() {
         // Required empty public constructor
@@ -118,6 +124,12 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         noMemoryCard = (LinearLayout) view.findViewById(R.id.noMemoryCard);
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
+        fileCopyLayout = (LinearLayout) view.findViewById(R.id.fileCopyLayout);
+        fileMoveLayout = (LinearLayout) view.findViewById(R.id.fileMoveLayout);
+        lblMoveFile = (TextView) view.findViewById(R.id.id_move);
+        lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
+        lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
+        lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
@@ -222,10 +234,49 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             }
         });
 
+        lblMoveCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedFileHashMap.clear();
+                isCheckboxVisible = false;
+                fileMoveLayout.setVisibility(View.GONE);
+            }
+        });
+
+        lblMoveFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveFile(lblFilePath.getText().toString());
+            }
+        });
+        lblCopyCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedFileHashMap.clear();
+                isCheckboxVisible = false;
+                fileCopyLayout.setVisibility(View.GONE);
+            }
+        });
+
+        lblCopyFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                copyFile(lblFilePath.getText().toString());
+            }
+        });
+
+
         imgFileCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                copyFile();
+                footerLayout.setVisibility(View.GONE);
+                fileCopyLayout.setVisibility(View.VISIBLE);
+                for (int i = 0; i < externalStorageFilesModelArrayList.size(); i++) {
+                    ExternalStorageFilesModel externalStorageFilesModel = externalStorageFilesModelArrayList.get(i);
+                    externalStorageFilesModel.setCheckboxVisible(false);
+                }
+                externalStorageListAdapter.notifyDataSetChanged();
+                isCheckboxVisible = false;
             }
         });
         return view;
@@ -265,6 +316,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                 }
             }
         } catch (Exception e) {
+            AppController.getInstance().trackException(e);
             e.printStackTrace();
             recyclerView.setVisibility(View.VISIBLE);
             noMediaLayout.setVisibility(View.GONE);
@@ -304,6 +356,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            AppController.getInstance().trackException(e);
                         }
                         dialogNewFile.dismiss();
                     }
@@ -351,6 +404,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                                 }
                             }
                         } catch (Exception e) {
+                            AppController.getInstance().trackException(e);
                             e.printStackTrace();
                         }
                         dialogNewFolder.cancel();
@@ -402,6 +456,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     dialogDeleteFile.dismiss();
                     footerLayout.setVisibility(View.GONE);
                 } catch (Exception e) {
+                    AppController.getInstance().trackException(e);
                     e.printStackTrace();
                 }
             }
@@ -493,7 +548,15 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFileMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveFile();
+                menuDialog.dismiss();
+                footerLayout.setVisibility(View.GONE);
+                fileMoveLayout.setVisibility(View.VISIBLE);
+                for (int i = 0; i < externalStorageFilesModelArrayList.size(); i++) {
+                    ExternalStorageFilesModel externalStorageFilesModel = externalStorageFilesModelArrayList.get(i);
+                    externalStorageFilesModel.setCheckboxVisible(false);
+                }
+                externalStorageListAdapter.notifyDataSetChanged();
+                isCheckboxVisible = false;
             }
         });
         lblRenameFile.setOnClickListener(new View.OnClickListener() {
@@ -514,10 +577,106 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         menuDialog.show();
     }
 
-    private void moveFile() {
+    private void moveFile(String outputPath) {
+        progressBar.setVisibility(View.VISIBLE);
+        try {
+            Set set = selectedFileHashMap.keySet();
+            Iterator itr = set.iterator();
+            while (itr.hasNext()) {
+                int i = Integer.parseInt(itr.next().toString());
+                File file = new File((String) selectedFileHashMap.get(i));
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+                    //create output directory if it doesn't exist
+                    File dir = new File(outputPath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    in = new FileInputStream((String) selectedFileHashMap.get(i));
+                    out = new FileOutputStream(outputPath + "/" + file.getName());
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    in = null;
+                    // write the output file
+                    out.flush();
+                    out.close();
+                    out = null;
+                    // delete the original file
+                    new File((String) selectedFileHashMap.get(i)).delete();
+                } catch (Exception e) {
+                    AppController.getInstance().trackException(e);
+                    Log.e("tag", e.getMessage());
+                }
+                ExternalStorageFilesModel model = new ExternalStorageFilesModel();
+                model.setSelected(false);
+                model.setFilePath(outputPath + "/" + file.getName());
+                model.setFileName(file.getName());
+                if (new File(outputPath + "/" + file.getName()).isDirectory()) {
+                    model.setIsDir(true);
+                } else {
+                    model.setIsDir(false);
+                }
+                externalStorageFilesModelArrayList.add(model);
+            }
+            externalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
+            selectedFileHashMap.clear();
+            footerLayout.setVisibility(View.GONE);
+            fileMoveLayout.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        } catch (Exception e) {
+            AppController.getInstance().trackException(e);
+            e.printStackTrace();
+            Toast.makeText(AppController.getInstance().getApplicationContext(), "unable to process this action", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        }
+
     }
 
-    private void copyFile() {
+    private void copyFile(String outputPath) {
+        progressBar.setVisibility(View.VISIBLE);
+        try {
+            Set set = selectedFileHashMap.keySet();
+            Iterator itr = set.iterator();
+            while (itr.hasNext()) {
+                int i = Integer.parseInt(itr.next().toString());
+                File file = new File((String) selectedFileHashMap.get(i));
+                InputStream in = new FileInputStream((String) selectedFileHashMap.get(i));
+                OutputStream out = new FileOutputStream(outputPath + "/" + file.getName());
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+                ExternalStorageFilesModel model = new ExternalStorageFilesModel();
+                model.setSelected(false);
+                model.setFilePath(outputPath + "/" + file.getName());
+                model.setFileName(file.getName());
+                if (new File(outputPath + "/" + file.getName()).isDirectory()) {
+                    model.setIsDir(true);
+                } else {
+                    model.setIsDir(false);
+                }
+                externalStorageFilesModelArrayList.add(model);
+            }
+            externalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
+            selectedFileHashMap.clear();
+            footerLayout.setVisibility(View.GONE);
+            fileCopyLayout.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        } catch (Exception e) {
+            AppController.getInstance().trackException(e);
+            e.printStackTrace();
+            Toast.makeText(AppController.getInstance().getApplicationContext(), "unable to process this action", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void extractZip(String fileName, final String filePath) {
@@ -566,6 +725,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
                     zis.close();
                     progressBar.setVisibility(View.GONE);
                 } catch (IOException ex) {
+                    AppController.getInstance().trackException(ex);
                     progressBar.setVisibility(View.GONE);
                     ex.printStackTrace();
                     extractZipDialog.dismiss();
@@ -686,6 +846,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
         } catch (IOException e) {
+            AppController.getInstance().trackException(e);
             e.printStackTrace();
         }
         mediaPlayer.start();

@@ -170,7 +170,7 @@
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:text="@string/copy"
+            android:text="@string/lbl_move"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 

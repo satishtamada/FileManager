@@ -19,7 +19,7 @@
             android:src="@drawable/back_arrow"/>
     </RelativeLayout>
 
-    <ImageView
+    <com.droids.tamada.filemanager.helper.TouchImageView
         android:layout_below="@+id/layout_image_title"
         android:layout_centerInParent="true"
         android:id="@+id/imageView"

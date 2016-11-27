@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.droids.tamada.filemanager.helper.TouchImageView;
 import com.example.satish.filemanager.R;
 
 import java.io.File;
@@ -19,14 +20,15 @@ import java.io.File;
  */
 
 public class FullImageViewActivity extends AppCompatActivity {
-    private ImageView imageView,imgBackArrow;
+    private ImageView imgBackArrow;
+    private TouchImageView imageView;
     String  imagePath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_imageview);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        imageView = (TouchImageView) findViewById(R.id.imageView);
         imgBackArrow= (ImageView) findViewById(R.id.id_back_arrow);
         Intent intent = getIntent();
         imagePath = intent.getStringExtra("imagePath");

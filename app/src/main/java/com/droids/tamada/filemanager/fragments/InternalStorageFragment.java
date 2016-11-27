@@ -77,7 +77,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private String rootPath;
     private String fileExtension;
     private RelativeLayout footerAudioPlayer;
-    private LinearLayout fileCopyLayout,fileMoveLayout;
+    private LinearLayout fileCopyLayout, fileMoveLayout;
     private MediaPlayer mediaPlayer;
     private RelativeLayout footerLayout;
     private TextView lblFilePath;
@@ -87,7 +87,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
-    private TextView lblCopyFile, lblCopyCancel,lblMoveFile,lblMoveCancel;
+    private TextView lblCopyFile, lblCopyCancel, lblMoveFile, lblMoveCancel;
 
     public InternalStorageFragment() {
         // Required empty public constructor
@@ -126,10 +126,10 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         fileCopyLayout = (LinearLayout) view.findViewById(R.id.fileCopyLayout);
-        fileMoveLayout= (LinearLayout) view.findViewById(R.id.fileMoveLayout);
+        fileMoveLayout = (LinearLayout) view.findViewById(R.id.fileMoveLayout);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
-        lblMoveFile= (TextView) view.findViewById(R.id.id_move);
-        lblMoveCancel= (TextView) view.findViewById(R.id.id_move_cancel);
+        lblMoveFile = (TextView) view.findViewById(R.id.id_move);
+        lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
         lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
         lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         internalStorageFilesModelArrayList = new ArrayList<>();
@@ -224,6 +224,8 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblMoveCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedFileHashMap.clear();
+                isCheckboxVisible = false;
                 fileMoveLayout.setVisibility(View.GONE);
             }
         });
@@ -231,7 +233,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblMoveFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveFile();
+                moveFile(lblFilePath.getText().toString());
             }
         });
         lblCopyCancel.setOnClickListener(new View.OnClickListener() {
@@ -351,6 +353,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                             }
                         }
                     } catch (Exception e) {
+                        AppController.getInstance().trackException(e);
                         e.printStackTrace();
                     }
                     dialogNewFile.dismiss();
@@ -397,6 +400,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                             }
                         }
                     } catch (Exception e) {
+                        AppController.getInstance().trackException(e);
                         e.printStackTrace();
                     }
                     dialogNewFolder.cancel();
@@ -447,6 +451,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                     dialogDeleteFile.dismiss();
                     footerLayout.setVisibility(View.GONE);
                 } catch (Exception e) {
+                    AppController.getInstance().trackException(e);
                     e.printStackTrace();
                 }
             }
@@ -559,6 +564,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
                     zis.close();
                     progressBar.setVisibility(View.GONE);
                 } catch (IOException ex) {
+                    AppController.getInstance().trackException(ex);
                     progressBar.setVisibility(View.GONE);
                     ex.printStackTrace();
                     extractZipDialog.dismiss();
@@ -638,17 +644,15 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblFileMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                menuDialog.dismiss();
                 footerLayout.setVisibility(View.GONE);
-                fileCopyLayout.setVisibility(View.VISIBLE);
+                fileMoveLayout.setVisibility(View.VISIBLE);
                 for (int i = 0; i < internalStorageFilesModelArrayList.size(); i++) {
                     InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(i);
                     internalStorageFilesModel.setCheckboxVisible(false);
                 }
                 internalStorageListAdapter.notifyDataSetChanged();
                 isCheckboxVisible = false;
-                InternalStorageFilesModel internalStorageFilesModel = internalStorageFilesModelArrayList.get(selectedFilePosition);
-                Toast.makeText(AppController.getInstance().getApplicationContext(), internalStorageFilesModel.getFileName(), Toast.LENGTH_SHORT).show();
-
             }
         });
         lblRenameFile.setOnClickListener(new View.OnClickListener() {
@@ -669,45 +673,106 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         menuDialog.show();
     }
 
-    private void moveFile() {
-    }
-
-    private void copyFile(String outputPath) {
+    private void moveFile(String outputPath) {
+        progressBar.setVisibility(View.VISIBLE);
         try {
             Set set = selectedFileHashMap.keySet();
             Iterator itr = set.iterator();
             while (itr.hasNext()) {
                 int i = Integer.parseInt(itr.next().toString());
-                File copyFile = new File((String) selectedFileHashMap.get(i));//create file for selected file
-
-                Log.d("file name is",(String) selectedFileHashMap.get(i));
-                /*InputStream is = null;
-                OutputStream os = null;
+                File file = new File((String) selectedFileHashMap.get(i));
+                InputStream in = null;
+                OutputStream out = null;
                 try {
-                    is = new FileInputStream((String) selectedFileHashMap.get(i));
-                    os = new FileOutputStream(outputPath+copyFile.getName());
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = is.read(buffer)) > 0) {
-                        os.write(buffer, 0, length);
+                    //create output directory if it doesn't exist
+                    File dir = new File(outputPath);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
-                    is.close();
-                    is= null;
-
-                    // write the output file (You have now copied the file)
-                    os.flush();
-                    os.close();
-                    os = null;
-                } catch (Exception e){
-                    e.printStackTrace();
-                }*/
+                    in = new FileInputStream((String) selectedFileHashMap.get(i));
+                    out = new FileOutputStream(outputPath + "/" + file.getName());
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    in = null;
+                    // write the output file
+                    out.flush();
+                    out.close();
+                    out = null;
+                    // delete the original file
+                    new File((String) selectedFileHashMap.get(i)).delete();
+                } catch (Exception e) {
+                    AppController.getInstance().trackException(e);
+                    Log.e("tag", e.getMessage());
+                }
+                InternalStorageFilesModel model = new InternalStorageFilesModel();
+                model.setSelected(false);
+                model.setFilePath(outputPath + "/" + file.getName());
+                model.setFileName(file.getName());
+                if (new File(outputPath + "/" + file.getName()).isDirectory()) {
+                    model.setIsDir(true);
+                } else {
+                    model.setIsDir(false);
+                }
+                internalStorageFilesModelArrayList.add(model);
             }
+            internalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
             selectedFileHashMap.clear();
-            fileCopyLayout.setVisibility(View.GONE);
+            footerLayout.setVisibility(View.GONE);
+            fileMoveLayout.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         } catch (Exception e) {
+            AppController.getInstance().trackException(e);
             e.printStackTrace();
+            Toast.makeText(AppController.getInstance().getApplicationContext(), "unable to process this action", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
         }
 
+    }
+
+    private void copyFile(String outputPath) {
+        progressBar.setVisibility(View.VISIBLE);
+        try {
+            Set set = selectedFileHashMap.keySet();
+            Iterator itr = set.iterator();
+            while (itr.hasNext()) {
+                int i = Integer.parseInt(itr.next().toString());
+                File file = new File((String) selectedFileHashMap.get(i));
+                InputStream in = new FileInputStream((String) selectedFileHashMap.get(i));
+                OutputStream out = new FileOutputStream(outputPath + "/" + file.getName());
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                in.close();
+                out.close();
+                InternalStorageFilesModel model = new InternalStorageFilesModel();
+                model.setSelected(false);
+                model.setFilePath(outputPath + "/" + file.getName());
+                model.setFileName(file.getName());
+                if (new File(outputPath + "/" + file.getName()).isDirectory()) {
+                    model.setIsDir(true);
+                } else {
+                    model.setIsDir(false);
+                }
+                internalStorageFilesModelArrayList.add(model);
+            }
+            internalStorageListAdapter.notifyDataSetChanged();//refresh the adapter
+            selectedFileHashMap.clear();
+            footerLayout.setVisibility(View.GONE);
+            fileCopyLayout.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        } catch (Exception e) {
+            AppController.getInstance().trackException(e);
+            e.printStackTrace();
+            Toast.makeText(AppController.getInstance().getApplicationContext(), "unable to process this action", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void renameFile(final Dialog menuDialog, String fileName, final String filePath, final int selectedFilePosition) {
@@ -819,6 +884,7 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepare();
         } catch (IOException e) {
+            AppController.getInstance().trackException(e);
             e.printStackTrace();
         }
         mediaPlayer.start();
