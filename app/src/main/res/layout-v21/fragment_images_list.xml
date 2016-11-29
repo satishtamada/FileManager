@@ -9,21 +9,21 @@
     tools:context="com.droids.tamada.filemanager.fragments.ImagesListFragment">
 
     <com.google.android.gms.ads.AdView
+        android:visibility="gone"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_home_footer">
     </com.google.android.gms.ads.AdView>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_above="@+id/adView"
+        android:layout_below="@+id/adView"
         android:id="@+id/recycler_view_images_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="?android:attr/selectableItemBackground"
         android:scrollbars="vertical"
         android:visibility="gone"/>

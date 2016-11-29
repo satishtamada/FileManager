@@ -42,6 +42,7 @@ import com.droids.tamada.filemanager.adapter.InternalStorageListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -62,7 +63,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 
-public class InternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
+public class InternalStorageFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener, MainActivity.ButtonBackPressListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -134,9 +135,15 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
         lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         internalStorageFilesModelArrayList = new ArrayList<>();
         arrayListFilePaths = new ArrayList<>();
         rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -931,6 +938,18 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
         });
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
+    }
+
     public interface ClickListener {
         void onClick(View view, int position);
 
@@ -990,6 +1009,15 @@ public class InternalStorageFragment extends Fragment implements MainActivity.Bu
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("Internal storage fragment");
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override

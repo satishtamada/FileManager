@@ -9,13 +9,13 @@
     tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
 
     <com.google.android.gms.ads.AdView
+        android:visibility="gone"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         ads:adSize="SMART_BANNER"
-        android:layout_marginBottom="10dp"
         ads:adUnitId="@string/banner_home_footer">
     </com.google.android.gms.ads.AdView>
 

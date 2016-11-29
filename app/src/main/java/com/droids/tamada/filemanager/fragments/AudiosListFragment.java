@@ -27,6 +27,7 @@ import android.widget.ToggleButton;
 import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class AudiosListFragment extends Fragment {
+public class AudiosListFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener{
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -74,9 +75,15 @@ public class AudiosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_audios_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         mediaFileListModels = new ArrayList<>();
         mediaPlayer = new MediaPlayer();
         AudiosListAdapter audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
@@ -204,6 +211,18 @@ public class AudiosListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
+    }
+
 
     public interface ClickListener {
         void onClick(View view, int position);
@@ -295,6 +314,15 @@ public class AudiosListFragment extends Fragment {
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("Audios List Fragment");
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
 
     }
 

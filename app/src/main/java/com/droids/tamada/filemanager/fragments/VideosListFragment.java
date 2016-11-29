@@ -21,6 +21,7 @@ import com.droids.tamada.filemanager.adapter.VideosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,7 +29,7 @@ import com.google.android.gms.ads.AdView;
 import java.io.File;
 import java.util.ArrayList;
 
-public class VideosListFragment extends Fragment {
+public class VideosListFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -69,9 +70,15 @@ public class VideosListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_videos_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         mediaFileListModelArrayList = new ArrayList<>();
         VideosListAdapter videosListAdapter = new VideosListAdapter(mediaFileListModelArrayList);
         recyclerView.setHasFixedSize(true);
@@ -126,6 +133,18 @@ public class VideosListFragment extends Fragment {
            noMediaLayout.setVisibility(View.VISIBLE);
            recyclerView.setVisibility(View.GONE);
        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
 
@@ -211,7 +230,15 @@ public class VideosListFragment extends Fragment {
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("videos List Fragment");
-
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.droids.tamada.filemanager.activity.AboutActivity;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.SwitchButton;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,7 +29,7 @@ import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,9 +88,15 @@ public class SettingsFragment extends Fragment {
         sBtnShowHiddenFile = (SwitchButton) view.findViewById(R.id.id_setting_hide_file);
         lblAbout= (TextView) view.findViewById(R.id.id_about);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         pswArray = new ArrayList<>();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         if (preferManager.isPasswordActivated()) {
@@ -299,6 +306,18 @@ public class SettingsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -311,6 +330,15 @@ public class SettingsFragment extends Fragment {
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("Settings storage fragment");
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override

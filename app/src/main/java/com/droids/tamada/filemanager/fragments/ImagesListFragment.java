@@ -22,6 +22,7 @@ import com.droids.tamada.filemanager.adapter.ImagesListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class ImagesListFragment extends Fragment {
+public class ImagesListFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
@@ -72,9 +73,15 @@ public class ImagesListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_images_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         imageListModelsArray = new ArrayList<>();
         imagesListAdapter = new ImagesListAdapter(imageListModelsArray);
         recyclerView.setHasFixedSize(true);
@@ -89,7 +96,7 @@ public class ImagesListFragment extends Fragment {
             public void onClick(View view, int position) {
                 AppController.getInstance().setMediaFileListArrayList(imageListModelsArray);
                 Intent intent = new Intent(AppController.getInstance().getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("imagePosition",  position);
+                intent.putExtra("imagePosition", position);
                 startActivity(intent);
             }
 
@@ -143,6 +150,19 @@ public class ImagesListFragment extends Fragment {
         } else {
             noMediaLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isConnected) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        } else {
+            mAdView.setVisibility(View.GONE);
+
         }
     }
 
@@ -231,7 +251,15 @@ public class ImagesListFragment extends Fragment {
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("Images List Fragment");
-
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override

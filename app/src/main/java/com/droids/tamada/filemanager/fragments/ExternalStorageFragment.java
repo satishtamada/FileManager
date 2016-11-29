@@ -43,6 +43,7 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.StorageHelper;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -62,7 +63,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class ExternalStorageFragment extends Fragment implements MainActivity.ButtonBackPressListener {
+public class ExternalStorageFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener, MainActivity.ButtonBackPressListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -136,9 +137,15 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
         mAdView = (AdView) view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         arrayListFilePaths = new ArrayList<>();
         externalStorageFilesModelArrayList = new ArrayList<>();
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
@@ -931,6 +938,18 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             }
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+                AdRequest adRequest = new AdRequest.Builder()
+                        .build();
+                mAdView.loadAd(adRequest);
+                mAdView.setVisibility(View.VISIBLE);
+            }else{
+                mAdView.setVisibility(View.GONE);
+        }
+    }
+
     public interface ClickListener {
         void onClick(View view, int position);
 
@@ -1006,6 +1025,15 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("External storage fragment");
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override
