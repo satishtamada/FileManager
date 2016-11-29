@@ -28,6 +28,8 @@ import com.droids.tamada.filemanager.adapter.AudiosListAdapter;
 import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +46,7 @@ public class AudiosListFragment extends Fragment {
     private ArrayList<MediaFileListModel> mediaFileListModels;
     private LinearLayout noMediaLayout;
     private MediaPlayer mediaPlayer;
+    private AdView mAdView;
 
     public AudiosListFragment() {
         // Required empty public constructor
@@ -70,6 +73,10 @@ public class AudiosListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_audios_list, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_audios_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
+        mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         mediaFileListModels = new ArrayList<>();
         mediaPlayer = new MediaPlayer();
         AudiosListAdapter audiosListAdapter = new AudiosListAdapter(mediaFileListModels);
@@ -274,8 +281,28 @@ public class AudiosListFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         AppController.getInstance().trackScreenView("Audios List Fragment");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

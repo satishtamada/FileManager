@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 
 import com.droids.tamada.filemanager.app.AppController;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by satish on 23/10/16.
@@ -34,6 +36,7 @@ public class WelcomeScreen extends AppCompatActivity {
     private static final int REQUEST_CODE_WRITE_STORAGE = 102;
     private static final String TAG = WelcomeScreen.class.getSimpleName();
     private static final String PERMISSION_WRITE_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +44,10 @@ public class WelcomeScreen extends AppCompatActivity {
         setContentView(R.layout.welcome_activity);
         layoutDeniedPermissionLayout = (LinearLayout) findViewById(R.id.id_access_permissions_layout);
         btnTurnOn= (Button) findViewById(R.id.id_btn_turn_on);
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             accessStorage();
         } else {
@@ -172,8 +179,28 @@ public class WelcomeScreen extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         AppController.getInstance().trackScreenView("Welcome screen");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

@@ -22,9 +22,8 @@ import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.SwitchButton;
 import com.example.satish.filemanager.R;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 
@@ -52,7 +51,7 @@ public class SettingsFragment extends Fragment {
     private int passwordLength;
     private PreferManager preferManager;
     private TextView lblAbout;
-    private InterstitialAd mInterstitialAd;
+    private AdView mAdView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -87,22 +86,11 @@ public class SettingsFragment extends Fragment {
         sBtnLock = (SwitchButton) view.findViewById(R.id.id_setting_lock);
         sBtnShowHiddenFile = (SwitchButton) view.findViewById(R.id.id_setting_hide_file);
         lblAbout= (TextView) view.findViewById(R.id.id_about);
-        pswArray = new ArrayList<>();
-        mInterstitialAd = new InterstitialAd(AppController.getInstance().getApplicationContext());
-
-        // set the ad unit ID
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
-
+        mAdView = (AdView) view.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
-
-        // Load ads into Interstitial Ads
-        mInterstitialAd.loadAd(adRequest);
-        mInterstitialAd.setAdListener(new AdListener() {
-            public void onAdLoaded() {
-                showInterstitial();
-            }
-        });
+        mAdView.loadAd(adRequest);
+        pswArray = new ArrayList<>();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         if (preferManager.isPasswordActivated()) {
             sBtnLock.setChecked(true);
@@ -146,12 +134,6 @@ public class SettingsFragment extends Fragment {
             }
         });
         return view;
-    }
-
-    private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
     }
 
     private void showPasswordDialog() {
@@ -320,5 +302,31 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+        AppController.getInstance().trackScreenView("Settings storage fragment");
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

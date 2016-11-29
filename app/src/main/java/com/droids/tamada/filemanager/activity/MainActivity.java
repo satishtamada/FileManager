@@ -31,15 +31,17 @@ import com.droids.tamada.filemanager.fragments.SettingsFragment;
 import com.droids.tamada.filemanager.fragments.VideosListFragment;
 import com.droids.tamada.filemanager.helper.ArcProgress;
 import com.droids.tamada.filemanager.helper.PreferManager;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener {
     private static final String TAG_INTERNAL_STORAGE = "INTERNAL STORAGE";
     private static final String TAG_EXTERNAL_STORAGE = "EXTERNAL STORAGE";
     private static final String TAG_IMAGES_LIST = "IMAGES";
@@ -57,20 +59,17 @@ public class MainActivity extends AppCompatActivity
     private ArcProgress progressStorage;
     private TextView lblFreeStorage;
     private PreferManager preferManager;
-    private AdView mAdView;
     private Handler handler;
     private Runnable runnable;
-    private int i = 5;
+    private int i = 1;
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
         mHandler = new Handler();
         preferManager = new PreferManager(AppController.getInstance().getApplicationContext());
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
@@ -94,6 +93,8 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         progressStorage = (ArcProgress) headerLayout.findViewById(R.id.progress_storage);
         lblFreeStorage = (TextView) headerLayout.findViewById(R.id.id_free_space);
+        mInterstitialAd = new InterstitialAd(AppController.getInstance().getApplicationContext());
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             navItemIndex = 0;
@@ -119,10 +120,18 @@ public class MainActivity extends AppCompatActivity
         runnable = new Runnable() {
             public void run() {
                 handler.postDelayed(this, 1000);
-                if (i > -1) {
-                    i--;
+                if (i <= 10) {
+                    i++;
                 } else {
-                    mAdView.setVisibility(View.GONE);
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .build();
+                    // Load ads into Interstitial Ads
+                    mInterstitialAd.loadAd(adRequest);
+                    mInterstitialAd.setAdListener(new AdListener() {
+                        public void onAdLoaded() {
+                            showInterstitial();
+                        }
+                    });
                     handler.removeCallbacks(runnable);
                 }
             }
@@ -130,7 +139,11 @@ public class MainActivity extends AppCompatActivity
         runnable.run();
     }
 
-
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
     private void setActivityTitle() {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(activityTitles[navItemIndex]);
@@ -389,31 +402,37 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            // Load ads into Interstitial Ads
+            mInterstitialAd.loadAd(adRequest);
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+        }
+    }
+
     public interface ButtonBackPressListener {
         void onButtonBackPressed(int navItemIndex);
     }
 
     @Override
     public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
     }
 
     @Override
     public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
         super.onDestroy();
     }
 }

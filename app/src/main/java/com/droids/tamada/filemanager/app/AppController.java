@@ -5,6 +5,7 @@ import android.app.Application;
 import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.helper.AnalyticsTrackers;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -41,6 +42,10 @@ public class AppController extends Application {
 
     public ArrayList<MediaFileListModel> getMediaFileListModeLArray() {
         return mediaFileListModelArrayList;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 
     public synchronized Tracker getGoogleAnalyticsTracker() {

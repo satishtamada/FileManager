@@ -22,6 +22,8 @@ import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class VideosListFragment extends Fragment {
     private ArrayList<MediaFileListModel> mediaFileListModelArrayList;
     private LinearLayout noMediaLayout;
     private OnFragmentInteractionListener mListener;
+    private AdView mAdView;
 
     public VideosListFragment() {
         // Required empty public constructor
@@ -65,6 +68,10 @@ public class VideosListFragment extends Fragment {
         View view =inflater.inflate(R.layout.fragment_videos_list, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_videos_list);
         noMediaLayout = (LinearLayout) view.findViewById(R.id.noMediaLayout);
+        mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         mediaFileListModelArrayList = new ArrayList<>();
         VideosListAdapter videosListAdapter = new VideosListAdapter(mediaFileListModelArrayList);
         recyclerView.setHasFixedSize(true);
@@ -188,5 +195,30 @@ public class VideosListFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+        AppController.getInstance().trackScreenView("videos List Fragment");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

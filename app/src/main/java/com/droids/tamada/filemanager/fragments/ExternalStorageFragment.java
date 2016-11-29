@@ -35,7 +35,6 @@ import android.widget.ToggleButton;
 
 import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
 import com.droids.tamada.filemanager.activity.FullImageViewActivity;
-import com.droids.tamada.filemanager.activity.ImageViewActivity;
 import com.droids.tamada.filemanager.activity.MainActivity;
 import com.droids.tamada.filemanager.activity.TextFileViewActivity;
 import com.droids.tamada.filemanager.adapter.ExternalStorageListAdapter;
@@ -44,8 +43,9 @@ import com.droids.tamada.filemanager.helper.DividerItemDecoration;
 import com.droids.tamada.filemanager.helper.PreferManager;
 import com.droids.tamada.filemanager.helper.StorageHelper;
 import com.droids.tamada.filemanager.model.ExternalStorageFilesModel;
-import com.droids.tamada.filemanager.model.InternalStorageFilesModel;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -88,6 +88,7 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
     private TextView lblCopyFile, lblCopyCancel, lblMoveFile, lblMoveCancel;
+    private AdView mAdView;
 
     public ExternalStorageFragment() {
         // Required empty public constructor
@@ -134,6 +135,10 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
+        mAdView = (AdView) view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         arrayListFilePaths = new ArrayList<>();
         externalStorageFilesModelArrayList = new ArrayList<>();
         externalStorageListAdapter = new ExternalStorageListAdapter(externalStorageFilesModelArrayList);
@@ -997,6 +1002,26 @@ public class ExternalStorageFragment extends Fragment implements MainActivity.Bu
     @Override
     public void onResume() {
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         AppController.getInstance().trackScreenView("External storage fragment");
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

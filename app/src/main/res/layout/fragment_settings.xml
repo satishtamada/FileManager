@@ -1,115 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/lock"
+                android:textSize="15sp" />
+
+            <com.droids.tamada.filemanager.helper.SwitchButton
+                android:id="@+id/id_setting_lock"
+                style="@style/SwitchButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|center_horizontal"
+                app:kswBackDrawable="@drawable/miui_back_drawable"
+                app:kswBackMeasureRatio="2"
+                app:kswThumbDrawable="@drawable/miui_thumb_drawable"
+                app:kswThumbHeight="18dp"
+                app:kswThumbWidth="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#d3d3d3" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/show_hidden_file"
+                android:textSize="15sp" />
+
+            <com.droids.tamada.filemanager.helper.SwitchButton
+                android:id="@+id/id_setting_hide_file"
+                style="@style/SwitchButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|center_horizontal"
+                app:kswBackDrawable="@drawable/miui_back_drawable"
+                app:kswBackMeasureRatio="2"
+                app:kswThumbDrawable="@drawable/miui_thumb_drawable"
+                app:kswThumbHeight="18dp"
+                app:kswThumbWidth="18dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#d3d3d3" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:text="@string/lock"
+            android:layout_gravity="start"
+            android:padding="15dp"
+            android:text="@string/version"
             android:textSize="15sp" />
 
-        <com.droids.tamada.filemanager.helper.SwitchButton
-            android:id="@+id/id_setting_lock"
-            style="@style/SwitchButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="end|center_horizontal"
-            app:kswBackDrawable="@drawable/miui_back_drawable"
-            app:kswBackMeasureRatio="2"
-            app:kswThumbDrawable="@drawable/miui_thumb_drawable"
-            app:kswThumbHeight="18dp"
-            app:kswThumbWidth="18dp" />
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="#d3d3d3" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#d3d3d3" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/id_about"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:text="@string/show_hidden_file"
+            android:layout_gravity="start"
+            android:background="@drawable/rectangle_ripple_effect"
+            android:padding="15dp"
+            android:text="@string/about"
             android:textSize="15sp" />
 
-        <com.droids.tamada.filemanager.helper.SwitchButton
-            android:id="@+id/id_setting_hide_file"
-            style="@style/SwitchButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="end|center_horizontal"
-            app:kswBackDrawable="@drawable/miui_back_drawable"
-            app:kswBackMeasureRatio="2"
-            app:kswThumbDrawable="@drawable/miui_thumb_drawable"
-            app:kswThumbHeight="18dp"
-            app:kswThumbWidth="18dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:background="#d3d3d3" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="#d3d3d3" />
-
-    <TextView
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:padding="15dp"
-        android:text="@string/version"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="#d3d3d3" />
-
-    <TextView
-        android:id="@+id/id_about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:padding="15dp"
-        android:background="@drawable/rectangle_ripple_effect"
-        android:text="@string/about"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="#d3d3d3" />
-
-</LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_home_footer"/>
+</RelativeLayout>
