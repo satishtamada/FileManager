@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         runnable = new Runnable() {
             public void run() {
                 handler.postDelayed(this, 1000);
-                if (i <= 10) {
+                if (i <= 15) {
                     i++;
                 } else {
                     AdRequest adRequest = new AdRequest.Builder()
