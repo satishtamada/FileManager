@@ -11,14 +11,19 @@ import android.webkit.WebViewClient;
 
 import com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView;
 import com.droids.tamada.filemanager.app.AppController;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 
 /**
  * Created by satish on 14/10/16.
  */
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener{
     private AVLoadingIndicatorView progressBar;
+    private AdView mAdView;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +35,14 @@ public class AboutActivity extends AppCompatActivity {
         }
         WebView webView = (WebView) findViewById(R.id.webView);
         progressBar= (AVLoadingIndicatorView)findViewById(R.id.progressBar);
+        if(ConnectivityReceiver.isConnected()) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         webView.getSettings().setBuiltInZoomControls(false);
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -47,12 +60,6 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        AppController.getInstance().trackScreenView("About Screen");
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
@@ -67,5 +74,52 @@ public class AboutActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+        AppController.getInstance().trackScreenView("About Screen");
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 }

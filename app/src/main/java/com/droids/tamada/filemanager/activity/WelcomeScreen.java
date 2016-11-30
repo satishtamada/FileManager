@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 
 
 import com.droids.tamada.filemanager.app.AppController;
+import com.droids.tamada.filemanager.receivers.ConnectivityReceiver;
 import com.example.satish.filemanager.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -30,7 +31,7 @@ import com.google.android.gms.ads.AdView;
  * Created by satish on 23/10/16.
  */
 
-public class WelcomeScreen extends AppCompatActivity {
+public class WelcomeScreen extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener{
     private Button btnTurnOn;
     private LinearLayout layoutDeniedPermissionLayout;
     private static final int REQUEST_CODE_WRITE_STORAGE = 102;
@@ -45,9 +46,15 @@ public class WelcomeScreen extends AppCompatActivity {
         layoutDeniedPermissionLayout = (LinearLayout) findViewById(R.id.id_access_permissions_layout);
         btnTurnOn= (Button) findViewById(R.id.id_btn_turn_on);
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             accessStorage();
         } else {
@@ -193,7 +200,15 @@ public class WelcomeScreen extends AppCompatActivity {
             mAdView.resume();
         }
         AppController.getInstance().trackScreenView("Welcome screen");
-
+        AppController.getInstance().setConnectivityListener(this);
+        if(ConnectivityReceiver.isConnected()){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -202,5 +217,17 @@ public class WelcomeScreen extends AppCompatActivity {
             mAdView.destroy();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.VISIBLE);
+        }else{
+            mAdView.setVisibility(View.GONE);
+        }
     }
 }

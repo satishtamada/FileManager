@@ -9,9 +9,10 @@
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
+        android:visibility="gone"
         ads:adUnitId="@string/banner_home_footer"/>
 
     <LinearLayout
@@ -38,11 +39,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/adView"
         android:id="@+id/id_access_permissions_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginBottom="60dp"
         android:gravity="center"
         android:visibility="gone"
         android:orientation="vertical">
