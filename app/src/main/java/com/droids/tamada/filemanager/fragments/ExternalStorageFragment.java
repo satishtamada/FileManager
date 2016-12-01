@@ -78,7 +78,6 @@ public class ExternalStorageFragment extends Fragment implements ConnectivityRec
     private ExternalStorageListAdapter externalStorageListAdapter;
     private String rootPath;
     private String fileExtension;
-    private RelativeLayout footerAudioPlayer;
     private MediaPlayer mediaPlayer;
     private RelativeLayout footerLayout;
     private TextView lblFilePath;
@@ -88,7 +87,6 @@ public class ExternalStorageFragment extends Fragment implements ConnectivityRec
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
-    private TextView lblCopyFile, lblCopyCancel, lblMoveFile, lblMoveCancel;
     private AdView mAdView;
 
     public ExternalStorageFragment() {
@@ -128,10 +126,10 @@ public class ExternalStorageFragment extends Fragment implements ConnectivityRec
         footerLayout = (RelativeLayout) view.findViewById(R.id.id_layout_footer);
         fileCopyLayout = (LinearLayout) view.findViewById(R.id.fileCopyLayout);
         fileMoveLayout = (LinearLayout) view.findViewById(R.id.fileMoveLayout);
-        lblMoveFile = (TextView) view.findViewById(R.id.id_move);
-        lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
-        lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
-        lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
+        TextView lblMoveFile = (TextView) view.findViewById(R.id.id_move);
+        TextView lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
+        TextView lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
+        TextView lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         lblFilePath = (TextView) view.findViewById(R.id.id_file_path);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.id_delete);
         final ImageView imgFileCopy = (ImageView) view.findViewById(R.id.id_copy_file);
@@ -852,7 +850,7 @@ public class ExternalStorageFragment extends Fragment implements ConnectivityRec
     private void showAudioPlayer(String fileName, String filePath) {
         final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
-        footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
+        RelativeLayout footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
         TextView lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
         ToggleButton toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
         toggleBtnPlayPause.setChecked(true);

@@ -68,16 +68,12 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
     private RecyclerView recyclerView;
     private LinearLayout noMediaLayout;
-    private OnFragmentInteractionListener mListener;
     private ArrayList<InternalStorageFilesModel> internalStorageFilesModelArrayList;
     private InternalStorageListAdapter internalStorageListAdapter;
     private String rootPath;
     private String fileExtension;
-    private RelativeLayout footerAudioPlayer;
     private LinearLayout fileCopyLayout, fileMoveLayout;
     private MediaPlayer mediaPlayer;
     private RelativeLayout footerLayout;
@@ -88,7 +84,6 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
     private final HashMap selectedFileHashMap = new HashMap();
     private boolean isCheckboxVisible = false;
     private AVLoadingIndicatorView progressBar;
-    private TextView lblCopyFile, lblCopyCancel, lblMoveFile, lblMoveCancel;
     private AdView mAdView;
 
     public InternalStorageFragment() {
@@ -108,8 +103,8 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -130,10 +125,10 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
         fileCopyLayout = (LinearLayout) view.findViewById(R.id.fileCopyLayout);
         fileMoveLayout = (LinearLayout) view.findViewById(R.id.fileMoveLayout);
         ImageView imgMenu = (ImageView) view.findViewById(R.id.id_menu);
-        lblMoveFile = (TextView) view.findViewById(R.id.id_move);
-        lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
-        lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
-        lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
+        TextView lblMoveFile = (TextView) view.findViewById(R.id.id_move);
+        TextView lblMoveCancel = (TextView) view.findViewById(R.id.id_move_cancel);
+        TextView lblCopyCancel = (TextView) view.findViewById(R.id.id_copy_cancel);
+        TextView lblCopyFile = (TextView) view.findViewById(R.id.id_copy);
         mAdView = (AdView) view.findViewById(R.id.adView);
         AppController.getInstance().setConnectivityListener(this);
         if(ConnectivityReceiver.isConnected()){
@@ -331,7 +326,7 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        OnFragmentInteractionListener mListener = null;
     }
 
     public void createNewFile() {
@@ -885,7 +880,7 @@ public class InternalStorageFragment extends Fragment implements ConnectivityRec
     private void showAudioPlayer(String fileName, String filePath) {
         final Dialog audioPlayerDialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         audioPlayerDialog.setContentView(R.layout.custom_audio_player_dialog);
-        footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
+        RelativeLayout footerAudioPlayer = (RelativeLayout) audioPlayerDialog.findViewById(R.id.id_layout_audio_player);
         TextView lblAudioFileName = (TextView) audioPlayerDialog.findViewById(R.id.ic_audio_file_name);
         ToggleButton toggleBtnPlayPause = (ToggleButton) audioPlayerDialog.findViewById(R.id.id_play_pause);
         toggleBtnPlayPause.setChecked(true);

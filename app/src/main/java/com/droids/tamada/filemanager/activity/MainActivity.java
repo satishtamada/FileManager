@@ -317,7 +317,6 @@ public class MainActivity extends AppCompatActivity
             long totalSize = totalBlocks * blockSize;
             @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
             long availableSize = availableBlocks * blockSize;
-            Log.d("here is", "" + ((availableSize * 100) / totalSize));
             int size = (int) ((availableSize * 100) / totalSize);
             return 100 - size;
         } else {
@@ -327,7 +326,6 @@ public class MainActivity extends AppCompatActivity
 
     private static String getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
-        Log.d("getPath", path.getPath());
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
         @SuppressWarnings("deprecation") long availableBlocks = stat.getAvailableBlocks();
