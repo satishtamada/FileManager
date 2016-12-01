@@ -300,32 +300,37 @@ public class ExternalStorageFragment extends Fragment implements ConnectivityRec
         try {
             File f = new File(filePath);
             File[] files = f.listFiles();
-            if (files.length == 0) {
-                noMediaLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                noMediaLayout.setVisibility(View.GONE);
-            }
-            for (File file : files) {
-                ExternalStorageFilesModel model = new ExternalStorageFilesModel();
-                model.setFileName(file.getName());
-                model.setFilePath(file.getPath());
-                model.setCheckboxVisible(false);
-                model.setSelected(false);
-                if (file.isDirectory()) {
-                    model.setDir(true);
+            if (files != null) {
+                if (files.length == 0) {
+                    noMediaLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 } else {
-                    model.setDir(false);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noMediaLayout.setVisibility(View.GONE);
                 }
+                for (File file : files) {
+                    ExternalStorageFilesModel model = new ExternalStorageFilesModel();
+                    model.setFileName(file.getName());
+                    model.setFilePath(file.getPath());
+                    model.setCheckboxVisible(false);
+                    model.setSelected(false);
+                    if (file.isDirectory()) {
+                        model.setDir(true);
+                    } else {
+                        model.setDir(false);
+                    }
 
-                if (!preferManager.isHiddenFileVisible()) {
-                    if (file.getName().indexOf('.') != 0) {
+                    if (!preferManager.isHiddenFileVisible()) {
+                        if (file.getName().indexOf('.') != 0) {
+                            externalStorageFilesModelArrayList.add(model);
+                        }
+                    } else { //display hidden files
                         externalStorageFilesModelArrayList.add(model);
                     }
-                } else { //display hidden files
-                    externalStorageFilesModelArrayList.add(model);
                 }
+            }else{
+                noMediaLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             AppController.getInstance().trackException(e);

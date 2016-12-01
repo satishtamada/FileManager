@@ -6,20 +6,21 @@
     android:background="@color/colorWhite">
 
     <com.google.android.gms.ads.AdView
+        android:layout_above="@+id/id_layout_footer"
+        android:layout_alignParentBottom="true"
         android:visibility="gone"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_home_footer"/>
 
     <TextView
+        android:layout_alignParentTop="true"
         android:id="@+id/id_file_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/adView"
         android:background="@color/colorWhite"
         android:maxLines="1"
         android:padding="8dp"
@@ -41,7 +42,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/id_layout_footer"
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/id_file_path"
         android:background="@color/colorWhite"
         android:scrollbars="vertical"
@@ -172,5 +173,4 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
-
 </RelativeLayout>

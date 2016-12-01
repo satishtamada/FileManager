@@ -5,18 +5,19 @@
     android:background="@color/colorWhite">
 
     <com.google.android.gms.ads.AdView
+        android:layout_above="@+id/id_layout_footer"
         android:visibility="gone"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_home_footer">
     </com.google.android.gms.ads.AdView>
 
     <TextView
-        android:layout_below="@+id/adView"
+        android:layout_alignParentTop="true"
         android:id="@+id/id_file_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +30,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_above="@+id/id_layout_footer"
+        android:layout_above="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_file_path"

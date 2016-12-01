@@ -1,23 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorWhite"
-    tools:context="com.droids.tamada.filemanager.fragments.AudiosListFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
     <com.google.android.gms.ads.AdView
+        android:layout_above="@+id/id_layout_footer"
+        android:layout_alignParentBottom="true"
         android:visibility="gone"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_home_footer"/>
 
     <TextView
-        android:layout_below="@+id/adView"
+        android:layout_alignParentTop="true"
         android:id="@+id/id_file_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +27,7 @@
         android:textAllCaps="false"
         android:textColor="@color/color_text_selected"
         android:textSize="13sp" />
+
     <com.droids.tamada.filemanager.Animations.AVLoadingIndicatorView
         android:id="@+id/progressBar"
         android:layout_width="30dp"
@@ -36,11 +37,12 @@
         android:visibility="gone"
         app:indicator="LineSpinFadeLoader"
         app:indicator_color="@color/colorPrimaryDark" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_above="@+id/id_layout_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/id_file_path"
         android:background="@color/colorWhite"
         android:scrollbars="vertical"
@@ -54,6 +56,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -64,8 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/color_text_selected"
             android:text="@string/no_media_found"
+            android:textColor="@color/color_text_selected"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -83,6 +86,7 @@
             android:id="@+id/id_copy_file"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@drawable/ripple_effect"
             android:padding="5dp"
@@ -102,6 +106,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/ripple_effect"
             android:padding="5dp"
             android:src="@drawable/ic_menu" />
@@ -113,8 +118,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_footer_layout"
-        android:weightSum="2"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/id_copy_cancel"
@@ -122,9 +127,9 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
             android:text="@string/btn_cancel"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/id_copy"
@@ -132,10 +137,10 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="18sp"
             android:text="@string/copy"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -144,8 +149,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_footer_layout"
-        android:weightSum="2"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/id_move_cancel"
@@ -153,9 +158,9 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
             android:text="@string/btn_cancel"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/id_move"
@@ -163,10 +168,9 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="18sp"
             android:text="@string/lbl_move"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
-
 </RelativeLayout>
