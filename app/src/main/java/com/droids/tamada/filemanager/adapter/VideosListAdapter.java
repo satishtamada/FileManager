@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
@@ -52,6 +54,11 @@ public class VideosListAdapter extends RecyclerView.Adapter<VideosListAdapter.My
         Bitmap bMap = ThumbnailUtils.createVideoThumbnail(mediaFileListModel.getFilePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
         holder.lblFileName.setText(mediaFileListModel.getFileName());
         holder.imgItemIcon.setImageBitmap(bMap);
+            Glide.with(AppController.getInstance().getApplicationContext())
+                    .load(mediaFileListModel.getFilePath())
+                    .crossFade()
+                    .into(holder.imgItemIcon);
+
 }
 
     @Override

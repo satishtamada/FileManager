@@ -1,16 +1,14 @@
 package com.droids.tamada.filemanager.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.droids.tamada.filemanager.app.AppController;
 import com.droids.tamada.filemanager.model.MediaFileListModel;
 import com.example.satish.filemanager.R;
 
@@ -58,9 +56,10 @@ public class ImagesListAdapter extends RecyclerView.Adapter<ImagesListAdapter.My
         holder.lblFileCreated.setText(mediaFileListModel.getFileCreatedTime().substring(0,19));
         File imgFile = new File(mediaFileListModel.getFilePath());
         if (imgFile.exists()) {
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile( mediaFileListModel.getFilePath()),
-                    THUMB_SIZE, THUMB_SIZE);
-            holder.imgItemIcon.setImageBitmap(ThumbImage);
+            Glide.with(AppController.getInstance().getApplicationContext())
+                    .load(mediaFileListModel.getFilePath())
+                    .crossFade()
+                    .into(holder.imgItemIcon);
         }
     }
 
